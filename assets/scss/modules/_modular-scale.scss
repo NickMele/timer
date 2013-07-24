@@ -1,0 +1,28 @@
+// Modular scale
+@function modular-scale( $value, $increment, $ratio ) {
+
+    @if $increment > 0 {
+
+        @for $i from 1 through $increment {
+          $value: ( $value * $ratio );
+        }
+
+    }
+
+    @if $increment < 0 {
+
+        $increment: abs($increment);
+
+        @for $i from 1 through $increment {
+          $value: ( $value / $ratio );
+        }
+
+    }
+
+    @return round($value);
+
+}
+
+@function golden-ratio( $value, $increment ) {
+    @return modular-scale( $value, $increment, 1.618 );
+}

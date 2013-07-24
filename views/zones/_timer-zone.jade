@@ -1,0 +1,16 @@
+h1(contenteditable="true", data-name="name").timer-name Timer name
+
+div.timer-clock
+	span(contenteditable="true").timer-clock-hours 00
+	span.timer-clock-separator :
+	span(contenteditable="true").timer-clock-minutes 00
+	span.timer-clock-separator :
+	span(contenteditable="true").timer-clock-seconds 00
+
+div.timer-controls
+	button.timer-start
+		i.icon-play
+	button.timer-pause.hidden
+		i.icon-pause
+	button.timer-reset
+		i.icon-repeat

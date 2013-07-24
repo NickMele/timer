@@ -1,0 +1,8 @@
+ul.nav.nav-list
+	li
+		a New timer
+	li.divider
+	li.nav-header Your timers
+	for timer in timers
+		li
+			a(data-timer-id='#{timer._id}').timer-link #{timer.name}

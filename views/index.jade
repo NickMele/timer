@@ -1,0 +1,13 @@
+extends layout
+
+block scripts
+	script(src="/socket.io/socket.io.js")
+	script(src="/js/timer.js")
+
+block content
+	.container-fluid
+		.row-fluid
+			.span3.timer-list.well.well-small
+
+			.span9.timer-zone
+				include zones/_timer-zone
