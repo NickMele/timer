@@ -58,22 +58,40 @@
 			timer.getTimerData();
 		});
 
+		$(properties.cache.newTimerLink).off('click').on('click', function(e) {
+
+			// prevent the default action of the link
+			e.preventDefault();
+
+			timer.newTimer();
+
+		});
+
 		// emit a message for other clients to start their timer
-		$(properties.cache.timerStart).off('click').on('click', function() {
+		$(properties.cache.timerStart).off('click').on('click', function(e) {
+			// prevent the default action of the link
+			e.preventDefault();
+
 			timer.socket.emit(properties.urls.notifyStartTimer, properties.currentTimer.id, function(data) {
 				timer.startTimer();
 			});
 		});
 
 		// emit a message for other clients to pause their timer
-		$(properties.cache.timerPause).off('click').on('click', function() {
+		$(properties.cache.timerPause).off('click').on('click', function(e) {
+			// prevent the default action of the link
+			e.preventDefault();
+
 			timer.socket.emit(properties.urls.notifyPauseTimer, properties.currentTimer.id, function(data) {
 				timer.pauseTimer();
 			});
 		});
 
 		// emit a message for other clients to reset their timer
-		$(properties.cache.timerReset).off('click').on('click', function() {
+		$(properties.cache.timerReset).off('click').on('click', function(e) {
+			// prevent the default action of the link
+			e.preventDefault();
+
 			timer.socket.emit(properties.urls.notifyResetTimer, properties.currentTimer.id, function(data) {
 				timer.resetTimer();
 			});
@@ -106,6 +124,8 @@
 				}
 			}
 		});
+
+		// $('.dropdown-toggle').dropdown();
 
 	};
 
@@ -157,6 +177,9 @@
 
 		timer.bindEvents();
 
+		// set the active item in our timer list
+		timer.setActiveItem();
+
 	};
 
 	timer.setActiveItem = function() {
@@ -165,11 +188,11 @@
 			currentTimer = properties.currentTimer,
 			currentTimerId = currentTimer.currentTimerData._id;
 
-		$(properties.cache.timerListLink).removeClass('active');
+		$(properties.cache.timerListLink).parent().removeClass('active');
 
 		console.log($(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']"));
 
-		$(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']").addClass('active');
+		$(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']").parent().addClass('active');
 
 	};
 
@@ -387,6 +410,7 @@
 				timerDuration: '.timer-zone .timer-clock',
 				timerList: '.timer-list',
 				timerListLink: '.timer-link',
+				newTimerLink: '.new-timer',
 				timerStart: '.timer-start',
 				timerPause: '.timer-pause',
 				timerReset: '.timer-reset'

@@ -1,6 +1,22 @@
 extends ../layout
 
 block content
-	div.row
-		h1 Login
-		include ../zones/_login
+	.container-fluid
+		.row-fluid
+			div.span3.offset3
+				
+				if message
+					p #{message}
+
+				h3 Please login
+				form(action='/login', method='post').form-horizontal
+					.control-group
+						input(type='text', name='username', placeholder='Username').span11
+					.control-group
+						input(type='password', name='password', placeholder='Password').span11
+					.control-group
+						button(type='submit').btn.btn-success.span11 Sign in
+
+			div.span3
+				h3 Not registered?
+				p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.

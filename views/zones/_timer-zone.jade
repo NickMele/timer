@@ -1,16 +1,32 @@
-h1(contenteditable="true", data-name="name").timer-name Timer name
+.btn-group.pull-right
+	a.btn.dropdown-toggle(data-toggle='dropdown', href='#')
+		| Options 
+		span.caret
+	ul.dropdown-menu
+		li
+			a(href="#") Edit
+		li
+			a(href="#") Delete
+
+h1(data-editable="true", data-name="name").timer-name Timer name
 
 div.timer-clock
-	span(contenteditable="true").timer-clock-hours 00
+	span(data-editable="true").timer-clock-hours 00
 	span.timer-clock-separator :
-	span(contenteditable="true").timer-clock-minutes 00
+	span(data-editable="true").timer-clock-minutes 00
 	span.timer-clock-separator :
-	span(contenteditable="true").timer-clock-seconds 00
+	span(data-editable="true").timer-clock-seconds 00
 
 div.timer-controls
-	button.timer-start
-		i.icon-play
-	button.timer-pause.hidden
-		i.icon-pause
-	button.timer-reset
-		i.icon-repeat
+	button.timer-start.btn.btn-large.btn-success
+		i.icon-play.icon-white
+		|  Start
+	button.timer-pause.btn.btn-large.btn-primary.hidden
+		i.icon-pause.icon-white.icon-white
+		|  Pause
+	button.timer-reset.btn.btn-large.btn-danger
+		i.icon-repeat.icon-white
+		|  Reset
+	button.timer-volume-off.btn.btn-large
+		i.icon-volume-off
+		|  Mute
