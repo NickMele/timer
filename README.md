@@ -1,4 +1,4 @@
-timer
+Cross device timer
 =====
 
-A timer that will keep in sync between logged in devices
+This timer will keep in sync across devices for a user.
