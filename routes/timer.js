@@ -66,6 +66,15 @@ exports.setTimerData = function(req) {
 	});
 };
 
+exports.removeTimer = function(req) {
+	timerModel.removeTimer(req.data, function(err) {
+		// respond to the request with err
+		req.io.respond({
+			err: err
+		});
+	});
+};
+
 exports.notifyGetTimer = function(req) {
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;

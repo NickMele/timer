@@ -33,3 +33,13 @@ exports.setTimerData = function setTimerData(objectId, timerData, callback) {
 		}
 	);
 };
+
+exports.removeTimer = function removeTimer(objectId, callback) {
+	Timer.find({_id: objectId}, function(err) {
+		if (err) {
+			console.log(err);
+		} else {
+			callback(err);
+		}
+	});
+};

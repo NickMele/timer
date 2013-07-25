@@ -4,6 +4,7 @@
 		line-height: 1.2em;
 		width: 50%;
 		margin: 0 auto;
+		padding: 6px;
 	}
 	.timer-clock {
 		text-align: center;
@@ -11,7 +12,11 @@
 		span {
 			font-size: 10em;
 			line-height: 1em;
+			padding: 2px;
 		}
+	}
+	.timer-edit-controls {
+		display: none;
 	}
 	.timer-controls {
 		text-align: center;
@@ -21,7 +26,13 @@
 			margin-right: 2px;
 		}
 	}
-	[contenteditable] {
+	[data-editable="true"] {
+		box-sizing: border-box;
+		background-color: #ffffff;
+		border: 1px solid #ffffff;
+	}
+	[contenteditable="true"] {
+		box-sizing: border-box;
 		background-color: #ffffff;
 		border: 1px solid #cccccc;
 		-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);

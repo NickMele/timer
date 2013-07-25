@@ -1,15 +1,21 @@
-.btn-group.pull-right
-	a.btn.timer-edit
-		i.icon-edit
-	a.btn.timer-delete
-		i.icon-trash
+.btn-toolbar.clearfix
+	.btn-group.pull-left
+		button.btn.new-timer
+			i.icon-plus-sign
+			|  New timer
 
-.btn-group.pull-right(style="margin-right:3px;")
-	a.btn.btn-primary.timer-save
-		i.icon-ok-circle.icon-white
-		|  Save
-	a.btn.timer-cancel-edit
-		| Cancel
+	.btn-group.pull-right
+		a.btn.timer-edit
+			i.icon-edit
+		a.btn.timer-delete
+			i.icon-trash
+
+	.btn-group.pull-right.timer-edit-controls(style="margin-right:3px;")
+		a.btn.btn-primary.timer-edit-save
+			i.icon-ok-circle.icon-white
+			|  Save
+		a.btn.timer-edit-cancel
+			| Cancel
 
 h1(data-editable="true", data-name="name").timer-name Timer name
 

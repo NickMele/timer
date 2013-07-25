@@ -110,14 +110,12 @@
 					// restore state
 					document.execCommand('undo');
 					element.blur();
+
+					timer.editMode();
+
 				} else if (enter) {
-					// extract timer data from timer zone
-					timer.getTimerDataFromZone();
-
-					// save the timer data to the db
-					timer.setTimerData();
-
-					timer.loadTimers();
+					
+					timer.saveTimer();
 
 					element.blur();
 					event.preventDefault();
@@ -125,14 +123,72 @@
 			}
 		});
 
-		$(properties.cache.timerEdit).off('click').on('click', function(e) {
+		$(properties.cache.timerEdit + ', ' + properties.cache.timerEditCancel).off('click').on('click', function(e) {
 
 			// prevent the default action of the link
 			e.preventDefault();
 
-			$('[data-editable="true"]').attr('contenteditable','true');
+			// turn on/off edit mode
+			timer.editMode();
 
 		});
+
+		$(properties.cache.timerEditSave).off('click').on('click', function(e) {
+
+			// prevent the default action of the link
+			e.preventDefault();
+
+			// save the timer
+			timer.saveTimer();
+
+		});
+
+	};
+
+	timer.saveTimer = function() {
+
+		// extract timer data from timer zone
+		timer.getTimerDataFromZone();
+
+		// save the timer data to the db
+		timer.setTimerData();
+
+		// reload timer list
+		timer.loadTimers();
+
+		timer.editMode();
+
+	};
+
+	timer.editMode = function() {
+
+		var properties = timer.properties,
+			isEditing = properties.currentTimer.isEditing;
+
+		if (!isEditing) {
+			
+			properties.currentTimer.isEditing = true;
+
+			// turn all editable elements on
+			$('[data-editable="true"]').attr('contenteditable','true');
+
+			// show the save/cancel buttons
+			$(properties.cache.timerEditControls).fadeIn(100);
+
+			$(properties.cache.timerEdit).addClass('active');
+
+		} else {
+
+			properties.currentTimer.isEditing = false;
+
+			// turn all editable elements on
+			$('[data-editable="true"]').attr('contenteditable','false');
+
+			// show the save/cancel buttons
+			$(properties.cache.timerEditControls).fadeOut(100);
+
+			$(properties.cache.timerEdit).removeClass('active');
+		}
 
 	};
 
@@ -249,7 +305,7 @@
 			currentTimerData: {
 				userId: null,
 				length: 0,
-				name: 'Timer name...',
+				name: null,
 				timeElapsed: 0
 			},
 			counter: null
@@ -257,6 +313,10 @@
 
 		// update timer zone
 		timer.setTimerZone(properties.currentTimer.currentTimerData);
+
+		timer.editMode();
+
+		$(properties.cache.timerName).focus();
 
 	};
 
@@ -421,8 +481,11 @@
 				timerStart: '.timer-start',
 				timerPause: '.timer-pause',
 				timerReset: '.timer-reset',
+				timerEditControls: '.timer-edit-controls',
 				timerEdit: '.timer-edit',
-				timerDelete: '.timer-delete'
+				timerDelete: '.timer-delete',
+				timerEditCancel: '.timer-edit-cancel',
+				timerEditSave: '.timer-edit-save'
 			},
 			urls: {
 				getTimers: '/get/timers',
