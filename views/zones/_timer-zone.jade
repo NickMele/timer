@@ -1,12 +1,15 @@
 .btn-group.pull-right
-	a.btn.dropdown-toggle(data-toggle='dropdown', href='#')
-		| Options 
-		span.caret
-	ul.dropdown-menu
-		li
-			a(href="#") Edit
-		li
-			a(href="#") Delete
+	a.btn.timer-edit
+		i.icon-edit
+	a.btn.timer-delete
+		i.icon-trash
+
+.btn-group.pull-right(style="margin-right:3px;")
+	a.btn.btn-primary.timer-save
+		i.icon-ok-circle.icon-white
+		|  Save
+	a.btn.timer-cancel-edit
+		| Cancel
 
 h1(data-editable="true", data-name="name").timer-name Timer name
 

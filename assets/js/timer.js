@@ -125,7 +125,14 @@
 			}
 		});
 
-		// $('.dropdown-toggle').dropdown();
+		$(properties.cache.timerEdit).off('click').on('click', function(e) {
+
+			// prevent the default action of the link
+			e.preventDefault();
+
+			$('[data-editable="true"]').attr('contenteditable','true');
+
+		});
 
 	};
 
@@ -413,7 +420,9 @@
 				newTimerLink: '.new-timer',
 				timerStart: '.timer-start',
 				timerPause: '.timer-pause',
-				timerReset: '.timer-reset'
+				timerReset: '.timer-reset',
+				timerEdit: '.timer-edit',
+				timerDelete: '.timer-delete'
 			},
 			urls: {
 				getTimers: '/get/timers',
