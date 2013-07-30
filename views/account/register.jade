@@ -5,13 +5,9 @@ block content
 		.row
 			div.col-lg-4.col-offset-4
 
-				h2 Sign in
-				p 
-					| If you have an account, please sign in. If not you can 
-					a(href="/register") register now
-					| .
+				h2 Register
 				
-				form(action='/login', method='post')
+				form(action='/register', method='post')
 					if message
 						div.alert.alert-danger.alert-block
 							button.close(type='button', data-dismiss='alert') &times;
