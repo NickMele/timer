@@ -1,5 +1,7 @@
 var passport = require('passport'),
-	GoogleStrategy = require('passport-google').Strategy;
+	GoogleStrategy = require('passport-google').Strategy,
+	mongoose = require('mongoose'),
+	User = mongoose.model('User');
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -26,9 +28,16 @@ passport.use(new GoogleStrategy({
     realm: 'http://localhost:5000/'
   },
   function(identifier, profile, done) {
-  	User.findOrCreate({ openId: identifier }, function(err, user) {
-      done(err, user);
-    });
+  	process.nextTick(function () {
+  		User.findOneAndUpdate(
+			{ openId: identifier },
+			{ openId: identifier },
+			{ upsert: true },
+			function(err, user) {
+				done(err, user);
+			}
+		);
+  	});
   }
 ));
 

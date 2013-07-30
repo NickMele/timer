@@ -255,11 +255,11 @@
 			currentTimer = properties.currentTimer,
 			currentTimerId = currentTimer.currentTimerData._id;
 
-		$(properties.cache.timerListLink).parent().removeClass('active');
+		$(properties.cache.timerListLink).removeClass('active');
 
 		console.log($(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']"));
 
-		$(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']").parent().addClass('active');
+		$(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']").addClass('active');
 
 	};
 

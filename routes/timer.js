@@ -41,7 +41,7 @@ exports.setTimerData = function(req) {
 
 		objectId = new mongoose.Types.ObjectId();
 		// get the user id
-		var userId = req.session.passport.user;
+		var userId = req.session.passport.user._id;
 		// add it to the data
 		timerData.userId = userId;
 

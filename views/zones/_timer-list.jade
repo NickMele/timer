@@ -1,5 +1,7 @@
-ul.nav.nav-list
-	li.nav-header Your timers
+div.list-group
+	a(href="#").list-group-item.new-timer
+		h4.list-group-item-heading New timer
+
 	for timer in timers
-		li
-			a(href="#", data-timer-id='#{timer._id}').timer-link #{timer.name}
+		a(href="#", data-timer-id='#{timer._id}').list-group-item.timer-link
+			| #{timer.name}
