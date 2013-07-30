@@ -1,22 +1,19 @@
 extends ../layout
 
 block content
-	.container-fluid
-		.row-fluid
-			div.span3.offset3
+	.container
+		.row
+			div.col-lg-4.col-offset-4
 				
-				if message
-					p #{message}
-
-				h3 Please login
-				form(action='/login', method='post').form-horizontal
-					.control-group
-						input(type='text', name='username', placeholder='Username').span11
-					.control-group
-						input(type='password', name='password', placeholder='Password').span11
-					.control-group
-						button(type='submit').btn.btn-success.span11 Sign in
-
-			div.span3
-				h3 Not registered?
-				p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+				form(action='/login', method='post')
+					if message
+						div.alert.alert-danger.alert-block
+							button.close(type='button', data-dismiss='alert') &times;
+							| #{message}
+					.form-group
+						input.form-control.input-large(type='text', name='username', placeholder='Username')
+					.form-group
+						input.form-control.input-large(type='password', name='password', placeholder='Password')
+					.form-group
+						button(type='submit').btn.btn-success.btn-block.btn-large Sign in
+				a(href="/register").btn.btn-primary.btn-block.btn-large Register

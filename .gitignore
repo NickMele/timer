@@ -16,3 +16,4 @@ node_modules
 codekit-config.json
 *.sublime-project
 *.sublime-workspace
+.DS_Store
