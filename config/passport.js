@@ -22,8 +22,8 @@ passport.deserializeUser(function(obj, done) {
 //   credentials (in this case, an OpenID identifier and profile), and invoke a
 //   callback with a user object.
 passport.use(new GoogleStrategy({
-    returnURL: 'http://localhost:3000/auth/google/return',
-    realm: 'http://localhost:3000/'
+    returnURL: 'http://localhost:5000/auth/google/return',
+    realm: 'http://localhost:5000/'
   },
   function(identifier, profile, done) {
     // asynchronous verification, for effect...

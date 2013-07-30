@@ -2,8 +2,7 @@ var passport = require('passport');
 
 exports.getlogin = function(req, res) {
 	res.render('account/login', {
-		user: req.user,
-		message: req.session.messages
+		user: req.user
 	});
 };
 

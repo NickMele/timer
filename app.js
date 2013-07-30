@@ -49,7 +49,7 @@ app.io.route('ready', function(req) {
 // Basic pages
 app.get('/', config.passport.ensureAuthenticated, routes.base.index);
 
-app.get('/login', routes.account.getLogin);
+app.get('/login', routes.account.getlogin);
 
 // GET /auth/google
 //   Use passport.authenticate() as route middleware to authenticate the
