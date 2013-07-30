@@ -7,7 +7,7 @@ var express = require('express.io'),
 	},
 	routes = {
 		base: require('./routes/base'),
-		// account: require('./routes/account'),
+		account: require('./routes/account'),
 		timer: require('./routes/timer')
 	},
 	port = process.env.PORT || 3000;
@@ -48,6 +48,8 @@ app.io.route('ready', function(req) {
 
 // Basic pages
 app.get('/', config.passport.ensureAuthenticated, routes.base.index);
+
+app.get('/login', routes.account.getLogin);
 
 // GET /auth/google
 //   Use passport.authenticate() as route middleware to authenticate the
