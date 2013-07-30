@@ -9,10 +9,17 @@ var express = require('express.io'),
 		base: require('./routes/base'),
 		account: require('./routes/account'),
 		timer: require('./routes/timer')
-	};
+	},
+	port = process.env.PORT || 3000;
 
 // set up socket io
 app.http().io();
+
+// configure socket io to work on heroku
+app.io.configure(function () { 
+	app.io.set("transports", ["xhr-polling"]); 
+	app.io.set("polling duration", 10); 
+});
 
 // configure Express
 app.configure(function() {
@@ -57,4 +64,6 @@ app.io.route('/notify/start/timer', routes.timer.startTimer);
 app.io.route('/notify/pause/timer', routes.timer.pauseTimer);
 app.io.route('/notify/reset/timer', routes.timer.resetTimer);
 
-app.listen(3000);
+app.listen(port, function() {
+  console.log("Listening on " + port);
+});

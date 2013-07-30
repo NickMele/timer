@@ -4,7 +4,9 @@ var mongoose = require('mongoose'),
 exports.mongoose = mongoose;
 
 // Database connect
-var uristring = 'mongodb://localhost/test';
+var uristring = process.env.MONGOLAB_URI || 
+				process.env.MONGOHQ_URL || 
+				'mongodb://localhost/timer';
 
 var mongoOptions = {
 	db: {

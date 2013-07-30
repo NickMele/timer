@@ -177,6 +177,8 @@
 
 			$(properties.cache.timerEdit).addClass('active');
 
+			$(properties.cache.timerControls).hide();
+
 		} else {
 
 			properties.currentTimer.isEditing = false;
@@ -188,6 +190,8 @@
 			$(properties.cache.timerEditControls).fadeOut(100);
 
 			$(properties.cache.timerEdit).removeClass('active');
+
+			$(properties.cache.timerControls).show();
 		}
 
 	};
@@ -478,6 +482,7 @@
 				timerList: '.timer-list',
 				timerListLink: '.timer-link',
 				newTimerLink: '.new-timer',
+				timerControls: '.timer-controls',
 				timerStart: '.timer-start',
 				timerPause: '.timer-pause',
 				timerReset: '.timer-reset',
