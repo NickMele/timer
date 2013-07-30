@@ -7,7 +7,7 @@ var express = require('express.io'),
 	},
 	routes = {
 		base: require('./routes/base'),
-		account: require('./routes/account'),
+		// account: require('./routes/account'),
 		timer: require('./routes/timer')
 	},
 	port = process.env.PORT || 3000;
@@ -49,9 +49,28 @@ app.io.route('ready', function(req) {
 // Basic pages
 app.get('/', config.passport.ensureAuthenticated, routes.base.index);
 
-// User pages
-app.get('/login', routes.account.getlogin);
-app.post('/login', routes.account.postlogin);
+// GET /auth/google
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  The first step in Google authentication will involve redirecting
+//   the user to google.com.  After authenticating, Google will redirect the
+//   user back to this application at /auth/google/return
+app.get('/auth/google', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+// GET /auth/google/return
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  If authentication fails, the user will be redirected back to the
+//   login page.  Otherwise, the primary route function function will be called,
+//   which, in this example, will redirect the user to the home page.
+app.get('/auth/google/return', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
 app.get('/logout', routes.account.logout);
 
 // Timer api

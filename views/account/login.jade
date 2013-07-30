@@ -6,20 +6,6 @@ block content
 			div.col-lg-4.col-offset-4
 
 				h2 Sign in
-				p 
-					| If you have an account, please sign in. If not you can 
-					a(href="/register") register now
-					| .
+				p Use your Google account to sign in
 				
-				form(action='/login', method='post')
-					if message
-						div.alert.alert-danger.alert-block
-							button.close(type='button', data-dismiss='alert') &times;
-							| #{message}
-					.form-group
-						input.form-control.input-large(type='text', name='username', placeholder='Username')
-					.form-group
-						input.form-control.input-large(type='password', name='password', placeholder='Password')
-					.form-group
-						button(type='submit').btn.btn-success.btn-block.btn-large Sign in
-				a(href="/register").btn.btn-primary.btn-block.btn-large Register
+				a(href="/").btn.btn-primary.btn-block.btn-large Sign in using Google
