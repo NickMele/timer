@@ -97,18 +97,17 @@
 			});
 		});
 
-		$(document).off('keydown').on('keydown', function(event) {
+		$(document).off('keyup').on('keyup', function(event) {
 
 			var escape = event.which == 27,
 				enter = event.which == 13,
 				element = event.target,
-				isInput = element.nodeName != 'INPUT' && element.nodeName != 'TEXTAREA',
-				data = {};
+				isInput = element.nodeName != 'INPUT' && element.nodeName != 'TEXTAREA';
 
 			if (isInput) {
 				if (escape) {
 					// restore state
-					document.execCommand('undo');
+					document.execCommand('undo', false, null); // restore to previus state
 					element.blur();
 
 					timer.editMode();
@@ -256,8 +255,6 @@
 			currentTimerId = currentTimer.currentTimerData._id;
 
 		$(properties.cache.timerListLink).removeClass('active');
-
-		console.log($(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']"));
 
 		$(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']").addClass('active');
 

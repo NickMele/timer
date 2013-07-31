@@ -1,0 +1,270 @@
+/* Margin and Padding - determined via golden ratio */
+$base-spacing: 18px;
+
+
+/* Margin */
+.margin {
+  margin-top: $base-spacing;
+  margin-right: $base-spacing;
+  margin-bottom: $base-spacing;
+  margin-left: $base-spacing;
+}
+
+.margin-tiny {
+  margin: golden-ratio($base-spacing, -3);
+}
+
+.margin-small {
+  margin: golden-ratio($base-spacing, -1);
+}
+
+.margin-medium {
+  margin: golden-ratio($base-spacing, 1);
+}
+
+.margin-large {
+  margin: golden-ratio($base-spacing, 2);
+}
+
+
+.margin-top {
+  margin-top: $base-spacing;
+}
+
+.margin-right {
+  margin-right: $base-spacing;
+}
+
+.margin-bottom {
+  margin-bottom: $base-spacing;
+}
+
+.margin-left {
+  margin-left: $base-spacing;
+}
+
+
+.margin-top-tiny {
+  margin-top: golden-ratio($base-spacing, -3);
+}
+
+.margin-right-tiny {
+  margin-right: golden-ratio($base-spacing, -3);
+}
+
+.margin-bottom-tiny {
+  margin-bottom: golden-ratio($base-spacing, -3);
+}
+
+.margin-left-tiny {
+  margin-left: golden-ratio($base-spacing, -3);
+}
+
+
+.margin-top-small {
+  margin-top: golden-ratio($base-spacing, -1);
+}
+
+.margin-right-small {
+  margin-right: golden-ratio($base-spacing, -1);
+}
+
+.margin-bottom-small {
+  margin-bottom: golden-ratio($base-spacing, -1);
+}
+
+.margin-left-small {
+  margin-left: golden-ratio($base-spacing, -1);
+}
+
+
+.margin-top-medium {
+  margin-top: golden-ratio($base-spacing, 1);
+}
+
+.margin-right-medium {
+  margin-right: golden-ratio($base-spacing, 1);
+}
+
+.margin-bottom-medium {
+  margin-bottom: golden-ratio($base-spacing, 1);
+}
+
+.margin-left-medium {
+  margin-left: golden-ratio($base-spacing, 1);
+}
+
+
+.margin-top-large {
+  margin-top: golden-ratio($base-spacing, 2);
+}
+
+.margin-right-large {
+  margin-right: golden-ratio($base-spacing, 2);
+}
+
+.margin-bottom-large {
+  margin-bottom: golden-ratio($base-spacing, 2);
+}
+
+.margin-left-large {
+  margin-left: golden-ratio($base-spacing, 2);
+}
+
+
+.no-margin {
+  margin-top: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0 !important;
+}
+
+.no-margin-top {
+  margin-top: 0 !important;
+}
+
+.no-margin-right {
+  margin-right: 0 !important;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0 !important;
+}
+
+.no-margin-left {
+  margin-left: 0 !important;
+}
+
+
+/* Padding */
+.padding {
+  padding-top: $base-spacing;
+  padding-right: $base-spacing;
+  padding-bottom: $base-spacing;
+  padding-left: $base-spacing;
+}
+
+.padding-tiny {
+  padding: golden-ratio($base-spacing, -3);
+}
+
+.padding-small {
+  padding: golden-ratio($base-spacing, -1);
+}
+
+.padding-medium {
+  padding: golden-ratio($base-spacing, 1);
+}
+
+.padding-large {
+  padding: golden-ratio($base-spacing, 2);
+}
+
+
+.padding-top {
+  padding-top: $base-spacing;
+}
+
+.padding-right {
+  padding-right: $base-spacing;
+}
+
+.padding-bottom {
+  padding-bottom: $base-spacing;
+}
+
+.padding-left {
+  padding-left: $base-spacing;
+}
+
+
+.padding-top-tiny {
+  padding-top: golden-ratio($base-spacing, -3);
+}
+
+.padding-right-tiny {
+  padding-right: golden-ratio($base-spacing, -3);
+}
+
+.padding-bottom-tiny {
+  padding-bottom: golden-ratio($base-spacing, -3);
+}
+
+.padding-left-tiny {
+  padding-left: golden-ratio($base-spacing, -3);
+}
+
+
+.padding-top-small {
+  padding-top: golden-ratio($base-spacing, -1);
+}
+
+.padding-right-small {
+  padding-right: golden-ratio($base-spacing, -1);
+}
+
+.padding-bottom-small {
+  padding-bottom: golden-ratio($base-spacing, -1);
+}
+
+.padding-left-small {
+  padding-left: golden-ratio($base-spacing, -1);
+}
+
+
+.padding-top-medium {
+  padding-top: golden-ratio($base-spacing, 1);
+}
+
+.padding-right-medium {
+  padding-right: golden-ratio($base-spacing, 1);
+}
+
+.padding-bottom-medium {
+  padding-bottom: golden-ratio($base-spacing, 1);
+}
+
+.padding-left-medium {
+  padding-left: golden-ratio($base-spacing, 1);
+}
+
+
+.padding-top-large {
+  padding-top: golden-ratio($base-spacing, 2);
+}
+
+.padding-right-large {
+  padding-right: golden-ratio($base-spacing, 2);
+}
+
+.padding-bottom-large {
+  padding-bottom: golden-ratio($base-spacing, 2);
+}
+
+.padding-left-large {
+  padding-left: golden-ratio($base-spacing, 2);
+}
+
+
+.no-padding {
+  padding-top: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+}
+
+.no-padding-top {
+  padding-top: 0 !important;
+}
+
+.no-padding-right {
+  padding-right: 0 !important;
+}
+
+.no-padding-bottom {
+  padding-bottom: 0 !important;
+}
+
+.no-padding-left {
+  padding-left: 0 !important;
+}

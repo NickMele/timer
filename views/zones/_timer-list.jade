@@ -1,7 +1,9 @@
-div.list-group
-	a(href="#").list-group-item.new-timer
-		h4.list-group-item-heading New timer
+div.row
+	a(href="#").btn.btn-primary.btn-block.new-timer
+			h4.list-group-item-heading New timer
 
-	for timer in timers
-		a(href="#", data-timer-id='#{timer._id}').list-group-item.timer-link
-			| #{timer.name}
+div.row.margin-top
+	div.list-group
+		for timer in timers
+			a(href="#", data-timer-id='#{timer._id}').list-group-item.timer-link
+				| #{timer.name}
