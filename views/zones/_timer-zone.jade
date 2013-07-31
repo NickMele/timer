@@ -12,7 +12,7 @@ div.clearfix
 			| Save 
 			span.glyphicon.glyphicon-ok
 
-h1(data-editable="true", data-name="name").timer-name Timer name
+h1(data-editable="true", data-name="name", data-bind="text: state.currentTimer().name").timer-name Timer name
 
 div.timer-clock
 	span(data-editable="true").timer-clock-hours 00

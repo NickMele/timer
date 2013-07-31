@@ -1,14 +1,28 @@
 var timerModel = require('../model/timer'),
 	mongoose = require('mongoose');
 
-exports.getTimerList = function(req, res) {
-	timerModel.getTimerList(req.user._id, function(err,timers) {
-		res.render('zones/_timer-list', {
-			user: req.user,
-			timers: timers
+exports.getTimers = function(req, res) {
+	// the user id is going to be used at the room identifier
+	var userId = req.session.passport.user._id;
+
+	timerModel.getTimersByUserId(userId, function(err,timers) {
+		// broadcast the message to load this timer to the room
+		req.io.room(userId).broadcast('get:timers', timers);
+		// respond to the request with the timer data
+		req.io.respond({
+			data: timers
 		});
 	});
 };
+
+exports.setCurrentTimer = function(req) {
+	// the user id is going to be used at the room identifier
+	var userId = req.session.passport.user._id;
+	// broadcast the message to load this timer to the room
+	req.io.room(userId).broadcast('set:current_timer', req.data);
+};
+
+
 
 exports.getTimer = function(req, res) {
 	timerModel.getTimerData(req.params.objectId, function(err,timer) {

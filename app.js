@@ -76,7 +76,9 @@ app.get('/auth/google/return',
 app.get('/logout', routes.account.logout);
 
 // Timer api
-app.get('/get/timers', routes.timer.getTimerList);
+app.io.route('get:timers', routes.timer.getTimers);
+app.io.route('set:current_timer', routes.timer.setCurrentTimer);
+
 app.get('/get/timers/:objectId', routes.timer.getTimer);
 app.io.route('/get/timer/data', routes.timer.getTimerData);
 app.io.route('/set/timer/data', routes.timer.setTimerData);

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
 	Timer = mongoose.model('Timer');
 
-exports.getTimerList = function getTimerList(userId, callback) {
+exports.getTimersByUserId = function getTimersByUserId(userId, callback) {
 	Timer.find({userId: userId}, function(err, timers) {
 		if (err) {
 			console.log(err);

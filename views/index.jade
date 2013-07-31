@@ -3,11 +3,13 @@ extends layout
 block scripts
 	script(src="/socket.io/socket.io.js")
 	script(src="/js/timer.js")
+	script(src="/js/modules/ko.timer.js")
 
 block content
 	.container
 		.row
 			.col-lg-3.timer-list
+				include zones/_timer-list
 
-			.col-lg-9.timer-zone
+			.col-lg-9.timer-zone(data-bind="visible: state.timerZoneVisible")
 				include zones/_timer-zone

@@ -1,7 +1,5 @@
 a(href="#").btn.btn-primary.btn-block.new-timer
 	| New timer
 
-div.list-group.margin-top
-	for timer in timers
-		a(href="#", data-timer-id='#{timer._id}').list-group-item.timer-link
-			| #{timer.name}
+div.list-group.margin-top(data-bind="foreach: data.timers")
+		a(href="#", data-bind="text: name, click: $root.setCurrentTimer").list-group-item.timer-link
