@@ -104,7 +104,7 @@
 				element = event.target,
 				isInput = element.nodeName != 'INPUT' && element.nodeName != 'TEXTAREA';
 
-			if (isInput) {
+			if (timer.properties.currentTimer.isEditing) {
 				if (escape) {
 					// restore state
 					document.execCommand('undo', false, null); // restore to previus state
@@ -119,6 +119,14 @@
 					element.blur();
 					event.preventDefault();
 				}
+			} else if(timer.properties.isFullscreen) {
+				if (escape) {
+					// exit fullscreen mode
+					timer.fullscreenMode();
+
+					// make sure we toggle the button
+					$(timer.properties.cache.timerFullscreen).button('toggle');
+				}
 			}
 		});
 
@@ -132,6 +140,16 @@
 
 		});
 
+		$(properties.cache.timerFullscreen).off('click').on('click', function(e) {
+
+			// prevent the default action of the link
+			e.preventDefault();
+
+			// turn on/off fullscreen mode
+			timer.fullscreenMode();
+
+		});
+
 		$(properties.cache.timerEditSave).off('click').on('click', function(e) {
 
 			// prevent the default action of the link
@@ -141,6 +159,17 @@
 			timer.saveTimer();
 
 		});
+
+	};
+
+	timer.fullscreenMode = function() {
+
+		var cache = timer.properties.cache;
+
+		// set fullscreen class on timer zone
+		$(cache.timerZone).toggleClass('fullscreen');
+
+		timer.properties.isFullscreen = $(cache.timerZone).hasClass('fullscreen');
 
 	};
 
@@ -171,12 +200,13 @@
 			// turn all editable elements on
 			$('[data-editable="true"]').attr('contenteditable','true');
 
-			// show the save/cancel buttons
-			$(properties.cache.timerEditControls).fadeIn(100);
+			$(properties.cache.timerControls).hide(1,function() {
+				// show the save/cancel buttons
+				$(properties.cache.timerEditControls).show();
+			});
 
-			$(properties.cache.timerEdit).addClass('active');
+			// $(properties.cache.timerEdit).addClass('active');
 
-			$(properties.cache.timerControls).hide();
 
 		} else {
 
@@ -185,12 +215,13 @@
 			// turn all editable elements on
 			$('[data-editable="true"]').attr('contenteditable','false');
 
-			// show the save/cancel buttons
-			$(properties.cache.timerEditControls).fadeOut(100);
+			$(properties.cache.timerEditControls).hide(1,function() {
+				// show the save/cancel buttons
+				$(properties.cache.timerControls).show();
+			});
 
-			$(properties.cache.timerEdit).removeClass('active');
+			// $(properties.cache.timerEdit).removeClass('active');
 
-			$(properties.cache.timerControls).show();
 		}
 
 	};
@@ -485,9 +516,10 @@
 				timerReset: '.timer-reset',
 				timerEditControls: '.timer-edit-controls',
 				timerEdit: '.timer-edit',
+				timerFullscreen: '.timer-fullscreen',
 				timerDelete: '.timer-delete',
 				timerEditCancel: '.timer-edit-cancel',
-				timerEditSave: '.timer-edit-save'
+				timerEditSave: '.timer-edit-save',
 			},
 			urls: {
 				getTimers: '/get/timers',

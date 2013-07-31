@@ -1,32 +1,32 @@
-div.row
+div.clearfix
 	.btn-group.pull-right
-		a.btn.btn-default.timer-edit Edit
-		a.btn.btn-danger.timer-delete Delete
+		a.btn.btn-default.timer-edit(href='#', data-toggle="button")
+			span.glyphicon.glyphicon-edit
+		a.btn.btn-default.timer-fullscreen(href='#', data-toggle="button")
+			span.glyphicon.glyphicon-fullscreen
+		a.btn.btn-default.timer-delete(href='#')
+			span.glyphicon.glyphicon-trash
 
-	.btn-group.pull-right.timer-edit-controls(style="margin-right:3px;")
-		a.btn.btn-success.timer-edit-save Save
-		a.btn.btn-default.timer-edit-cancel Cancel
+	.btn-group.pull-right.timer-edit-controls
+		a.btn.btn-success.timer-edit-save
+			| Save 
+			span.glyphicon.glyphicon-ok
 
-div.row
-	h1(data-editable="true", data-name="name").timer-name Timer name
+h1(data-editable="true", data-name="name").timer-name Timer name
 
-	div.timer-clock
-		span(data-editable="true").timer-clock-hours 00
-		span.timer-clock-separator :
-		span(data-editable="true").timer-clock-minutes 00
-		span.timer-clock-separator :
-		span(data-editable="true").timer-clock-seconds 00
+div.timer-clock
+	span(data-editable="true").timer-clock-hours 00
+	span.timer-clock-separator :
+	span(data-editable="true").timer-clock-minutes 00
+	span.timer-clock-separator :
+	span(data-editable="true").timer-clock-seconds 00
 
-	div.timer-controls
-		button.timer-start.btn.btn-large.btn-success
-			i.icon-play.icon-white
-			|  Start
-		button.timer-pause.btn.btn-large.btn-primary.hidden
-			i.icon-pause.icon-white.icon-white
-			|  Pause
-		button.timer-reset.btn.btn-large.btn-danger
-			i.icon-repeat.icon-white
-			|  Reset
-		button.timer-volume-off.btn.btn-large
-			i.icon-volume-off
-			|  Mute
+div.timer-controls
+	button.timer-start.btn.btn-large.btn-success
+		| Start
+	button.timer-pause.btn.btn-large.btn-primary.hidden
+		| Pause
+	button.timer-reset.btn.btn-large.btn-danger
+		| Reset
+	button.timer-mute.btn.btn-large.btn-default
+		| Mute
