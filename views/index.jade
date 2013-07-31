@@ -13,3 +13,15 @@ block content
 
 			.col-lg-9.timer-zone(data-bind="visible: state.timerZoneVisible")
 				include zones/_timer-zone
+
+	div.modal.fade#new-timer
+		div.modal-dialog
+			div.modal-content
+				div.modal-header
+					button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+					h4.modal-title Modal title
+				div.modal-body
+					p One fine body&hellip
+				div.modal-footer
+					button.btn.btn-default(type="button", data-dismiss="modal") Close
+					button.btn.btn-primary(type="button") Save changes
