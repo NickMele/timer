@@ -1,7 +1,8 @@
 var passport = require('passport'),
 	GoogleStrategy = require('passport-google').Strategy,
 	mongoose = require('mongoose'),
-	User = mongoose.model('User');
+	User = mongoose.model('User'),
+	url = process.env.URL || 'http://localhost:5000';
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -24,8 +25,8 @@ passport.deserializeUser(function(obj, done) {
 //   credentials (in this case, an OpenID identifier and profile), and invoke a
 //   callback with a user object.
 passport.use(new GoogleStrategy({
-    returnURL: 'http://localhost:5000/auth/google/return',
-    realm: 'http://localhost:5000/'
+    returnURL: url + '/auth/google/return',
+    realm: url + '/'
   },
   function(identifier, profile, done) {
   	process.nextTick(function () {
