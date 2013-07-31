@@ -4,7 +4,7 @@ div.clearfix
 			span.glyphicon.glyphicon-edit
 		a.btn.btn-default.timer-fullscreen(data-toggle="button")
 			span.glyphicon.glyphicon-fullscreen
-		a.btn.btn-default.timer-delete()
+		a.btn.btn-default.timer-delete
 			span.glyphicon.glyphicon-trash
 
 	.btn-group.pull-right.timer-edit-controls(data-bind="visible: state.editingCurrentTimer()")
@@ -14,7 +14,7 @@ div.clearfix
 		a.btn.btn-default.timer-edit-cancel(data-bind="click: $root.cancelEdit")
 			| Cancel	
 
-h1(data-name="name", data-bind="text: state.currentTimer().name, attr: { contenteditable:state.editingCurrentTimer() }").timer-name
+h1(data-name="name", data-bind="text: state.currentTimer().name, attr: { contenteditable: state.editingCurrentTimer() }").timer-name
 
 div.timer-clock
 	span(data-bind="attr: { contenteditable:state.editingCurrentTimer() }").timer-clock-hours 00

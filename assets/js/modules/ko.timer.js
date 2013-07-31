@@ -1,5 +1,19 @@
-// the timer object that will be used as our view model
-app.modules.ko.Timer = function() {
+// Timer
+app.modules.ko.Timer = function(data) {
+
+	if (typeof data == "undefined") {
+		data = {};
+	}
+
+	this._id = ko.observable(data._id);
+	this.name = ko.observable(data.name);
+	this.length = ko.observable(data.length);
+	this.state = ko.observable(data.state);
+
+};
+
+// TimerListViewModel
+app.modules.ko.TimerListViewModel = function() {
 
 	"use strict";
 
@@ -31,14 +45,14 @@ app.modules.ko.Timer = function() {
 
 	// store the state of the application
 	self.state = {
-		currentTimer		: ko.observable({}),
+		currentTimer		: ko.observable(""),
 		timerZoneVisible	: ko.observable(false),
 		editingCurrentTimer	: ko.observable(false)
 	};
 
 	// data store
 	self.data = {
-		timers	: ko.observableArray()
+		timers	: ko.observableArray([])
 	};
 
 
@@ -71,12 +85,14 @@ app.modules.ko.Timer = function() {
 
 		self.socket.emit(self.sockets.setCurrentTimer, timer);
 
+		self.state.timerZoneVisible(true);
+
 	};
 
 	self.createNewTimer = function() {
 
 		// empty out the current timer observable
-		self.state.currentTimer({});
+		self.state.currentTimer(new app.modules.ko.Timer());
 
 		// tell the ui we are editing our timer
 		self.state.editingCurrentTimer(true);
@@ -101,8 +117,6 @@ app.modules.ko.Timer = function() {
 
 	self.saveTimer = function() {
 
-		console.log(self.state.currentTimer());
-
 	};
 
 
@@ -120,22 +134,19 @@ app.modules.ko.Timer = function() {
 	------------------------------------------------------------------------- */	
 	self.setTimers = function(response) {
 
-		// store the timer data
-		self.data.timers(response.data);
+		// map our timers
+		var mappedTimers = $.map(response.data, function(timer) {
+			return new app.modules.ko.Timer(timer);
+		});
+        
+		// assign this mapping to our timers observable
+        self.data.timers(mappedTimers);
 
 	};
 
 
 	/* Subscriptions
 	------------------------------------------------------------------------- */	
-	self.state.currentTimer.subscribe(function(newValue) {
-
-		// emit a message that we have selected a new timer
-		self.socket.emit(self.sockets.setCurrentTimer);
-
-		self.state.timerZoneVisible(true);
-
-	});
 
 
 	/* Init controller
@@ -161,8 +172,8 @@ $(window).on("load", function() {
 
 	"use strict";
 
-	// create a new Timer object
-	app.viewModel = new app.modules.ko.Timer();
+	// create a new TimerListViewModel
+	app.viewModel = new app.modules.ko.TimerListViewModel();
 
 	// apply ko bindings to our view model
 	ko.applyBindings(app.viewModel);
