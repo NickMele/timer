@@ -10,7 +10,12 @@ var express = require('express.io'),
 		account: require('./routes/account'),
 		timer: require('./routes/timer')
 	},
-	port = process.env.PORT || 3000;
+	port = process.env.PORT || 5000;
+
+
+/* ----------------------------------------------------------------------
+|	-- CONFIGURATION --
+------------------------------------------------------------------------- */
 
 // set up socket io
 app.http().io();
@@ -38,47 +43,53 @@ app.configure(function() {
 	app.use(express.static(__dirname + '/assets'));
 });
 
+/* ----------------------------------------------------------------------
+|	-- ROUTING --
+------------------------------------------------------------------------- */
+
+/* Basic routes
+------------------------------------------------------------------------- */
+// main page
+app.get('/', config.passport.ensureAuthenticated, routes.base.index);
+
 // when the client is ready, have them join a user room
 app.io.route('ready', function(req) {
 	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user;
+	var userId = req.session.passport.user._id;
 	// join the room
 	req.io.join(userId);
 });
 
-// Basic pages
-app.get('/', config.passport.ensureAuthenticated, routes.base.index);
 
+/* Account routes
+------------------------------------------------------------------------- */
+
+// GET /login
 app.get('/login', routes.account.getlogin);
 
 // GET /auth/google
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in Google authentication will involve redirecting
-//   the user to google.com.  After authenticating, Google will redirect the
-//   user back to this application at /auth/google/return
-app.get('/auth/google', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+app.get('/auth/google', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
+	res.redirect('/');
+});
 
 // GET /auth/google/return
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
-app.get('/auth/google/return', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+app.get('/auth/google/return', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
+	res.redirect('/');
+});
 
+// GET /logout
 app.get('/logout', routes.account.logout);
 
-// Timer api
+
+/* Timer routes
+------------------------------------------------------------------------- */
+
+// new routes - knockout
 app.io.route('get:timers', routes.timer.getTimers);
 app.io.route('set:current_timer', routes.timer.setCurrentTimer);
 
+
+// old routes - nonknockout
 app.get('/get/timers/:objectId', routes.timer.getTimer);
 app.io.route('/get/timer/data', routes.timer.getTimerData);
 app.io.route('/set/timer/data', routes.timer.setTimerData);
@@ -87,6 +98,10 @@ app.io.route('/notify/start/timer', routes.timer.startTimer);
 app.io.route('/notify/pause/timer', routes.timer.pauseTimer);
 app.io.route('/notify/reset/timer', routes.timer.resetTimer);
 
+
+/* ----------------------------------------------------------------------
+|	-- LISTENER --
+------------------------------------------------------------------------- */
 app.listen(port, function() {
   console.log("Listening on " + port);
 });

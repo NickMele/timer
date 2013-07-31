@@ -1,27 +1,29 @@
 div.clearfix
-	.btn-group.pull-right
-		a.btn.btn-default.timer-edit(href='#', data-toggle="button")
+	.btn-group.pull-right(data-bind="visible: !state.editingCurrentTimer()")
+		a.btn.btn-default.timer-edit(data-bind="click: $root.toggleEditMode")
 			span.glyphicon.glyphicon-edit
-		a.btn.btn-default.timer-fullscreen(href='#', data-toggle="button")
+		a.btn.btn-default.timer-fullscreen(data-toggle="button")
 			span.glyphicon.glyphicon-fullscreen
-		a.btn.btn-default.timer-delete(href='#')
+		a.btn.btn-default.timer-delete()
 			span.glyphicon.glyphicon-trash
 
-	.btn-group.pull-right.timer-edit-controls
-		a.btn.btn-success.timer-edit-save
+	.btn-group.pull-right.timer-edit-controls(data-bind="visible: state.editingCurrentTimer()")
+		a.btn.btn-success.timer-edit-save(data-bind="click: $root.saveTimer")
 			| Save 
 			span.glyphicon.glyphicon-ok
+		a.btn.btn-default.timer-edit-cancel(data-bind="click: $root.cancelEdit")
+			| Cancel	
 
-h1(data-editable="true", data-name="name", data-bind="text: state.currentTimer().name").timer-name Timer name
+h1(data-name="name", data-bind="text: state.currentTimer().name, attr: { contenteditable:state.editingCurrentTimer() }").timer-name
 
 div.timer-clock
-	span(data-editable="true").timer-clock-hours 00
+	span(data-bind="attr: { contenteditable:state.editingCurrentTimer() }").timer-clock-hours 00
 	span.timer-clock-separator :
-	span(data-editable="true").timer-clock-minutes 00
+	span(data-bind="attr: { contenteditable:state.editingCurrentTimer() }").timer-clock-minutes 00
 	span.timer-clock-separator :
-	span(data-editable="true").timer-clock-seconds 00
+	span(data-bind="attr: { contenteditable:state.editingCurrentTimer() }").timer-clock-seconds 00
 
-div.timer-controls
+div.timer-controls(data-bind="visible: !state.editingCurrentTimer()")
 	button.timer-start.btn.btn-large.btn-success
 		| Start
 	button.timer-pause.btn.btn-large.btn-primary.hidden

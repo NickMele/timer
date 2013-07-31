@@ -23,7 +23,6 @@
 		}
 	}
 	.timer-edit-controls {
-		display: none;
 		margin-right: 4px;
 	}
 	.timer-controls {
@@ -34,9 +33,12 @@
 			margin-right: 2px;
 		}
 	}
-	[data-editable="true"] {
+	[contenteditable="false"] {
 		box-sizing: border-box;
 		border: 1px solid #ffffff;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
 	}
 	[contenteditable="true"] {
 		box-sizing: border-box;

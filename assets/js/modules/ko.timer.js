@@ -20,13 +20,20 @@ app.modules.ko.Timer = function() {
 
 	// cache dom elements
 	self.elements = {
-
+		timer: {
+			$timerEditControls: $('.timer-edit-controls'),
+			$timerControls: $('.timer-controls'),
+			$timerStart: $('.timer-start'),
+			$timerPause: $('.timer-pause'),
+			$timerReset: $('.timer-reset')
+		}
 	};
 
 	// store the state of the application
 	self.state = {
-		currentTimer		: ko.observable(""),
-		timerZoneVisible	: ko.observable(false)
+		currentTimer		: ko.observable({}),
+		timerZoneVisible	: ko.observable(false),
+		editingCurrentTimer	: ko.observable(false)
 	};
 
 	// data store
@@ -63,6 +70,38 @@ app.modules.ko.Timer = function() {
 		self.state.currentTimer(timer);
 
 		self.socket.emit(self.sockets.setCurrentTimer, timer);
+
+	};
+
+	self.createNewTimer = function() {
+
+		// empty out the current timer observable
+		self.state.currentTimer({});
+
+		// tell the ui we are editing our timer
+		self.state.editingCurrentTimer(true);
+
+		// make sure the timer zone is visible
+		self.state.timerZoneVisible(true);
+
+	};
+
+	self.toggleEditMode = function() {
+		self.state.editingCurrentTimer(!self.state.editingCurrentTimer());
+	}
+
+	self.cancelEdit = function() {
+
+		// undo any edits that were made
+		document.execCommand('undo', false, null);
+
+		self.toggleEditMode();
+
+	};
+
+	self.saveTimer = function() {
+
+		console.log(self.state.currentTimer());
 
 	};
 

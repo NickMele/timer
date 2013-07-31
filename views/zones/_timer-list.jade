@@ -1,4 +1,4 @@
-a(href="#").btn.btn-primary.btn-block.new-timer
+a(data-bind="click: $root.createNewTimer").btn.btn-primary.btn-block.new-timer
 	| New timer
 
 div.list-group.margin-top(data-bind="foreach: data.timers")
