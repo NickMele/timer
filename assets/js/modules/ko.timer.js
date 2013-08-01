@@ -3,6 +3,10 @@ app.modules.ko.Timer = function(data) {
 
 	var self = this;
 
+	if (typeof data == "undefined") {
+		data = {};
+	}
+
 	self._id = ko.observable(data._id);
 	self.name = ko.observable(data.name);
 	self.timerLength = ko.observable(data.timerLength);
@@ -47,35 +51,72 @@ app.modules.ko.Editor = function(data) {
 	self.name = ko.observable(data.name || "");
 	self.timerLength = ko.observable(data.timerLength || "");
 
-	self.hours = ko.computed(function() {
-		var hours = Math.floor( self.timerLength() / 3600 );
-		if (hours < 10 && hours !== 0) {
-			hours = "0" + hours;
-		} else if (hours === 0) {
-			hours = "";
-		}
-		return hours;
+	self.hours = ko.computed({
+		read: function () {
+			var hours = Math.floor( self.timerLength() / 3600 );
+			if (hours === 0) {
+				hours = "";
+			}
+			
+			return hours;
+		},
+		write: function (value) {
+			// calculate our total length with the new hours
+			self.timerLength(self.reverserCalculateTime(parseInt(value), self.minutes(), self.seconds()));
+		},
+		owner: self
 	});
 
-	self.minutes = ko.computed(function() {
-		var minutes = Math.floor( (self.timerLength() / 60) % 60 );
-		if (minutes < 10 && minutes !== 0) {
-			minutes = "0" + minutes;
-		} else if (minutes == 0) {
-			minutes = "";
-		}
-		return minutes;
+	self.minutes = ko.computed({
+		read: function () {
+			var minutes = Math.floor( (self.timerLength() / 60) % 60 );
+			if (minutes === 0) {
+				minutes = "";
+			}
+			
+			return minutes;
+		},
+		write: function (value) {
+			// calculate our total length with the new minutes
+			self.timerLength(self.reverserCalculateTime(self.hours(), parseInt(value), self.seconds()));
+		},
+		owner: self
 	});
 
-	self.seconds = ko.computed(function() {
-		var seconds =  Math.floor( self.timerLength() % 60 );
-		if (seconds < 10 && seconds !== 0) {
-			seconds = "0" + seconds;
-		} else if (seconds == 0) {
-			seconds = "";
+	self.seconds = ko.computed({
+		read: function () {
+			var seconds = Math.floor( self.timerLength() % 60 );
+			if (seconds === 0) {
+				seconds = "";
+			}
+			
+			return seconds;
+		},
+		write: function (value) {
+			self.timerLength(self.reverserCalculateTime(self.hours(), self.minutes(), parseInt(value)));
+		},
+		owner: self
+	});
+
+	self.reverserCalculateTime = function(hours, minutes, seconds) {
+
+		// we need to make sure that if we receive undefined that we set that var to 0
+		if (typeof hours == "undefined") {
+			hours = 0;
 		}
-		return seconds;
-	});	
+		if (typeof minutes == "undefined") {
+			minutes = 0;
+		}
+		if (typeof seconds == "undefined") {
+			seconds = 0;
+		}
+
+		// calculate the total length of the timer from the hours, minutes, and seconds provided
+		var length = ( hours * 3600 ) + ( minutes * 60 ) + seconds;
+
+		return parseInt(length);
+
+	};
 
 };
 
@@ -119,7 +160,7 @@ app.modules.ko.TimerListViewModel = function() {
 
 	// data store
 	self.data = {
-		currentTimer	: ko.observable(""),
+		currentTimer	: ko.observable(new app.modules.ko.Timer()),
 		timers			: ko.observableArray([]),
 		// staged timer represents the timer currently being edited, regardless of new/old
 		stagedTimer		: ko.observable(""),
@@ -156,7 +197,7 @@ app.modules.ko.TimerListViewModel = function() {
 		self.socket.on(self.sockets.getTimers, self.setTimers);
 
 		// listen for set:current_timer
-		self.socket.on(self.sockets.setCurrentTimer, self.setCurrentTimer);
+		self.socket.on(self.sockets.setCurrentTimer, self.data.currentTimer);
 
 		// listen for start:timer
 
@@ -186,55 +227,34 @@ app.modules.ko.TimerListViewModel = function() {
 
 	}
 
-	self.reverserCalculateTime = function(hours, minutes, seconds) {
-
-		// we need to make sure that if we receive undefined that we set that var to 0
-		if (typeof hours == "undefined") {
-			hours = 0;
-		}
-		if (typeof minutes == "undefined") {
-			minutes = 0;
-		}
-		if (typeof seconds == "undefined") {
-			seconds = 0;
-		}
-
-		// calculate the total length of the timer from the hours, minutes, and seconds provided
-		var length = ( parseInt(hours) * 3600 ) + ( parseInt(minutes) * 60 ) + parseInt(seconds);
-
-		return length;
-
-	};
-
 	self.saveTimer = function() {
 
-		var editorData = ko.toJS({ timer: self.data.editor }),
-			processedData = {};
+		var editorData = ko.toJS(self.data.editor);
+			
+		// remove the hours, minutes and seconds from data
+		delete editorData.hours;
+		delete editorData.minutes;
+		delete editorData.seconds;
 
-		processedData = {
-			name: editorData.timer.name,
-			timerLength: self.reverserCalculateTime(editorData.timer.hours, editorData.timer.minutes, editorData.timer.seconds)
-		}
+		// save the timer to the server with the processed data
+		self.socket.emit(self.sockets.saveTimer, editorData, function(data) {
 
-		console.log(editorData);
+			// we got a good response, close, modal and reload timers
+			if (data.timer) {
 
-		// // save the timer to the server with the processed data
-		// self.socket.emit(self.sockets.saveTimer, processedData, function(data) {
+				$('#timer-editor').modal('hide');
 
-		// 	// we got a good response, close, modal and reload timers
-		// 	if (data.timer) {
+				self.getTimers();
 
-		// 		$('#timer-editor').modal('hide');
+				var timerData = new app.modules.ko.Timer(data.timer);
 
-		// 		self.getTimers();
-
-		// 		self.setCurrentTimer(data.timer);
+				self.data.currentTimer(timerData);
 				
-		// 	} else {
-		// 		console.log(data.err);
-		// 	}
+			} else {
+				console.log(data.err);
+			}
 
-		// });
+		});
 
 	};
 
@@ -254,9 +274,9 @@ app.modules.ko.TimerListViewModel = function() {
 	self.setTimers = function(response) {
 
 		var mappedTimers = $.map(response.data, function(timer) { return new app.modules.ko.Timer(timer) });
-        
+		
 		// assign this mapping to our timers observable
-        self.data.timers(mappedTimers);
+		self.data.timers(mappedTimers);
 
 	};
 
@@ -265,7 +285,7 @@ app.modules.ko.TimerListViewModel = function() {
 	------------------------------------------------------------------------- */	
 	self.data.currentTimer.subscribe(function(newValue) {
 
-		self.socket.emit(self.sockets.setCurrentTimer, self.data.currentTimer);
+		self.socket.emit(self.sockets.setCurrentTimer);
 
 		self.state.timerZoneVisible(true);
 

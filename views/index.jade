@@ -12,7 +12,7 @@ block content
 				include zones/_timer-list
 
 			.col-lg-9
-				div.timer-zone(data-bind="visible: state.timerZoneVisible, with: data.currentTimer")
+				div.timer-zone(data-bind="visible: state.timerZoneVisible, with: data.currentTimer()")
 					include zones/_timer-zone
 				div(data-bind="ifnot: state.timerZoneVisible")
 					h1 TimeSync
@@ -39,6 +39,7 @@ block content
 								input#timerLength.form-control(type='text', placeholder='minute', data-bind="value: minutes")
 							.col-lg-3
 								input#timerLength.form-control(type='text', placeholder='second', data-bind="value: seconds")
+						div(data-bind="text: timerLength")
 
 				div.modal-footer
 					button.btn.btn-default(type="button", data-dismiss="modal") Close
