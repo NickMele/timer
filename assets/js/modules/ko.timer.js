@@ -208,7 +208,7 @@ app.modules.ko.TimerListViewModel = function() {
 
 	self.saveTimer = function() {
 
-		var editorData = ko.toJS({ timer: self.data.stagedTimer }),
+		var editorData = ko.toJS({ timer: self.data.editor }),
 			processedData = {};
 
 		processedData = {
@@ -216,23 +216,25 @@ app.modules.ko.TimerListViewModel = function() {
 			timerLength: self.reverserCalculateTime(editorData.timer.hours, editorData.timer.minutes, editorData.timer.seconds)
 		}
 
-		// save the timer to the server with the processed data
-		self.socket.emit(self.sockets.saveTimer, processedData, function(data) {
+		console.log(editorData);
 
-			// we got a good response, close, modal and reload timers
-			if (data.timer) {
+		// // save the timer to the server with the processed data
+		// self.socket.emit(self.sockets.saveTimer, processedData, function(data) {
 
-				$('#timer-editor').modal('hide');
+		// 	// we got a good response, close, modal and reload timers
+		// 	if (data.timer) {
 
-				self.getTimers();
+		// 		$('#timer-editor').modal('hide');
 
-				self.setCurrentTimer(data.timer);
+		// 		self.getTimers();
+
+		// 		self.setCurrentTimer(data.timer);
 				
-			} else {
-				console.log(data.err);
-			}
+		// 	} else {
+		// 		console.log(data.err);
+		// 	}
 
-		});
+		// });
 
 	};
 
