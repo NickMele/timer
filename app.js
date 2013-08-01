@@ -87,7 +87,7 @@ app.get('/logout', routes.account.logout);
 // new routes - knockout
 app.io.route('get:timers', routes.timer.getTimers);
 app.io.route('set:current_timer', routes.timer.setCurrentTimer);
-
+app.io.route('save:timer', routes.timer.saveTimer);
 
 // old routes - nonknockout
 app.get('/get/timers/:objectId', routes.timer.getTimer);

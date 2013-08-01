@@ -46,9 +46,9 @@ exports.getTimerData = function(req) {
 	});
 };
 
-exports.setTimerData = function(req) {
-	var objectId = req.data.currentTimerData._id,
-		timerData = req.data.currentTimerData;
+exports.saveTimer = function(req) {
+	var objectId = req.data._id,
+		timerData = req.data;
 
 	// we need to process whether this is a new timer or not
 	if (!objectId) {
@@ -70,7 +70,7 @@ exports.setTimerData = function(req) {
 		if (doc) {
 			// respond to the request with the timer data
 			req.io.respond({
-				timerData: doc
+				timer: doc
 			});
 		} else {
 			req.io.respond({

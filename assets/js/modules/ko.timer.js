@@ -1,14 +1,17 @@
 // Timer
 app.modules.ko.Timer = function(data) {
 
+	var self = this;
+
 	if (typeof data == "undefined") {
 		data = {};
 	}
 
-	this._id = ko.observable(data._id);
-	this.name = ko.observable(data.name);
-	this.length = ko.observable(data.length);
-	this.state = ko.observable(data.state);
+	self._id = ko.observable(data._id);
+	self.name = ko.observable(data.name);
+	self.timerLength = ko.observable(data.timerLength);
+	self.timeElapsed = ko.observable(data.timeElapsed);
+	self.state = ko.observable(data.state);
 
 };
 
@@ -29,7 +32,8 @@ app.modules.ko.TimerListViewModel = function() {
 		setCurrentTimer		: 'set:current_timer',
 		startTimer			: 'start:timer',
 		pauseTimer			: 'pause:timer',
-		resetTimer			: 'reset:timer'
+		resetTimer			: 'reset:timer',
+		saveTimer			: 'save:timer'
 	};
 
 	// cache dom elements
@@ -45,16 +49,37 @@ app.modules.ko.TimerListViewModel = function() {
 
 	// store the state of the application
 	self.state = {
-		currentTimer		: ko.observable(""),
 		timerZoneVisible	: ko.observable(false),
 		editingCurrentTimer	: ko.observable(false)
 	};
 
 	// data store
 	self.data = {
-		timers	: ko.observableArray([])
+		currentTimer	: ko.observable(""),
+		timers			: ko.observableArray([]),
+		// staged timer represents the timer currently being edited, regardless of new/old
+		stagedTimer		: ko.observable("")
 	};
 
+	/* Computed data
+	------------------------------------------------------------------------- */	
+	// dynamically create the editor title based on editing
+	self.state.editorTitle = ko.computed(function() {
+		if (self.state.editingCurrentTimer()) {
+			return "Edit timer";
+		} else {
+			return "New timer";
+		}
+	});
+
+	// dynamically create the save button for the editor
+	self.state.editorSaveButton = ko.computed(function() {
+		if (self.state.editingCurrentTimer()) {
+			return "Save changes";
+		} else {
+			return "Create";
+		}
+	});
 
 	/* Functional methods
 	------------------------------------------------------------------------- */
@@ -81,7 +106,7 @@ app.modules.ko.TimerListViewModel = function() {
 	self.setCurrentTimer = function(timer) {
 
 		// set our current timer
-		self.state.currentTimer(timer);
+		self.data.currentTimer(timer);
 
 		self.socket.emit(self.sockets.setCurrentTimer, timer);
 
@@ -92,30 +117,66 @@ app.modules.ko.TimerListViewModel = function() {
 	self.createNewTimer = function() {
 
 		// empty out the current timer observable
-		self.state.currentTimer(new app.modules.ko.Timer());
-
-		// tell the ui we are editing our timer
-		self.state.editingCurrentTimer(true);
-
-		// make sure the timer zone is visible
-		self.state.timerZoneVisible(true);
+		self.data.stagedTimer({});
 
 	};
 
-	self.toggleEditMode = function() {
-		self.state.editingCurrentTimer(!self.state.editingCurrentTimer());
+	self.editTimer = function() {
+
+		// stage the current timer for editing
+		self.data.stagedTimer(self.data.currentTimer());
+
+		self.state.editingCurrentTimer(true);
+
 	}
 
-	self.cancelEdit = function() {
+	self.reverserCalculateTime = function(hours, minutes, seconds) {
 
-		// undo any edits that were made
-		document.execCommand('undo', false, null);
+		// we need to make sure that if we receive undefined that we set that var to 0
+		if (typeof hours == "undefined") {
+			hours = 0;
+		}
+		if (typeof minutes == "undefined") {
+			minutes = 0;
+		}
+		if (typeof seconds == "undefined") {
+			seconds = 0;
+		}
 
-		self.toggleEditMode();
+		// calculate the total length of the timer from the hours, minutes, and seconds provided
+		var length = ( parseInt(hours) * 3600 ) + ( parseInt(minutes) * 60 ) + parseInt(seconds);
+
+		return length;
 
 	};
 
 	self.saveTimer = function() {
+
+		var editorData = ko.toJS({ timer: self.data.stagedTimer }),
+			processedData = {};
+
+		processedData = {
+			name: editorData.timer.name,
+			timerLength: self.reverserCalculateTime(editorData.timer.hours, editorData.timer.minutes, editorData.timer.seconds)
+		}
+
+		// save the timer to the server with the processed data
+		self.socket.emit(self.sockets.saveTimer, processedData, function(data) {
+
+			// we got a good response, close, modal and reload timers
+			if (data.timer) {
+
+				$('#timer-editor').modal('hide');
+
+				self.getTimers();
+
+				self.setCurrentTimer(data.timer);
+				
+			} else {
+				console.log(data.err);
+			}
+
+		});
 
 	};
 
@@ -134,13 +195,8 @@ app.modules.ko.TimerListViewModel = function() {
 	------------------------------------------------------------------------- */	
 	self.setTimers = function(response) {
 
-		// map our timers
-		var mappedTimers = $.map(response.data, function(timer) {
-			return new app.modules.ko.Timer(timer);
-		});
-        
 		// assign this mapping to our timers observable
-        self.data.timers(mappedTimers);
+        self.data.timers(response.data);
 
 	};
 

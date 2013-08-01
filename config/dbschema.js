@@ -66,7 +66,7 @@ var timerSchema = new mongoose.Schema({
 		type: String,
 		unique: true
 	},
-	length: {
+	timerLength: {
 		type: Number
 	},
 	state: {

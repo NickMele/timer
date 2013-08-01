@@ -11,17 +11,35 @@ block content
 			.col-lg-3.timer-list
 				include zones/_timer-list
 
-			.col-lg-9.timer-zone(data-bind="visible: state.timerZoneVisible")
-				include zones/_timer-zone
+			.col-lg-9
+				div.timer-zone(data-bind="visible: state.timerZoneVisible")
+					include zones/_timer-zone
+				div(data-bind="ifnot: state.timerZoneVisible")
+					h1 TimeSync
+					p Select a timer from the list on the left or create a new one
 
-	div.modal.fade#new-timer
+	div.modal.fade#timer-editor
 		div.modal-dialog
 			div.modal-content
 				div.modal-header
 					button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-					h4.modal-title Modal title
+					h4.modal-title(data-bind="text: state.editorTitle")
 				div.modal-body
-					p One fine body&hellip
+
+					form.form-horizontal
+						.form-group
+							label.col-lg-2.control-label(for='timerName') Name
+							.col-lg-9
+								input#timerName.form-control(type='text', placeholder='Name timer will be saved with', data-bind="value: data.stagedTimer().name")
+						.form-group
+							label.col-lg-2.control-label(for='timerLength') Length
+							.col-lg-3
+								input#timerLength.form-control(type='text', placeholder='hour', data-bind="value: data.stagedTimer().hours")
+							.col-lg-3
+								input#timerLength.form-control(type='text', placeholder='minute', data-bind="value: data.stagedTimer().minutes")
+							.col-lg-3
+								input#timerLength.form-control(type='text', placeholder='second', data-bind="value: data.stagedTimer().seconds")
+
 				div.modal-footer
 					button.btn.btn-default(type="button", data-dismiss="modal") Close
-					button.btn.btn-primary(type="button") Save changes
+					button.btn.btn-primary(type="button", data-bind="text: state.editorSaveButton, click: $root.saveTimer") Save changes
