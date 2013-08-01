@@ -7,14 +7,14 @@ div.clearfix
 		a.btn.btn-default.timer-delete
 			span.glyphicon.glyphicon-trash
 
-h1(data-name="name", data-bind="text: data.currentTimer().name").timer-name
+h1(data-name="name", data-bind="text: name").timer-name
 
-div.timer-clock(data-bind="with: data")
-	span(data-bind="text: timerLength").timer-clock-hours
+div.timer-clock
+	span(data-bind="text: hours").timer-clock-hours
 	span.timer-clock-separator :
-	span(data-bind="text: timerLength").timer-clock-minutes
+	span(data-bind="text: minutes").timer-clock-minutes
 	span.timer-clock-separator :
-	span(data-bind="text: timerLength").timer-clock-seconds
+	span(data-bind="text: seconds").timer-clock-seconds
 
 div.timer-controls
 	button.timer-start.btn.btn-large.btn-success

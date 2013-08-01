@@ -12,7 +12,7 @@ block content
 				include zones/_timer-list
 
 			.col-lg-9
-				div.timer-zone(data-bind="visible: state.timerZoneVisible")
+				div.timer-zone(data-bind="visible: state.timerZoneVisible, with: data.currentTimer")
 					include zones/_timer-zone
 				div(data-bind="ifnot: state.timerZoneVisible")
 					h1 TimeSync
@@ -26,19 +26,19 @@ block content
 					h4.modal-title(data-bind="text: state.editorTitle")
 				div.modal-body
 
-					form.form-horizontal
+					form.form-horizontal(data-bind="with: data.editor")
 						.form-group
 							label.col-lg-2.control-label(for='timerName') Name
 							.col-lg-9
-								input#timerName.form-control(type='text', placeholder='Name timer will be saved with', data-bind="value: data.stagedTimer().name")
+								input#timerName.form-control(type='text', placeholder='Name timer will be saved with', data-bind="value: name")
 						.form-group
 							label.col-lg-2.control-label(for='timerLength') Length
 							.col-lg-3
-								input#timerLength.form-control(type='text', placeholder='hour', data-bind="value: data.stagedTimer().hours")
+								input#timerLength.form-control(type='text', placeholder='hour', data-bind="value: hours")
 							.col-lg-3
-								input#timerLength.form-control(type='text', placeholder='minute', data-bind="value: data.stagedTimer().minutes")
+								input#timerLength.form-control(type='text', placeholder='minute', data-bind="value: minutes")
 							.col-lg-3
-								input#timerLength.form-control(type='text', placeholder='second', data-bind="value: data.stagedTimer().seconds")
+								input#timerLength.form-control(type='text', placeholder='second', data-bind="value: seconds")
 
 				div.modal-footer
 					button.btn.btn-default(type="button", data-dismiss="modal") Close

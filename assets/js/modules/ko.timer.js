@@ -3,15 +3,79 @@ app.modules.ko.Timer = function(data) {
 
 	var self = this;
 
-	if (typeof data == "undefined") {
-		data = {};
-	}
-
 	self._id = ko.observable(data._id);
 	self.name = ko.observable(data.name);
 	self.timerLength = ko.observable(data.timerLength);
 	self.timeElapsed = ko.observable(data.timeElapsed);
 	self.state = ko.observable(data.state);
+
+	self.hours = ko.computed(function() {
+		var hours = Math.floor( (self.timerLength() - self.timeElapsed()) / 3600 );
+		if (hours < 10) {
+			hours = "0" + hours;
+		}
+		return hours;
+	});
+
+	self.minutes = ko.computed(function() {
+		var minutes = Math.floor( ((self.timerLength() - self.timeElapsed()) / 60) % 60 );
+		if (minutes < 10) {
+			minutes = "0" + minutes;
+		}
+		return minutes;
+	});
+
+	self.seconds = ko.computed(function() {
+		var seconds =  Math.floor( (self.timerLength() - self.timeElapsed()) % 60 );
+		if (seconds < 10) {
+			seconds = "0" + seconds;
+		}
+		return seconds;
+	});	
+
+};
+
+app.modules.ko.Editor = function(data) {
+
+	var self = this;
+
+	if (typeof data == "undefined") {
+		data = {}
+	}
+
+	self._id = ko.observable(data._id || "");
+	self.name = ko.observable(data.name || "");
+	self.timerLength = ko.observable(data.timerLength || "");
+
+	self.hours = ko.computed(function() {
+		var hours = Math.floor( self.timerLength() / 3600 );
+		if (hours < 10 && hours !== 0) {
+			hours = "0" + hours;
+		} else if (hours === 0) {
+			hours = "";
+		}
+		return hours;
+	});
+
+	self.minutes = ko.computed(function() {
+		var minutes = Math.floor( (self.timerLength() / 60) % 60 );
+		if (minutes < 10 && minutes !== 0) {
+			minutes = "0" + minutes;
+		} else if (minutes == 0) {
+			minutes = "";
+		}
+		return minutes;
+	});
+
+	self.seconds = ko.computed(function() {
+		var seconds =  Math.floor( self.timerLength() % 60 );
+		if (seconds < 10 && seconds !== 0) {
+			seconds = "0" + seconds;
+		} else if (seconds == 0) {
+			seconds = "";
+		}
+		return seconds;
+	});	
 
 };
 
@@ -58,7 +122,8 @@ app.modules.ko.TimerListViewModel = function() {
 		currentTimer	: ko.observable(""),
 		timers			: ko.observableArray([]),
 		// staged timer represents the timer currently being edited, regardless of new/old
-		stagedTimer		: ko.observable("")
+		stagedTimer		: ko.observable(""),
+		editor 			: ko.observable("")
 	};
 
 	/* Computed data
@@ -102,19 +167,9 @@ app.modules.ko.TimerListViewModel = function() {
 
 	};
 
-	// will set the current timer
-	self.setCurrentTimer = function(timer) {
-
-		// set our current timer
-		self.data.currentTimer(timer);
-
-		self.socket.emit(self.sockets.setCurrentTimer, timer);
-
-		self.state.timerZoneVisible(true);
-
-	};
-
 	self.createNewTimer = function() {
+
+		self.data.editor(new app.modules.ko.Editor());
 
 		// empty out the current timer observable
 		self.data.stagedTimer({});
@@ -124,7 +179,8 @@ app.modules.ko.TimerListViewModel = function() {
 	self.editTimer = function() {
 
 		// stage the current timer for editing
-		self.data.stagedTimer(self.data.currentTimer());
+		// self.data.stagedTimer(self.data.currentTimer());
+		self.data.editor(new app.modules.ko.Editor(ko.toJS(self.data.currentTimer)));
 
 		self.state.editingCurrentTimer(true);
 
@@ -195,15 +251,23 @@ app.modules.ko.TimerListViewModel = function() {
 	------------------------------------------------------------------------- */	
 	self.setTimers = function(response) {
 
+		var mappedTimers = $.map(response.data, function(timer) { return new app.modules.ko.Timer(timer) });
+        
 		// assign this mapping to our timers observable
-        self.data.timers(response.data);
+        self.data.timers(mappedTimers);
 
 	};
 
 
 	/* Subscriptions
 	------------------------------------------------------------------------- */	
+	self.data.currentTimer.subscribe(function(newValue) {
 
+		self.socket.emit(self.sockets.setCurrentTimer, self.data.currentTimer);
+
+		self.state.timerZoneVisible(true);
+
+	});
 
 	/* Init controller
 	------------------------------------------------------------------------- */	
