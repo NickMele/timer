@@ -47,17 +47,16 @@ exports.saveTimer = function(req) {
 	// before upserting into mongo we need to remove the _id from the data
 	delete timerData._id;
 
-	timerModel.setTimerData(objectId, timerData, function(err,doc) {
-		if (doc) {
-			// respond to the request with the timer data
-			req.io.respond({
-				timer: doc
-			});
-		} else {
-			req.io.respond({
-				err: err
-			});
-		}
+	timerModel.setTimerData(objectId, timerData, function(error,timer) {
+
+		// this will be our response object to the client
+		var response = {
+			error: error,
+			data: timer
+		};
+
+		// respond to the request with the timer data
+		req.io.respond(response);
 	});
 };
 
@@ -103,9 +102,15 @@ exports.removeTimer = function(req) {
 };
 
 exports.startTimer = function(req) {
+
+	var objectId = req.data._id,
+		data = req.data;
+
+	// delete the _id from the data
+	delete data._id;
 	
 	// save the timer state
-	timerModel.setTimerData(req.data._id, req.data);
+	timerModel.setTimerData(objectId, data);
 
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;
@@ -115,9 +120,15 @@ exports.startTimer = function(req) {
 };
 
 exports.pauseTimer = function(req) {
+
+	var objectId = req.data._id,
+		data = req.data;
+
+	// delete the _id from the data
+	delete data._id;
 	
 	// save the timer state
-	timerModel.setTimerData(req.data._id, req.data);
+	timerModel.setTimerData(objectId, data);
 
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;
@@ -128,8 +139,14 @@ exports.pauseTimer = function(req) {
 
 exports.resetTimer = function(req) {
 	
+	var objectId = req.data._id,
+		data = req.data;
+
+	// delete the _id from the data
+	delete data._id;
+	
 	// save the timer state
-	timerModel.setTimerData(req.data._id, req.data);
+	timerModel.setTimerData(objectId, data);
 
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;

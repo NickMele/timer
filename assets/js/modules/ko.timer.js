@@ -91,6 +91,8 @@ app.modules.ko.Timer = function(data) {
 		// notify server of start
 		app.modules.socket.emit(self.sockets.startTimer, data);
 
+		app.viewModel.getTimers();
+
 	};
 
 	self.pauseTimer = function() {
@@ -104,6 +106,8 @@ app.modules.ko.Timer = function(data) {
 			
 		// notify server of pause
 		app.modules.socket.emit(self.sockets.pauseTimer, data);
+
+		app.viewModel.getTimers();
 
 	};
 
@@ -120,6 +124,8 @@ app.modules.ko.Timer = function(data) {
 			
 		// notify server of reset
 		app.modules.socket.emit(self.sockets.resetTimer, data);
+
+		app.viewModel.getTimers();
 
 	};
 
@@ -379,19 +385,19 @@ app.modules.ko.TimerListViewModel = function() {
 		delete editorData.seconds;
 
 		// save the timer to the server with the processed data
-		app.modules.socket.emit(self.sockets.saveTimer, editorData, function(data) {
+		app.modules.socket.emit(self.sockets.saveTimer, editorData, function(response) {
 
 			// we got a good response, close, modal and reload timers
-			if (data.timer) {
+			if (!response.error) {
 
 				$('#timer-editor').modal('hide');
 
-				//self.getTimers();
+				self.getTimers();
 
-				self.setCurrentTimer(data.timer);
+				self.setCurrentTimer(response);
 				
 			} else {
-				console.log(data.err);
+				console.log(response.error);
 			}
 
 		});

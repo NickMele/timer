@@ -32,6 +32,7 @@ app.configure(function() {
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(express.logger('dev'));
+	app.use(express.static(__dirname + '/assets'));
 	app.use(express.cookieParser());
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
@@ -48,7 +49,6 @@ app.configure(function() {
 	app.use(passport.session());
 	app.use(passport.authenticate('remember-me'));
 	app.use(app.router);
-	app.use(express.static(__dirname + '/assets'));
 });
 
 /* ----------------------------------------------------------------------
