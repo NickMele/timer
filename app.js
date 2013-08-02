@@ -88,8 +88,7 @@ app.get(
 	}),
 	function(req, res, next) {
 		var token = Token.generateRandomToken();
-		console.log(token);
-		Token.save(token, req.user, function(err) {
+		Token.save(token, req.user._id, function(err) {
 			if (err) {
 				return done(err);
 			}

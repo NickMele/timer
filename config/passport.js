@@ -14,32 +14,36 @@ var passport = require('passport'),
 //   have a database of user records, the complete Google profile is serialized
 //   and deserialized.
 passport.serializeUser(function(user, done) {
-	console.log('serialize: ', user._id);
+	console.log('serialize: ', user);
 	done(null, user._id);
 });
 
-passport.deserializeUser(function(user, done) {
-	console.log('deserialize: ', user._id);
-	User.findById(user._id, function(err, user) {
+passport.deserializeUser(function(userId, done) {
+	console.log('deserialize: ', userId);
+	User.findById(userId, function(err, user) {
 		done(null, user);
-	})
+	});
 });
 
 passport.use(new RememberMeStrategy(
 	function(token, done) {
-		Token.consume(token, function (err, user) {
+		Token.consume(token, function (err, userId) {
 			if (err) {
 				return done(err);
 			}
-			if (!user) {
+			if (!userId) {
 				return done(null, false);
 			}
-			return done(null, user);
+			User.findById(userId, function(err, user) {
+				if (err) { return done(err); }
+		        if (!user) { return done(null, false); }
+		        return done(null, user);
+			});
 		});
 	},
 	function(user, done) {
 		var token = Token.generateRandomToken();
-		Token.save(token, user, function(err) {
+		Token.save(token, user._id, function(err) {
 			if (err) {
 				return done(err);
 			}
@@ -63,8 +67,7 @@ passport.use(new GoogleStrategy({
 			{ openId: identifier },
 			{ upsert: true },
 			function(err, user) {
-				console.log('from db: ', user);
-				done(err, user);
+				return done(null, user);
 			}
 		);
 	});

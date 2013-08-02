@@ -386,11 +386,9 @@ app.modules.ko.TimerListViewModel = function() {
 
 				$('#timer-editor').modal('hide');
 
-				self.getTimers();
+				//self.getTimers();
 
-				var timerData = new app.modules.ko.Timer(data.timer);
-
-				self.data.currentTimer(timerData);
+				self.setCurrentTimer(data.timer);
 				
 			} else {
 				console.log(data.err);
