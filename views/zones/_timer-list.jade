@@ -1,5 +1,5 @@
-a(data-toggle='modal', href='#timer-editor', data-bind="click: $root.createNewTimer").btn.btn-primary.btn-block.new-timer
+a(data-toggle='modal',data-backdrop="static", href='#timer-editor', data-bind="click: $root.createNewTimer").btn.btn-primary.btn-block.new-timer
 	| New timer
 
 div.list-group.margin-top(data-bind="foreach: data.timers")
-	a(data-bind="text: name(), click: $parent.data.currentTimer, css: { active: _id() == $parent.data.currentTimer()._id() }").list-group-item.timer-link
+	a(data-bind="text: data.name, click: $root.setCurrentTimer, css: { active: data._id() == $root.data.currentTimer().data._id() }").list-group-item.timer-link

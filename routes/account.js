@@ -7,6 +7,7 @@ exports.getlogin = function(req, res) {
 };
 
 exports.logout = function(req, res) {
+	res.clearCookie('remember_me');
 	req.logout();
 	res.redirect('/');
 };

@@ -3,11 +3,13 @@ var timerModel = require('../model/timer'),
 
 exports.getTimers = function(req, res) {
 	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user._id;
+	var userId = req.session.passport.user;
+
+	console.log(req.session);
 
 	timerModel.getTimersByUserId(userId, function(err,timers) {
 		// broadcast the message to load this timer to the room
-		req.io.room(userId).broadcast('get:timers', timers);
+		req.io.room(userId).broadcast('timer:get:list', timers);
 		// respond to the request with the timer data
 		req.io.respond({
 			data: timers
@@ -16,33 +18,14 @@ exports.getTimers = function(req, res) {
 };
 
 exports.setCurrentTimer = function(req) {
+
 	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user._id;
+	var userId = req.session.passport.user;
 	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('set:current_timer', req.data);
-};
+	req.io.room(userId).broadcast('timer:set:current_timer', req.data);
 
-
-
-exports.getTimer = function(req, res) {
-	timerModel.getTimerData(req.params.objectId, function(err,timer) {
-		res.render('zones/_timer-zone', {
-			user: req.user,
-			timer: timer
-		});
-	});
-};
-
-exports.getTimerData = function(req) {
-	timerModel.getTimerData(req.data, function(err,timer) {
-		// the user id is going to be used at the room identifier
-		var userId = req.session.passport.user;
-		// broadcast the message to load this timer to the room
-		req.io.room(userId).broadcast('/get/timer/data', timer);
-		// respond to the request with the timer data
-		req.io.respond({
-			timer: timer
-		});
+	req.io.respond({
+		data: req.data
 	});
 };
 
@@ -51,20 +34,18 @@ exports.saveTimer = function(req) {
 		timerData = req.data;
 
 	// we need to process whether this is a new timer or not
-	if (!objectId) {
+	if (!objectId || objectId == "") {
 
 		objectId = new mongoose.Types.ObjectId();
 		// get the user id
-		var userId = req.session.passport.user._id;
+		var userId = req.session.passport.user;
 		// add it to the data
 		timerData.userId = userId;
 
-	} else {
-
-		// before upserting into mongo we need to remove the _id from the data
-		delete timerData._id;
-
 	}
+
+	// before upserting into mongo we need to remove the _id from the data
+	delete timerData._id;
 
 	timerModel.setTimerData(objectId, timerData, function(err,doc) {
 		if (doc) {
@@ -81,53 +62,78 @@ exports.saveTimer = function(req) {
 };
 
 exports.removeTimer = function(req) {
-	timerModel.removeTimer(req.data, function(err) {
-		// respond to the request with err
-		req.io.respond({
-			err: err
-		});
-	});
-};
 
-exports.notifyGetTimer = function(req) {
-	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user;
-	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('/notify/get/timer', req.data);
+	// get the user id
+	var userId = req.session.passport.user,
+		conditions = {
+			_id: req.data,
+			userId: userId
+		};
+	
+	timerModel.removeTimer(conditions, function(error) {
+
+		// this will be our response object to the client
+		var response = {
+			error: error,
+			data: null
+		};
+
+		// if we did not receive an error then lets gather a new timer list and send it back down
+		if (response.error == null) {
+
+			// get timer list for user
+			timerModel.getTimersByUserId(userId, function(err,timers) {
+
+				// store the timers in data
+				response.data = timers;
+
+				// respond to the client with our response
+				req.io.respond(response);
+
+			});
+
+		} else {
+
+			// respond to the client with our response
+			req.io.respond(response);
+
+		}
+
+	});
 };
 
 exports.startTimer = function(req) {
-	console.log('start');
+	
+	// save the timer state
+	timerModel.setTimerData(req.data._id, req.data);
+
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;
 	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('/notify/start/timer', req.data);
-	// return success response
-	req.io.respond({
-		success: true
-	});
+	req.io.room(userId).broadcast('timer:start', req.data);
+	
 };
 
 exports.pauseTimer = function(req) {
-	console.log('pause');
+	
+	// save the timer state
+	timerModel.setTimerData(req.data._id, req.data);
+
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;
 	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('/notify/pause/timer', req.data);
-	// return success response
-	req.io.respond({
-		success: true
-	});
+	req.io.room(userId).broadcast('timer:pause', req.data);
+	
 };
 
 exports.resetTimer = function(req) {
-	console.log('reset');
+	
+	// save the timer state
+	timerModel.setTimerData(req.data._id, req.data);
+
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;
 	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('/notify/reset/timer', req.data);
-	// return success response
-	req.io.respond({
-		success: true
-	});
+	req.io.room(userId).broadcast('timer:reset', req.data);
+	
 };

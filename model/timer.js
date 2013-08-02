@@ -6,7 +6,6 @@ exports.getTimersByUserId = function getTimersByUserId(userId, callback) {
 		if (err) {
 			console.log(err);
 		} else {
-			console.log(timers);
 			callback(err, timers);
 		}
 	});
@@ -17,29 +16,26 @@ exports.getTimerData = function getTimerData(objectId, callback) {
 		if (err) {
 			console.log(err);
 		} else {
-			console.log(timer);
 			callback(err, timer);
 		}
 	});
 };
 
 exports.setTimerData = function setTimerData(objectId, timerData, callback) {
+
 	Timer.findByIdAndUpdate(
 		objectId,
 		{ $set: timerData },
 		{ upsert: true },
 		function(error, doc) {
-			callback(error, doc);
+			if (typeof callback == "function") {
+				callback(error, doc);
+			}
 		}
 	);
+	
 };
 
-exports.removeTimer = function removeTimer(objectId, callback) {
-	Timer.find({_id: objectId}, function(err) {
-		if (err) {
-			console.log(err);
-		} else {
-			callback(err);
-		}
-	});
+exports.removeTimer = function removeTimer(conditions, callback) {
+	Timer.remove(conditions, callback);
 };

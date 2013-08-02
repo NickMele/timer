@@ -1,6 +1,7 @@
 var express = require('express.io'),
 	passport = require('passport'),
 	app = express(),
+	MongoStore = require('connect-mongo')(express),
 	config = {
 		db: require('./config/dbschema'),
 		passport: require('./config/passport')
@@ -10,8 +11,8 @@ var express = require('express.io'),
 		account: require('./routes/account'),
 		timer: require('./routes/timer')
 	},
+	Token = require('./model/token'),
 	port = process.env.PORT || 5000;
-
 
 /* ----------------------------------------------------------------------
 |	-- CONFIGURATION --
@@ -34,11 +35,18 @@ app.configure(function() {
 	app.use(express.cookieParser());
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
+	// app.use(express.session({
+	// 	secret: 'amazing application'
+	// }));
 	app.use(express.session({
-		secret: 'amazing application'
+		store: new MongoStore({
+			url: process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/timer'
+		}),
+		secret: '1234567890QWERTY'
 	}));
 	app.use(passport.initialize());
 	app.use(passport.session());
+	app.use(passport.authenticate('remember-me'));
 	app.use(app.router);
 	app.use(express.static(__dirname + '/assets'));
 });
@@ -68,14 +76,31 @@ app.io.route('ready', function(req) {
 app.get('/login', routes.account.getlogin);
 
 // GET /auth/google
-app.get('/auth/google', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
+app.get('/auth/google', passport.authenticate('google', { failureRedirect: '/login' }),  function(req, res) {
 	res.redirect('/');
 });
 
 // GET /auth/google/return
-app.get('/auth/google/return', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
-	res.redirect('/');
-});
+app.get(
+	'/auth/google/return',
+	passport.authenticate('google', {
+		failureRedirect: '/login'
+	}),
+	function(req, res, next) {
+		var token = Token.generateRandomToken();
+		console.log(token);
+		Token.save(token, req.user, function(err) {
+			if (err) {
+				return done(err);
+			}
+			res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
+			return next();
+		});
+	},
+	function(req, res) {
+		res.redirect('/');
+	}
+);
 
 // GET /logout
 app.get('/logout', routes.account.logout);
@@ -84,19 +109,13 @@ app.get('/logout', routes.account.logout);
 /* Timer routes
 ------------------------------------------------------------------------- */
 
-// new routes - knockout
-app.io.route('get:timers', routes.timer.getTimers);
-app.io.route('set:current_timer', routes.timer.setCurrentTimer);
-app.io.route('save:timer', routes.timer.saveTimer);
-
-// old routes - nonknockout
-app.get('/get/timers/:objectId', routes.timer.getTimer);
-app.io.route('/get/timer/data', routes.timer.getTimerData);
-app.io.route('/set/timer/data', routes.timer.setTimerData);
-app.io.route('/notify/get/timer', routes.timer.notifyGetTimer);
-app.io.route('/notify/start/timer', routes.timer.startTimer);
-app.io.route('/notify/pause/timer', routes.timer.pauseTimer);
-app.io.route('/notify/reset/timer', routes.timer.resetTimer);
+app.io.route('timer:get:list', routes.timer.getTimers);
+app.io.route('timer:set:current_timer', routes.timer.setCurrentTimer);
+app.io.route('timer:save', routes.timer.saveTimer);
+app.io.route('timer:remove', routes.timer.removeTimer);
+app.io.route('timer:start', routes.timer.startTimer);
+app.io.route('timer:pause', routes.timer.pauseTimer);
+app.io.route('timer:reset', routes.timer.resetTimer);
 
 
 /* ----------------------------------------------------------------------

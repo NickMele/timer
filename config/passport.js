@@ -1,7 +1,9 @@
 var passport = require('passport'),
 	GoogleStrategy = require('passport-google').Strategy,
+	RememberMeStrategy = require('passport-remember-me').Strategy,
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
+	Token = require('../model/token'),
 	url = process.env.URL || 'http://localhost:5000';
 
 // Passport session setup.
@@ -12,33 +14,60 @@ var passport = require('passport'),
 //   have a database of user records, the complete Google profile is serialized
 //   and deserialized.
 passport.serializeUser(function(user, done) {
-  done(null, user);
+	console.log('serialize: ', user._id);
+	done(null, user._id);
 });
 
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
+passport.deserializeUser(function(user, done) {
+	console.log('deserialize: ', user._id);
+	User.findById(user._id, function(err, user) {
+		done(null, user);
+	})
 });
 
+passport.use(new RememberMeStrategy(
+	function(token, done) {
+		Token.consume(token, function (err, user) {
+			if (err) {
+				return done(err);
+			}
+			if (!user) {
+				return done(null, false);
+			}
+			return done(null, user);
+		});
+	},
+	function(user, done) {
+		var token = Token.generateRandomToken();
+		Token.save(token, user, function(err) {
+			if (err) {
+				return done(err);
+			}
+			return done(null, token);
+		});
+	}
+));
 
 // Use the GoogleStrategy within Passport.
 //   Strategies in passport require a `validate` function, which accept
 //   credentials (in this case, an OpenID identifier and profile), and invoke a
 //   callback with a user object.
 passport.use(new GoogleStrategy({
-    returnURL: url + '/auth/google/return',
-    realm: url + '/'
+	returnURL: url + '/auth/google/return',
+	realm: url + '/'
   },
   function(identifier, profile, done) {
-  	process.nextTick(function () {
-  		User.findOneAndUpdate(
+	process.nextTick(function () {
+		User.findOneAndUpdate(
 			{ openId: identifier },
 			{ openId: identifier },
 			{ upsert: true },
 			function(err, user) {
+				console.log('from db: ', user);
 				done(err, user);
 			}
 		);
-  	});
+	});
   }
 ));
 

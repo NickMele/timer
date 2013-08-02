@@ -36,18 +36,6 @@ var userSchema = new mongoose.Schema({
 	}
 });
 
-// Remember Me implementation helper method
-userSchema.methods.generateRandomToken = function () {
-  var user = this,
-      chars = "_!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-      token = new Date().getTime() + '_';
-  for ( var x = 0; x < 16; x++ ) {
-    var i = Math.floor( Math.random() * 62 );
-    token += chars.charAt( i );
-  }
-  return token;
-};
-
 // Export user model
 exports.userModel = mongoose.model('User', userSchema);
 
@@ -71,7 +59,7 @@ var timerSchema = new mongoose.Schema({
 	},
 	state: {
 		type: String,
-		enum: 'stopped started paused'.split(' ')
+		enum: 'started paused stopped'.split(' ')
 	},
 	timeElapsed: {
 		type: Number,
@@ -81,3 +69,23 @@ var timerSchema = new mongoose.Schema({
 
 // Export timer model
 exports.timerModel = mongoose.model('Timer', timerSchema);
+
+/****************************************************************
+/
+/ TOKEN SCHEMA
+/
+/ ****************************************************************/
+var tokenSchema = new mongoose.Schema({
+	token: {
+		type: String,
+		required: true,
+		unique: true
+	},
+	userId: {
+		type: String,
+		required: true
+	}
+});
+
+// Export user model
+exports.tokenModel = mongoose.model('Token', tokenSchema);

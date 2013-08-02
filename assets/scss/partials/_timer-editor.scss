@@ -1,0 +1,17 @@
+#timer-editor {
+	.time-control-groups {
+		padding-top: 40px;
+		.btn-increment-up {
+			border-radius: 3px 3px 0 0;
+		}
+		.btn-increment-down {
+			border-radius: 0 0 3px 3px;
+		}
+		.form-control {
+			border-radius: 0;
+			text-align: center;
+			border-top: 0;
+			border-bottom: 0;
+		}
+	}
+}
