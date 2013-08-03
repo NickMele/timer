@@ -5,9 +5,7 @@ var mongoose = require('mongoose'),
 exports.mongoose = mongoose;
 
 // Database connect
-var uristring = process.env.MONGOLAB_URI || 
-				process.env.MONGOHQ_URL || 
-				'mongodb://localhost/timer';
+var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/timer';
 
 var mongoOptions = {
 	db: {
@@ -23,11 +21,9 @@ mongoose.connect(uristring, mongoOptions, function(err, res) {
 	}
 });
 
-/****************************************************************
-/
-/ USER SCHEMA
-/
-/ ****************************************************************/
+/* ----------------------------------------------------------------------
+|	-- User Schema --
+------------------------------------------------------------------------- */
 var userSchema = new mongoose.Schema({
 	openId: {
 		type: String,
@@ -39,42 +35,45 @@ var userSchema = new mongoose.Schema({
 // Export user model
 exports.userModel = mongoose.model('User', userSchema);
 
-/****************************************************************
-/
-/ TIMER SCHEMA
-/
-/ ****************************************************************/
 
+/* ----------------------------------------------------------------------
+|	-- Timer Schema --
+------------------------------------------------------------------------- */
 var timerSchema = new mongoose.Schema({
 	userId : {
 		type: mongoose.Schema.ObjectId,
-		required: true
+		required: true,
+		select: false
 	},
 	name: {
 		type: String,
 		unique: true
 	},
 	timerLength: {
-		type: Number
+		type: Number,
+		default: 0
 	},
 	state: {
 		type: String,
-		enum: 'started paused stopped'.split(' ')
+		enum: 'started paused stopped'.split(' '),
+		default: 'stopped'
 	},
 	timeElapsed: {
 		type: Number,
 		default: 0
+	},
+	timeStarted: {
+		type: Date,
+		default: ''
 	}
 });
 
 // Export timer model
 exports.timerModel = mongoose.model('Timer', timerSchema);
 
-/****************************************************************
-/
-/ TOKEN SCHEMA
-/
-/ ****************************************************************/
+/* ----------------------------------------------------------------------
+|	-- Token Schema --
+------------------------------------------------------------------------- */
 var tokenSchema = new mongoose.Schema({
 	token: {
 		type: String,

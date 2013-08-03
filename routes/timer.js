@@ -1,19 +1,33 @@
-var timerModel = require('../model/timer'),
-	mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+	Timer = mongoose.model('Timer');
 
 exports.getTimers = function(req, res) {
-	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user;
+	// set up our conditions
+	var userId = req.session.passport.user,
+		conditions = {
+			userId: userId
+		};
 
-	console.log(req.session);
+	// what fields do we want to select
+	var fields = '-userId';
 
-	timerModel.getTimersByUserId(userId, function(err,timers) {
-		// broadcast the message to load this timer to the room
-		req.io.room(userId).broadcast('timer:get:list', timers);
-		// respond to the request with the timer data
+	// search the db for timers matching this user
+	Timer.find(conditions, fields, function(error, timers) {
+		
+		if (error) {
+			// if there was an error, do something
+			console.log(err);
+		} else {
+			// broadcast the message to load this timer to the room
+			req.io.room(userId).broadcast('timer:get:list', timers);
+		}
+
+		// respond to the request with the timer data, and status
 		req.io.respond({
+			error: error,
 			data: timers
 		});
+
 	});
 };
 
@@ -21,34 +35,41 @@ exports.setCurrentTimer = function(req) {
 
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;
+
 	// broadcast the message to load this timer to the room
 	req.io.room(userId).broadcast('timer:set:current_timer', req.data);
 
+	// respond to the client the data
 	req.io.respond({
 		data: req.data
 	});
+
 };
 
 exports.saveTimer = function(req) {
-	var objectId = req.data._id,
-		timerData = req.data;
 
-	// we need to process whether this is a new timer or not
-	if (!objectId || objectId == "") {
+	var conditions = {},
+		update = req.data,
+		options = {
+			upsert: true
+		};
 
-		objectId = new mongoose.Types.ObjectId();
+	// if we are not given an _id, this is a new timer
+	if (!req.data._id || req.data._id == "") {
+
+		// create new _id
+		conditions._id = new mongoose.Types.ObjectId();
+
 		// get the user id
-		var userId = req.session.passport.user;
-		// add it to the data
-		timerData.userId = userId;
+		update.userId = req.session.passport.user;
 
 	}
 
 	// before upserting into mongo we need to remove the _id from the data
-	delete timerData._id;
+	delete update._id;
 
-	timerModel.setTimerData(objectId, timerData, function(error,timer) {
-
+	// update the model
+	Timer.findOneAndUpdate(conditions, update, options, function(error, timer) {
 		// this will be our response object to the client
 		var response = {
 			error: error,
@@ -58,6 +79,7 @@ exports.saveTimer = function(req) {
 		// respond to the request with the timer data
 		req.io.respond(response);
 	});
+
 };
 
 exports.removeTimer = function(req) {
@@ -69,7 +91,7 @@ exports.removeTimer = function(req) {
 			userId: userId
 		};
 	
-	timerModel.removeTimer(conditions, function(error) {
+	Timer.remove(conditions, function(error) {
 
 		// this will be our response object to the client
 		var response = {
@@ -78,23 +100,26 @@ exports.removeTimer = function(req) {
 		};
 
 		// if we did not receive an error then lets gather a new timer list and send it back down
-		if (response.error == null) {
+		if (error) {
+
+			// respond to the client with our response
+			req.io.respond(response);
+
+		} else {
 
 			// get timer list for user
-			timerModel.getTimersByUserId(userId, function(err,timers) {
+			Timer.findById(userId, function(error,timers) {
 
 				// store the timers in data
-				response.data = timers;
+				response = {
+					error: error,
+					data: timers
+				};
 
 				// respond to the client with our response
 				req.io.respond(response);
 
 			});
-
-		} else {
-
-			// respond to the client with our response
-			req.io.respond(response);
 
 		}
 
@@ -103,14 +128,16 @@ exports.removeTimer = function(req) {
 
 exports.startTimer = function(req) {
 
-	var objectId = req.data._id,
-		data = req.data;
+	var conditions = {
+			_id: req.data._id
+		},
+		update = req.data;
 
 	// delete the _id from the data
-	delete data._id;
+	delete update._id;
 	
-	// save the timer state
-	timerModel.setTimerData(objectId, data);
+	// update the timer state
+	Timer.findOneAndUpdate(conditions, update).exec();
 
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;
@@ -121,14 +148,16 @@ exports.startTimer = function(req) {
 
 exports.pauseTimer = function(req) {
 
-	var objectId = req.data._id,
-		data = req.data;
+	var conditions = {
+			_id: req.data._id
+		},
+		update = req.data;
 
 	// delete the _id from the data
-	delete data._id;
+	delete update._id;
 	
-	// save the timer state
-	timerModel.setTimerData(objectId, data);
+	// update the timer state
+	Timer.findOneAndUpdate(conditions, update).exec();
 
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;
@@ -139,14 +168,16 @@ exports.pauseTimer = function(req) {
 
 exports.resetTimer = function(req) {
 	
-	var objectId = req.data._id,
-		data = req.data;
+	var conditions = {
+			_id: req.data._id
+		},
+		update = req.data;
 
 	// delete the _id from the data
-	delete data._id;
+	delete update._id;
 	
-	// save the timer state
-	timerModel.setTimerData(objectId, data);
+	// update the timer state
+	Timer.findOneAndUpdate(conditions, update).exec();
 
 	// the user id is going to be used at the room identifier
 	var userId = req.session.passport.user;

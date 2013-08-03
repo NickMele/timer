@@ -16,18 +16,15 @@ app.modules.ko.Timer = function(data) {
 
 	var self = this;
 
-	if (typeof data == "undefined") {
-		data = {};
-	}
-
 	self.sockets = app.modules.ko.sockets;
 
 	self.data = {
-		_id			: ko.observable(data._id),
-		name		: ko.observable(data.name),
-		timerLength	: ko.observable(data.timerLength),
-		timeElapsed	: ko.observable(data.timeElapsed),
-		state		: ko.observable(data.state)
+		_id			: ko.observable(""),
+		name		: ko.observable(""),
+		timerLength	: ko.observable(""),
+		timeElapsed	: ko.observable(""),
+		state		: ko.observable(""),
+		timeStarted	: ko.observable("")
 	};
 
 	self.computedData = {
@@ -63,6 +60,33 @@ app.modules.ko.Timer = function(data) {
 		return seconds;
 	});
 
+	self.init = function() {
+
+		if (typeof data == "undefined") {
+			data = {};
+		}
+
+		self.data._id(data._id);
+		self.data.name(data.name);
+		self.data.timerLength(data.timerLength);
+		self.data.timeElapsed(data.timeElapsed);
+		self.data.state(data.state);
+		self.data.timeStarted(data.timeStarted);
+
+		if (data.timeStarted !== "") {
+
+			var timeStarted = new Date(data.timeStarted).getTime(),
+				currentTime = new Date().getTime(),
+				differenceInSeconds = (currentTime - timeStarted) * 1000;
+
+			// self.data.timeElapsed( self.data.timeElapsed() + differenceInSeconds );
+
+			console.log(differenceInSeconds);
+
+		}
+
+	};
+
 	self.timerCountdown = function() {
 
 		self.data.timeElapsed( self.data.timeElapsed() + 1 );
@@ -83,15 +107,11 @@ app.modules.ko.Timer = function(data) {
 		// 1000 will  run it every 1 second
 		self.counter = setInterval(self.timerCountdown, 1000);
 
+		self.data.timeStarted(new Date());
+
 		self.data.state("started");
 
-		// prepare our data to send to the server
-		var data = self.getServerReadyData();
-			
-		// notify server of start
-		app.modules.socket.emit(self.sockets.startTimer, data);
-
-		app.viewModel.getTimers();
+		self.saveTimer();
 
 	};
 
@@ -99,15 +119,11 @@ app.modules.ko.Timer = function(data) {
 
 		clearInterval(self.counter);
 
+		self.data.timeStarted("");
+
 		self.data.state("paused");
 
-		// prepare our data to send to the server
-		var data = self.getServerReadyData();
-			
-		// notify server of pause
-		app.modules.socket.emit(self.sockets.pauseTimer, data);
-
-		app.viewModel.getTimers();
+		self.saveTimer();
 
 	};
 
@@ -117,15 +133,11 @@ app.modules.ko.Timer = function(data) {
 
 		self.data.timeElapsed(0);
 
+		self.data.timeStarted("");
+
 		self.data.state("stopped");
 
-		// prepare our data to send to the server
-		var data = self.getServerReadyData();
-			
-		// notify server of reset
-		app.modules.socket.emit(self.sockets.resetTimer, data);
-
-		app.viewModel.getTimers();
+		self.saveTimer();
 
 	};
 
@@ -139,6 +151,23 @@ app.modules.ko.Timer = function(data) {
 		return ko.toJS(self.data);
 
 	};
+
+	self.saveTimer = function(newState) {
+		// prepare our data to send to the server
+		var data = self.getServerReadyData();
+			
+		// notify server of start
+		app.modules.socket.emit(self.sockets.startTimer, data);
+
+		app.viewModel.getTimers();
+
+		if (newState == "started") {
+			console.log('should start');
+		}
+
+	};
+
+	self.init();
 
 };
 
@@ -439,6 +468,8 @@ app.modules.ko.TimerListViewModel = function() {
 	/* Setters
 	------------------------------------------------------------------------- */	
 	self.setTimers = function(response) {
+
+		console.log(response);
 
 		var mappedTimers = $.map(response.data, function(timer) { return new app.modules.ko.Timer(timer) });
 		
