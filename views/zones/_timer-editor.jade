@@ -1,0 +1,35 @@
+div.modal.fade#timer-editor
+	div.modal-dialog
+		div.modal-content
+			div.modal-header
+				button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+				h4.modal-title(data-bind="text: state.editorTitle")
+			div.modal-body
+
+				form.form-horizontal(data-bind="submit: $root.saveTimer, with: data.editor")
+					.form-group
+						.col-lg-12
+							input.form-control(type='text', placeholder='Name', data-bind="value: data.name")
+					.form-group.time-control-groups
+						.col-lg-2.col-sm-3.col-4.col-offset-3
+							button.btn.btn-primary.btn-block.btn-small.btn-increment-up(type="button", data-bind="click: incrementTime.bind($data, 'hours', 'up'), enable: hours() >= 0")
+								span.glyphicon.glyphicon-chevron-up
+							input.form-control.input-large(type='text', placeholder='0', data-bind="value: hours")
+							button.btn.btn-primary.btn-block.btn-small.btn-increment-down(type="button", data-bind="click: incrementTime.bind($data, 'hours', 'down'), disable: hours() < 1")
+								span.glyphicon.glyphicon-chevron-down
+						.col-lg-2.col-sm-3.col-4
+							button.btn.btn-primary.btn-block.btn-small.btn-increment-up(type="button", data-bind="click: incrementTime.bind($data, 'minutes', 'up'), enable: minutes() >= 0")
+								span.glyphicon.glyphicon-chevron-up
+							input.form-control.input-large(type='text', placeholder='0', data-bind="value: minutes")
+							button.btn.btn-primary.btn-block.btn-small.btn-increment-down(type="button", data-bind="click: incrementTime.bind($data, 'minutes', 'down'), disable: minutes() < 1")
+								span.glyphicon.glyphicon-chevron-down
+						.col-lg-2.col-sm-3.col-4
+							button.btn.btn-primary.btn-block.btn-small.btn-increment-up(type="button", data-bind="click: incrementTime.bind($data, 'seconds', 'up'), enable: seconds() >= 0")
+								span.glyphicon.glyphicon-chevron-up
+							input.form-control.input-large(type='text', placeholder='0', data-bind="value: seconds")
+							button.btn.btn-primary.btn-block.btn-small.btn-increment-down(type="button", data-bind="click: incrementTime.bind($data, 'seconds', 'down'), disable: seconds() < 1")
+								span.glyphicon.glyphicon-chevron-down
+
+			div.modal-footer
+				button.btn.btn-default(type="button", data-dismiss="modal") Close
+				button.btn.btn-success(type="submit", data-bind="text: state.editorSaveButton, click: $root.saveTimer") Save changes

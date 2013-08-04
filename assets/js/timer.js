@@ -1,550 +1,560 @@
-(function( $, window, document ) {
+// global app object
+var app = window.app = {};
 
-	'use strict';
+// module and view storage object
+app.modules = {},
+app.modules.ko = {},
+app.views = {};
 
-	// master object
-	var timer = window.timer = {};
 
-	// setup our socket listeners that will route incoming socket requests
-	timer.initializeSocketListeners = function() {
 
-		var properties = timer.properties;
+// (function( $, window, document ) {
 
-		// will listen for updated information about timer
-		timer.socket.on(properties.urls.getTimerData, timer.setTimerZone);
+// 	'use strict';
 
-		timer.socket.on(properties.urls.notifyStartTimer, timer.startTimer);
-		timer.socket.on(properties.urls.notifyPauseTimer, timer.pauseTimer);
-		timer.socket.on(properties.urls.notifyResetTimer, timer.resetTimer);
+// 	// master object
+// 	var timer = window.timer = {};
 
-	};
+// 	// setup our socket listeners that will route incoming socket requests
+// 	timer.initializeSocketListeners = function() {
 
-	// this method will load the list of timers for this user
-	timer.loadTimers = function() {
+// 		var properties = timer.properties;
 
-		var properties = timer.properties;
+// 		// will listen for updated information about timer
+// 		timer.socket.on(properties.urls.getTimerData, timer.setTimerZone);
 
-		// load the list of timers
-		$(properties.cache.timerList).load(properties.urls.getTimers, function() {
+// 		timer.socket.on(properties.urls.notifyStartTimer, timer.startTimer);
+// 		timer.socket.on(properties.urls.notifyPauseTimer, timer.pauseTimer);
+// 		timer.socket.on(properties.urls.notifyResetTimer, timer.resetTimer);
 
-			// set the active item in our timer list
-			timer.setActiveItem();
+// 	};
 
-			// once the timers are loaded bind the events
-			timer.bindEvents();
+// 	// this method will load the list of timers for this user
+// 	timer.loadTimers = function() {
 
-		});
+// 		var properties = timer.properties;
 
-	};
+// 		// load the list of timers
+// 		$(properties.cache.timerList).load(properties.urls.getTimers, function() {
 
-	// bind events to the elements
-	timer.bindEvents = function() {
+// 			// set the active item in our timer list
+// 			timer.setActiveItem();
 
-		var properties = timer.properties;
+// 			// once the timers are loaded bind the events
+// 			timer.bindEvents();
 
-		// bind click event to timer links
-		$(properties.cache.timerListLink).off('click').on('click', function(e) {
+// 		});
 
-			// prevent the default action of the link
-			e.preventDefault();
+// 	};
 
-			// get the currenttimer id from the link
-			properties.currentTimer.id = $(this).data('timer-id');
+// 	// bind events to the elements
+// 	timer.bindEvents = function() {
 
-			// notify others to load this timer
-			// timer.socket.emit(properties.urls.notifyGetTimer, properties.currentTimer.id);
+// 		var properties = timer.properties;
 
-			// load this timer
-			timer.getTimerData();
-		});
+// 		// bind click event to timer links
+// 		$(properties.cache.timerListLink).off('click').on('click', function(e) {
 
-		$(properties.cache.newTimerLink).off('click').on('click', function(e) {
+// 			// prevent the default action of the link
+// 			e.preventDefault();
 
-			// prevent the default action of the link
-			e.preventDefault();
+// 			// get the currenttimer id from the link
+// 			properties.currentTimer.id = $(this).data('timer-id');
 
-			timer.newTimer();
+// 			// notify others to load this timer
+// 			// timer.socket.emit(properties.urls.notifyGetTimer, properties.currentTimer.id);
 
-		});
+// 			// load this timer
+// 			timer.getTimerData();
+// 		});
 
-		// emit a message for other clients to start their timer
-		$(properties.cache.timerStart).off('click').on('click', function(e) {
-			// prevent the default action of the link
-			e.preventDefault();
+// 		$(properties.cache.newTimerLink).off('click').on('click', function(e) {
 
-			timer.socket.emit(properties.urls.notifyStartTimer, properties.currentTimer.id, function(data) {
-				timer.startTimer();
-			});
-		});
+// 			// prevent the default action of the link
+// 			e.preventDefault();
 
-		// emit a message for other clients to pause their timer
-		$(properties.cache.timerPause).off('click').on('click', function(e) {
-			// prevent the default action of the link
-			e.preventDefault();
+// 			timer.newTimer();
 
-			timer.socket.emit(properties.urls.notifyPauseTimer, properties.currentTimer.id, function(data) {
-				timer.pauseTimer();
-			});
-		});
+// 		});
 
-		// emit a message for other clients to reset their timer
-		$(properties.cache.timerReset).off('click').on('click', function(e) {
-			// prevent the default action of the link
-			e.preventDefault();
+// 		// emit a message for other clients to start their timer
+// 		$(properties.cache.timerStart).off('click').on('click', function(e) {
+// 			// prevent the default action of the link
+// 			e.preventDefault();
 
-			timer.socket.emit(properties.urls.notifyResetTimer, properties.currentTimer.id, function(data) {
-				timer.resetTimer();
-			});
-		});
+// 			timer.socket.emit(properties.urls.notifyStartTimer, properties.currentTimer.id, function(data) {
+// 				timer.startTimer();
+// 			});
+// 		});
 
-		$(document).off('keyup').on('keyup', function(event) {
+// 		// emit a message for other clients to pause their timer
+// 		$(properties.cache.timerPause).off('click').on('click', function(e) {
+// 			// prevent the default action of the link
+// 			e.preventDefault();
 
-			var escape = event.which == 27,
-				enter = event.which == 13,
-				element = event.target,
-				isInput = element.nodeName != 'INPUT' && element.nodeName != 'TEXTAREA';
+// 			timer.socket.emit(properties.urls.notifyPauseTimer, properties.currentTimer.id, function(data) {
+// 				timer.pauseTimer();
+// 			});
+// 		});
 
-			if (timer.properties.currentTimer.isEditing) {
-				if (escape) {
-					// restore state
-					document.execCommand('undo', false, null); // restore to previus state
-					element.blur();
+// 		// emit a message for other clients to reset their timer
+// 		$(properties.cache.timerReset).off('click').on('click', function(e) {
+// 			// prevent the default action of the link
+// 			e.preventDefault();
 
-					timer.editMode();
+// 			timer.socket.emit(properties.urls.notifyResetTimer, properties.currentTimer.id, function(data) {
+// 				timer.resetTimer();
+// 			});
+// 		});
 
-				} else if (enter) {
+// 		$(document).off('keyup').on('keyup', function(event) {
+
+// 			var escape = event.which == 27,
+// 				enter = event.which == 13,
+// 				element = event.target,
+// 				isInput = element.nodeName != 'INPUT' && element.nodeName != 'TEXTAREA';
+
+// 			if (timer.properties.currentTimer.isEditing) {
+// 				if (escape) {
+// 					// restore state
+// 					document.execCommand('undo', false, null); // restore to previus state
+// 					element.blur();
+
+// 					timer.editMode();
+
+// 				} else if (enter) {
 					
-					timer.saveTimer();
+// 					timer.saveTimer();
 
-					element.blur();
-					event.preventDefault();
-				}
-			} else if(timer.properties.isFullscreen) {
-				if (escape) {
-					// exit fullscreen mode
-					timer.fullscreenMode();
+// 					element.blur();
+// 					event.preventDefault();
+// 				}
+// 			} else if(timer.properties.isFullscreen) {
+// 				if (escape) {
+// 					// exit fullscreen mode
+// 					timer.fullscreenMode();
 
-					// make sure we toggle the button
-					$(timer.properties.cache.timerFullscreen).button('toggle');
-				}
-			}
-		});
+// 					// make sure we toggle the button
+// 					$(timer.properties.cache.timerFullscreen).button('toggle');
+// 				}
+// 			}
+// 		});
 
-		$(properties.cache.timerEdit + ', ' + properties.cache.timerEditCancel).off('click').on('click', function(e) {
+// 		$(properties.cache.timerEdit + ', ' + properties.cache.timerEditCancel).off('click').on('click', function(e) {
 
-			// prevent the default action of the link
-			e.preventDefault();
+// 			// prevent the default action of the link
+// 			e.preventDefault();
 
-			// turn on/off edit mode
-			timer.editMode();
+// 			// turn on/off edit mode
+// 			timer.editMode();
 
-		});
+// 		});
 
-		$(properties.cache.timerFullscreen).off('click').on('click', function(e) {
+// 		$(properties.cache.timerFullscreen).off('click').on('click', function(e) {
 
-			// prevent the default action of the link
-			e.preventDefault();
+// 			// prevent the default action of the link
+// 			e.preventDefault();
 
-			// turn on/off fullscreen mode
-			timer.fullscreenMode();
+// 			// turn on/off fullscreen mode
+// 			timer.fullscreenMode();
 
-		});
+// 		});
 
-		$(properties.cache.timerEditSave).off('click').on('click', function(e) {
+// 		$(properties.cache.timerEditSave).off('click').on('click', function(e) {
 
-			// prevent the default action of the link
-			e.preventDefault();
+// 			// prevent the default action of the link
+// 			e.preventDefault();
 
-			// save the timer
-			timer.saveTimer();
+// 			// save the timer
+// 			timer.saveTimer();
 
-		});
+// 		});
 
-	};
+// 	};
 
-	timer.fullscreenMode = function() {
+// 	timer.fullscreenMode = function() {
 
-		var cache = timer.properties.cache;
+// 		var cache = timer.properties.cache;
 
-		// set fullscreen class on timer zone
-		$(cache.timerZone).toggleClass('fullscreen');
+// 		// set fullscreen class on timer zone
+// 		$(cache.timerZone).toggleClass('fullscreen');
 
-		timer.properties.isFullscreen = $(cache.timerZone).hasClass('fullscreen');
+// 		timer.properties.isFullscreen = $(cache.timerZone).hasClass('fullscreen');
 
-	};
+// 	};
 
-	timer.saveTimer = function() {
+// 	timer.saveTimer = function() {
 
-		// extract timer data from timer zone
-		timer.getTimerDataFromZone();
+// 		// extract timer data from timer zone
+// 		timer.getTimerDataFromZone();
 
-		// save the timer data to the db
-		timer.setTimerData();
+// 		// save the timer data to the db
+// 		timer.setTimerData();
 
-		// reload timer list
-		timer.loadTimers();
+// 		// reload timer list
+// 		timer.loadTimers();
 
-		timer.editMode();
+// 		timer.editMode();
 
-	};
+// 	};
 
-	timer.editMode = function() {
+// 	timer.editMode = function() {
 
-		var properties = timer.properties,
-			isEditing = properties.currentTimer.isEditing;
+// 		var properties = timer.properties,
+// 			isEditing = properties.currentTimer.isEditing;
 
-		if (!isEditing) {
+// 		if (!isEditing) {
 			
-			properties.currentTimer.isEditing = true;
+// 			properties.currentTimer.isEditing = true;
 
-			// turn all editable elements on
-			$('[data-editable="true"]').attr('contenteditable','true');
+// 			// turn all editable elements on
+// 			$('[data-editable="true"]').attr('contenteditable','true');
 
-			$(properties.cache.timerControls).hide(1,function() {
-				// show the save/cancel buttons
-				$(properties.cache.timerEditControls).show();
-			});
+// 			$(properties.cache.timerControls).hide(1,function() {
+// 				// show the save/cancel buttons
+// 				$(properties.cache.timerEditControls).show();
+// 			});
 
-			// $(properties.cache.timerEdit).addClass('active');
+// 			// $(properties.cache.timerEdit).addClass('active');
 
 
-		} else {
+// 		} else {
 
-			properties.currentTimer.isEditing = false;
+// 			properties.currentTimer.isEditing = false;
 
-			// turn all editable elements on
-			$('[data-editable="true"]').attr('contenteditable','false');
+// 			// turn all editable elements on
+// 			$('[data-editable="true"]').attr('contenteditable','false');
 
-			$(properties.cache.timerEditControls).hide(1,function() {
-				// show the save/cancel buttons
-				$(properties.cache.timerControls).show();
-			});
+// 			$(properties.cache.timerEditControls).hide(1,function() {
+// 				// show the save/cancel buttons
+// 				$(properties.cache.timerControls).show();
+// 			});
 
-			// $(properties.cache.timerEdit).removeClass('active');
+// 			// $(properties.cache.timerEdit).removeClass('active');
 
-		}
+// 		}
 
-	};
+// 	};
 
-	timer.calculateTime = function(length) {
+// 	timer.calculateTime = function(length) {
 
-		var seconds = Math.floor( length % 60 ),
-			minutes = Math.floor(( length / 60 ) % 60),
-			hours = Math.floor( length / 3600 );
+// 		var seconds = Math.floor( length % 60 ),
+// 			minutes = Math.floor(( length / 60 ) % 60),
+// 			hours = Math.floor( length / 3600 );
 
-		if (seconds < 10) {
-			seconds = '0' + seconds;
-		}
-		if (minutes < 10) {
-			minutes = '0' + minutes;
-		}
-		if (hours < 10) {
-			hours = '0' + hours;
-		}
+// 		if (seconds < 10) {
+// 			seconds = '0' + seconds;
+// 		}
+// 		if (minutes < 10) {
+// 			minutes = '0' + minutes;
+// 		}
+// 		if (hours < 10) {
+// 			hours = '0' + hours;
+// 		}
 
-		return {
-			hours: hours,
-			minutes: minutes,
-			seconds: seconds
-		};
+// 		return {
+// 			hours: hours,
+// 			minutes: minutes,
+// 			seconds: seconds
+// 		};
 
-	};
+// 	};
 
-	timer.reverserCalculateTime = function(hours, minutes, seconds) {
+// 	timer.reverserCalculateTime = function(hours, minutes, seconds) {
 
-		var length = ( hours * 3600 ) + (minutes * 60 ) + seconds;
+// 		var length = ( hours * 3600 ) + (minutes * 60 ) + seconds;
 
-		return length;
+// 		return length;
 
-	};
+// 	};
 
-	// this method will load a specific timer from url
-	timer.setTimerZone = function(data) {
+// 	// this method will load a specific timer from url
+// 	timer.setTimerZone = function(data) {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer,
-			cache = properties.cache,
-			calculatedTime;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer,
+// 			cache = properties.cache,
+// 			calculatedTime;
 
-		timer.cacheTimerData(data);
+// 		timer.cacheTimerData(data);
 
-		$(cache.timerName).html(currentTimer.currentTimerData.name);
+// 		$(cache.timerName).html(currentTimer.currentTimerData.name);
 
-		timer.setTimerZoneClock();
+// 		timer.setTimerZoneClock();
 
-		timer.bindEvents();
+// 		timer.bindEvents();
 
-		// set the active item in our timer list
-		timer.setActiveItem();
+// 		// set the active item in our timer list
+// 		timer.setActiveItem();
 
-	};
+// 	};
 
-	timer.setActiveItem = function() {
+// 	timer.setActiveItem = function() {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer,
-			currentTimerId = currentTimer.currentTimerData._id;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer,
+// 			currentTimerId = currentTimer.currentTimerData._id;
 
-		$(properties.cache.timerListLink).removeClass('active');
+// 		$(properties.cache.timerListLink).removeClass('active');
 
-		$(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']").addClass('active');
+// 		$(properties.cache.timerList).find("[data-timer-id='" + currentTimerId + "']").addClass('active');
 
-	};
+// 	};
 
-	timer.getTimerDataFromZone = function() {
+// 	timer.getTimerDataFromZone = function() {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer,
-			cache = properties.cache,
-			hours, minutes, seconds;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer,
+// 			cache = properties.cache,
+// 			hours, minutes, seconds;
 
-		// get the timer name
-		currentTimer.currentTimerData.name = $(cache.timerName).text();
+// 		// get the timer name
+// 		currentTimer.currentTimerData.name = $(cache.timerName).text();
 
-		// get hours, minutes, seconds
-		hours = parseInt($(cache.timerDuration).find('.timer-clock-hours').text());
-		minutes = parseInt($(cache.timerDuration).find('.timer-clock-minutes').text());
-		seconds = parseInt($(cache.timerDuration).find('.timer-clock-seconds').text());
+// 		// get hours, minutes, seconds
+// 		hours = parseInt($(cache.timerDuration).find('.timer-clock-hours').text());
+// 		minutes = parseInt($(cache.timerDuration).find('.timer-clock-minutes').text());
+// 		seconds = parseInt($(cache.timerDuration).find('.timer-clock-seconds').text());
 
-		// we need to calculate these times into seconds
-		currentTimer.currentTimerData.length = timer.reverserCalculateTime(hours, minutes, seconds);
+// 		// we need to calculate these times into seconds
+// 		currentTimer.currentTimerData.length = timer.reverserCalculateTime(hours, minutes, seconds);
 
-	};
+// 	};
 
-	timer.setTimerZoneClock = function() {
+// 	timer.setTimerZoneClock = function() {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer,
-			cache = properties.cache,
-			calculatedTime;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer,
+// 			cache = properties.cache,
+// 			calculatedTime;
 
-		// calculate the time to get seconds, minutes, hours
-		calculatedTime = timer.calculateTime(currentTimer.currentTimerData.length - currentTimer.currentTimerData.timeElapsed);
+// 		// calculate the time to get seconds, minutes, hours
+// 		calculatedTime = timer.calculateTime(currentTimer.currentTimerData.length - currentTimer.currentTimerData.timeElapsed);
 
-		$(cache.timerDuration).find('.timer-clock-hours').html(calculatedTime.hours);
-		$(cache.timerDuration).find('.timer-clock-minutes').html(calculatedTime.minutes);
-		$(cache.timerDuration).find('.timer-clock-seconds').html(calculatedTime.seconds);
+// 		$(cache.timerDuration).find('.timer-clock-hours').html(calculatedTime.hours);
+// 		$(cache.timerDuration).find('.timer-clock-minutes').html(calculatedTime.minutes);
+// 		$(cache.timerDuration).find('.timer-clock-seconds').html(calculatedTime.seconds);
 
-	};
+// 	};
 
-	timer.newTimer = function() {
+// 	timer.newTimer = function() {
 
-		var properties = timer.properties;
+// 		var properties = timer.properties;
 
-		// clear out the current timer data
-		properties.currentTimer = {
-			id: null,
-			currentTimerData: {
-				userId: null,
-				length: 0,
-				name: null,
-				timeElapsed: 0
-			},
-			counter: null
-		};
+// 		// clear out the current timer data
+// 		properties.currentTimer = {
+// 			id: null,
+// 			currentTimerData: {
+// 				userId: null,
+// 				length: 0,
+// 				name: null,
+// 				timeElapsed: 0
+// 			},
+// 			counter: null
+// 		};
 
-		// update timer zone
-		timer.setTimerZone(properties.currentTimer.currentTimerData);
+// 		// update timer zone
+// 		timer.setTimerZone(properties.currentTimer.currentTimerData);
 
-		timer.editMode();
+// 		timer.editMode();
 
-		$(properties.cache.timerName).focus();
+// 		$(properties.cache.timerName).focus();
 
-	};
+// 	};
 
-	timer.getTimerData = function() {
+// 	timer.getTimerData = function() {
 
-		var properties = timer.properties;
+// 		var properties = timer.properties;
 
-		// emit a message to get updated timer data
-		timer.socket.emit(properties.urls.getTimerData, properties.currentTimer.id, function(data) {
+// 		// emit a message to get updated timer data
+// 		timer.socket.emit(properties.urls.getTimerData, properties.currentTimer.id, function(data) {
 			
-			timer.setTimerZone(data.timer);
+// 			timer.setTimerZone(data.timer);
 
-		});
+// 		});
 
-	};
+// 	};
 
-	timer.setTimerData = function() {
+// 	timer.setTimerData = function() {
 
-		var properties = timer.properties;
+// 		var properties = timer.properties;
 
-		// emit a message to save the data for this timer
-		timer.socket.emit(properties.urls.setTimerData, properties.currentTimer, function(data) {
+// 		// emit a message to save the data for this timer
+// 		timer.socket.emit(properties.urls.setTimerData, properties.currentTimer, function(data) {
 			
-			// check for errors, if none update the timer
-			if (data.timerData) {
-				timer.setTimerZone(data.timerData);
-			} else {
-				console.log(data.err);
-			}
+// 			// check for errors, if none update the timer
+// 			if (data.timerData) {
+// 				timer.setTimerZone(data.timerData);
+// 			} else {
+// 				console.log(data.err);
+// 			}
 
-		});
+// 		});
 
-	};
+// 	};
 
-	timer.cacheTimerData = function(data) {
+// 	timer.cacheTimerData = function(data) {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer;
 
-		currentTimer.id = data._id;
-		currentTimer.currentTimerData = data;
+// 		currentTimer.id = data._id;
+// 		currentTimer.currentTimerData = data;
 
-	};
+// 	};
 
-	timer.showStartButton = function() {
+// 	timer.showStartButton = function() {
 
-		var properties = timer.properties,
-			cache = properties.cache;
+// 		var properties = timer.properties,
+// 			cache = properties.cache;
 
-		// show the start button
-		$(cache.timerStart).removeClass('hidden');
+// 		// show the start button
+// 		$(cache.timerStart).removeClass('hidden');
 
-		// hide the pause button
-		$(cache.timerPause).addClass('hidden');
+// 		// hide the pause button
+// 		$(cache.timerPause).addClass('hidden');
 
-	};
+// 	};
 
-	timer.showPauseButton = function() {
+// 	timer.showPauseButton = function() {
 
-		var properties = timer.properties,
-			cache = properties.cache;
+// 		var properties = timer.properties,
+// 			cache = properties.cache;
 
-		// hide the start button
-		$(cache.timerStart).addClass('hidden');
+// 		// hide the start button
+// 		$(cache.timerStart).addClass('hidden');
 
-		// show the pause button
-		$(cache.timerPause).removeClass('hidden');
+// 		// show the pause button
+// 		$(cache.timerPause).removeClass('hidden');
 
-	};
+// 	};
 
-	timer.startTimer = function() {
+// 	timer.startTimer = function() {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer;
 
-		console.log('start timer');
+// 		console.log('start timer');
 
-		timer.showPauseButton();
+// 		timer.showPauseButton();
 
-		clearInterval(properties.currentTimer.counter);
-		currentTimer.counter = setInterval(timer.timerCountdown, 1000); //1000 will  run it every 1 second
-	};
+// 		clearInterval(properties.currentTimer.counter);
+// 		currentTimer.counter = setInterval(timer.timerCountdown, 1000); //1000 will  run it every 1 second
+// 	};
 
-	timer.pauseTimer = function() {
+// 	timer.pauseTimer = function() {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer;
 
-		console.log('pause timer');
+// 		console.log('pause timer');
 
-		clearInterval(currentTimer.counter);
+// 		clearInterval(currentTimer.counter);
 
-		// save the timer state in the db
-		timer.setTimerData();
+// 		// save the timer state in the db
+// 		timer.setTimerData();
 
-		timer.showStartButton();
+// 		timer.showStartButton();
 
-	};
+// 	};
 
-	timer.resetTimer = function() {
+// 	timer.resetTimer = function() {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer;
 
-		console.log('reset timer');
+// 		console.log('reset timer');
 
-		clearInterval(currentTimer.counter);
+// 		clearInterval(currentTimer.counter);
 
-		currentTimer.currentTimerData.timeElapsed = 0;
+// 		currentTimer.currentTimerData.timeElapsed = 0;
 
-		// save the timer state in the db
-		timer.setTimerData();
+// 		// save the timer state in the db
+// 		timer.setTimerData();
 
-		timer.setTimerZoneClock();
+// 		timer.setTimerZoneClock();
 
-		timer.showStartButton();
-	};
+// 		timer.showStartButton();
+// 	};
 
-	timer.timerCountdown = function() {
+// 	timer.timerCountdown = function() {
 
-		var properties = timer.properties,
-			currentTimer = properties.currentTimer;
+// 		var properties = timer.properties,
+// 			currentTimer = properties.currentTimer;
 
-		currentTimer.currentTimerData.timeElapsed++;
+// 		currentTimer.currentTimerData.timeElapsed++;
 
-		if (currentTimer.currentTimerData.timeElapsed > currentTimer.currentTimerData.length)
-		{
-			timer.resetTimer();
-			//counter ended, do something here
-			return;
-		}
+// 		if (currentTimer.currentTimerData.timeElapsed > currentTimer.currentTimerData.length)
+// 		{
+// 			timer.resetTimer();
+// 			//counter ended, do something here
+// 			return;
+// 		}
 
-		timer.setTimerZoneClock();
+// 		timer.setTimerZoneClock();
 
-	};
+// 	};
 
-	/* --------------------------------------------------------------------------
-	|   -- Initializer --
-	-------------------------------------------------------------------------- */
-	$(window).on('load', function(){
+// 	/* --------------------------------------------------------------------------
+// 	|   -- Initializer --
+// 	-------------------------------------------------------------------------- */
+// 	$(window).on('load', function(){
 
-		// properties
-		timer.properties = {
-			currentTimer: {
-				id: null,
-				currentTimerData: {
-					_id: null,
-					length: null,
-					name: null,
-					userId: null,
-					timeElapsed: null
-				},
-				counter: null
-			},
-			cache: {
-				timerZone: '.timer-zone',
-				timerName: '.timer-zone .timer-name',
-				timerDuration: '.timer-zone .timer-clock',
-				timerList: '.timer-list',
-				timerListLink: '.timer-link',
-				newTimerLink: '.new-timer',
-				timerControls: '.timer-controls',
-				timerStart: '.timer-start',
-				timerPause: '.timer-pause',
-				timerReset: '.timer-reset',
-				timerEditControls: '.timer-edit-controls',
-				timerEdit: '.timer-edit',
-				timerFullscreen: '.timer-fullscreen',
-				timerDelete: '.timer-delete',
-				timerEditCancel: '.timer-edit-cancel',
-				timerEditSave: '.timer-edit-save',
-			},
-			urls: {
-				getTimers: '/get/timers',
-				getTimerData: '/get/timer/data',
-				setTimerData: '/set/timer/data',
-				notifyGetTimer: '/notify/get/timer',
-				notifyStartTimer: '/notify/start/timer',
-				notifyPauseTimer: '/notify/pause/timer',
-				notifyResetTimer: '/notify/reset/timer'
-			}
-		};
+// 		// properties
+// 		timer.properties = {
+// 			currentTimer: {
+// 				id: null,
+// 				currentTimerData: {
+// 					_id: null,
+// 					length: null,
+// 					name: null,
+// 					userId: null,
+// 					timeElapsed: null
+// 				},
+// 				counter: null
+// 			},
+// 			cache: {
+// 				timerZone: '.timer-zone',
+// 				timerName: '.timer-zone .timer-name',
+// 				timerDuration: '.timer-zone .timer-clock',
+// 				timerList: '.timer-list',
+// 				timerListLink: '.timer-link',
+// 				newTimerLink: '.new-timer',
+// 				timerControls: '.timer-controls',
+// 				timerStart: '.timer-start',
+// 				timerPause: '.timer-pause',
+// 				timerReset: '.timer-reset',
+// 				timerEditControls: '.timer-edit-controls',
+// 				timerEdit: '.timer-edit',
+// 				timerFullscreen: '.timer-fullscreen',
+// 				timerDelete: '.timer-delete',
+// 				timerEditCancel: '.timer-edit-cancel',
+// 				timerEditSave: '.timer-edit-save',
+// 			},
+// 			urls: {
+// 				getTimers: '/get/timers',
+// 				getTimerData: '/get/timer/data',
+// 				setTimerData: '/set/timer/data',
+// 				notifyGetTimer: '/notify/get/timer',
+// 				notifyStartTimer: '/notify/start/timer',
+// 				notifyPauseTimer: '/notify/pause/timer',
+// 				notifyResetTimer: '/notify/reset/timer'
+// 			}
+// 		};
 
-		// set up the socket
-		timer.socket = io.connect();
+// 		// set up the socket
+// 		timer.socket = io.connect();
 
-		// let the server know this client is ready
-		timer.socket.emit('ready');
+// 		// let the server know this client is ready
+// 		timer.socket.emit('ready');
 
-		// initialize socket listeners
-		timer.initializeSocketListeners();
+// 		// initialize socket listeners
+// 		timer.initializeSocketListeners();
 
-		// load the list of timers for this user
-		timer.loadTimers();
+// 		// load the list of timers for this user
+// 		timer.loadTimers();
 
-	});
+// 	});
 
 
-}( jQuery, window, document ));
+// }( jQuery, window, document ));

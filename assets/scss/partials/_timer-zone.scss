@@ -6,6 +6,7 @@
 		width: 50%;
 		margin: 20px auto;
 		padding: 6px;
+		height: 40px;
 		@media(max-width: 768px) {
 			width: 90%;
 		}
@@ -23,20 +24,18 @@
 		}
 	}
 	.timer-edit-controls {
-		display: none;
 		margin-right: 4px;
 	}
 	.timer-controls {
 		text-align: center;
 		margin-top: 40px;
-		button {
-			margin-left: 2px;
-			margin-right: 2px;
-		}
 	}
-	[data-editable="true"] {
+	[contenteditable="false"] {
 		box-sizing: border-box;
 		border: 1px solid #ffffff;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
 	}
 	[contenteditable="true"] {
 		box-sizing: border-box;
@@ -60,5 +59,13 @@
 		top: 0;
 		left: 0;
 		background: #fff;
+		z-index: 999;
+	}
+
+	.final-countdown {
+		-webkit-animation-name: final-countdown; 
+		-webkit-animation-duration: 1s; 
+		-webkit-animation-iteration-count: infinite;
+		-webkit-animation-timing-function: linear;
 	}
 }

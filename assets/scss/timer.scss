@@ -1,10 +1,12 @@
 @import 'modules/variables';
 @import 'modules/modular-scale';
+@import 'modules/animations';
 
 // PARTIALS
 @import 'partials/base';
 @import 'partials/spacing';
 @import 'partials/timer-list';
 @import 'partials/timer-zone';
+@import 'partials/timer-editor';
 
 @import 'partials/bootstrap-glyphicons';

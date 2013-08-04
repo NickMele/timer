@@ -5,9 +5,7 @@ var mongoose = require('mongoose'),
 exports.mongoose = mongoose;
 
 // Database connect
-var uristring = process.env.MONGOLAB_URI || 
-				process.env.MONGOHQ_URL || 
-				'mongodb://localhost/timer';
+var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/timer';
 
 var mongoOptions = {
 	db: {
@@ -23,11 +21,9 @@ mongoose.connect(uristring, mongoOptions, function(err, res) {
 	}
 });
 
-/****************************************************************
-/
-/ USER SCHEMA
-/
-/ ****************************************************************/
+/* ----------------------------------------------------------------------
+|	-- User Schema --
+------------------------------------------------------------------------- */
 var userSchema = new mongoose.Schema({
 	openId: {
 		type: String,
@@ -36,48 +32,59 @@ var userSchema = new mongoose.Schema({
 	}
 });
 
-// Remember Me implementation helper method
-userSchema.methods.generateRandomToken = function () {
-  var user = this,
-      chars = "_!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-      token = new Date().getTime() + '_';
-  for ( var x = 0; x < 16; x++ ) {
-    var i = Math.floor( Math.random() * 62 );
-    token += chars.charAt( i );
-  }
-  return token;
-};
-
 // Export user model
 exports.userModel = mongoose.model('User', userSchema);
 
-/****************************************************************
-/
-/ TIMER SCHEMA
-/
-/ ****************************************************************/
 
+/* ----------------------------------------------------------------------
+|	-- Timer Schema --
+------------------------------------------------------------------------- */
 var timerSchema = new mongoose.Schema({
 	userId : {
 		type: mongoose.Schema.ObjectId,
-		required: true
+		required: true,
+		select: false
 	},
 	name: {
 		type: String,
 		unique: true
 	},
-	length: {
-		type: Number
+	timerLength: {
+		type: Number,
+		default: 0
 	},
 	state: {
 		type: String,
-		enum: 'stopped started paused'.split(' ')
+		enum: 'started paused stopped'.split(' '),
+		default: 'stopped'
 	},
 	timeElapsed: {
 		type: Number,
 		default: 0
+	},
+	timeStarted: {
+		type: Date,
+		default: ''
 	}
 });
 
 // Export timer model
 exports.timerModel = mongoose.model('Timer', timerSchema);
+
+/* ----------------------------------------------------------------------
+|	-- Token Schema --
+------------------------------------------------------------------------- */
+var tokenSchema = new mongoose.Schema({
+	token: {
+		type: String,
+		required: true,
+		unique: true
+	},
+	userId: {
+		type: String,
+		required: true
+	}
+});
+
+// Export user model
+exports.tokenModel = mongoose.model('Token', tokenSchema);

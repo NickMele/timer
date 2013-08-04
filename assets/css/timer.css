@@ -1,3 +1,20 @@
+@-webkit-keyframes flash {
+  from {
+    opacity: 1; }
+
+  50% {
+    opacity: .6; }
+
+  to {
+    opacity: 1; } }
+
+@-webkit-keyframes final-countdown {
+  from {
+    color: #780000; }
+
+  50% {
+    color: #b40000; } }
+
 body {
   margin-top: 20px; }
 
@@ -196,12 +213,21 @@ body {
 .no-padding-left {
   padding-left: 0 !important; }
 
+.timer-list a .glyphicon {
+  margin-top: 1px;
+  color: #5cb85c;
+  -webkit-animation-name: flash;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear; }
+
 .timer-zone .timer-name {
   text-align: center;
   line-height: 1.2em;
   width: 50%;
   margin: 20px auto;
-  padding: 6px; }
+  padding: 6px;
+  height: 40px; }
   @media (max-width: 768px) {
     .timer-zone .timer-name {
       width: 90%; } }
@@ -216,17 +242,16 @@ body {
       .timer-zone .timer-clock span {
         font-size: 6em; } }
 .timer-zone .timer-edit-controls {
-  display: none;
   margin-right: 4px; }
 .timer-zone .timer-controls {
   text-align: center;
   margin-top: 40px; }
-  .timer-zone .timer-controls button {
-    margin-left: 2px;
-    margin-right: 2px; }
-.timer-zone [data-editable="true"] {
+.timer-zone [contenteditable="false"] {
   box-sizing: border-box;
-  border: 1px solid #ffffff; }
+  border: 1px solid #ffffff;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px; }
 .timer-zone [contenteditable="true"] {
   box-sizing: border-box;
   border: 1px solid #cccccc;
@@ -247,7 +272,25 @@ body {
   padding: 20px;
   top: 0;
   left: 0;
-  background: #fff; }
+  background: #fff;
+  z-index: 999; }
+.timer-zone .final-countdown {
+  -webkit-animation-name: final-countdown;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear; }
+
+#timer-editor .time-control-groups {
+  padding-top: 40px; }
+  #timer-editor .time-control-groups .btn-increment-up {
+    border-radius: 3px 3px 0 0; }
+  #timer-editor .time-control-groups .btn-increment-down {
+    border-radius: 0 0 3px 3px; }
+  #timer-editor .time-control-groups .form-control {
+    border-radius: 0;
+    text-align: center;
+    border-top: 0;
+    border-bottom: 0; }
 
 @font-face {
   font-family: 'Glyphicons Halflings';

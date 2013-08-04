@@ -1,32 +1,26 @@
 div.clearfix
 	.btn-group.pull-right
-		a.btn.btn-default.timer-edit(href='#', data-toggle="button")
+		a.btn.btn-primary.btn-small.timer-edit(data-toggle='modal', href='#timer-editor', data-bind="click: $root.editTimer")
 			span.glyphicon.glyphicon-edit
-		a.btn.btn-default.timer-fullscreen(href='#', data-toggle="button")
+		a.btn.btn-primary.btn-small.timer-fullscreen(data-toggle="button", data-bind="click: $root.fullscreenMode")
 			span.glyphicon.glyphicon-fullscreen
-		a.btn.btn-default.timer-delete(href='#')
+		a.btn.btn-primary.btn-small.timer-delete(data-bind="click: $root.removeTimer")
 			span.glyphicon.glyphicon-trash
 
-	.btn-group.pull-right.timer-edit-controls
-		a.btn.btn-success.timer-edit-save
-			| Save 
-			span.glyphicon.glyphicon-ok
-
-h1(data-editable="true", data-name="name").timer-name Timer name
+h1(data-name="name", data-bind="text: data.name").timer-name
 
 div.timer-clock
-	span(data-editable="true").timer-clock-hours 00
+	span(data-bind="text: computedData.hours").timer-clock-hours 00
 	span.timer-clock-separator :
-	span(data-editable="true").timer-clock-minutes 00
+	span(data-bind="text: computedData.minutes").timer-clock-minutes 00
 	span.timer-clock-separator :
-	span(data-editable="true").timer-clock-seconds 00
+	span(data-bind="text: computedData.seconds").timer-clock-seconds 00
 
 div.timer-controls
-	button.timer-start.btn.btn-large.btn-success
-		| Start
-	button.timer-pause.btn.btn-large.btn-primary.hidden
-		| Pause
-	button.timer-reset.btn.btn-large.btn-danger
-		| Reset
-	button.timer-mute.btn.btn-large.btn-default
-		| Mute
+	.btn-group
+		button.timer-start.btn.btn-large.btn-primary(data-bind="click: startTimer, enable: data.state() != 'started'")
+			span.glyphicon.glyphicon-play
+		button.timer-pause.btn.btn-large.btn-primary(data-bind="click: pauseTimer, enable: data.state() == 'started'")
+			span.glyphicon.glyphicon-pause
+		button.timer-reset.btn.btn-large.btn-primary(data-bind="click: resetTimer")
+			span.glyphicon.glyphicon-repeat
