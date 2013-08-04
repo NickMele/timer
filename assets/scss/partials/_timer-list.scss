@@ -1,0 +1,12 @@
+.timer-list {
+	a {
+		.glyphicon {
+			margin-top: 1px;
+			color: rgb(92,184,92);
+			-webkit-animation-name: flash; 
+			-webkit-animation-duration: 1.5s; 
+			-webkit-animation-iteration-count: infinite;
+			-webkit-animation-timing-function: linear;
+		}
+	}
+}

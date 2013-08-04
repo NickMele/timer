@@ -81,7 +81,15 @@ app.modules.ko.Timer = function(data) {
 
 			self.data.timeElapsed( self.data.timeElapsed() + differenceInSeconds );
 
-			self.startTimer();
+			if (self.data.timeElapsed() >= self.data.timerLength()) {
+
+				self.resetTimer();
+
+			} else {
+
+				self.startTimer();
+
+			}
 
 		}
 
@@ -126,6 +134,8 @@ app.modules.ko.Timer = function(data) {
 
 		clearInterval(self.counter);
 
+		$('.timer-clock span, .timer-name').removeClass('final-countdown');
+
 		self.data.timeElapsed(0);
 
 		self.data.timeStarted("");
@@ -154,7 +164,7 @@ app.modules.ko.Timer = function(data) {
 		// notify server of start
 		app.modules.socket.emit(self.sockets.startTimer, data);
 
-		// app.viewModel.getTimers();
+		app.viewModel.getTimers();
 
 		if (newState == "started") {
 			console.log('should start');
@@ -164,10 +174,19 @@ app.modules.ko.Timer = function(data) {
 
 	self.data.timeElapsed.subscribe(function(value) {
 
-		if (self.data.timeElapsed() > self.data.timerLength()) {
-			self.resetTimer();
-			//counter ended, do something here
-			return;
+		if (self.data.timeElapsed() >= self.data.timerLength()) {
+
+			clearInterval(self.counter);
+
+			document.getElementById('audio-handle').play();
+
+			setTimeout(self.resetTimer, 5000);
+
+		} else if (self.data.timeElapsed() > (self.data.timerLength() - 5)) {
+
+			// start warning the user we are in the final countdown
+			$('.timer-clock span, .timer-name').addClass('final-countdown');
+
 		}
 
 	});
@@ -310,7 +329,8 @@ app.modules.ko.TimerListViewModel = function() {
 			$timerControls: $('.timer-controls'),
 			$timerStart: $('.timer-start'),
 			$timerPause: $('.timer-pause'),
-			$timerReset: $('.timer-reset')
+			$timerReset: $('.timer-reset'),
+			$timerZone: $('.timer-zone')
 		}
 	};
 
@@ -372,18 +392,6 @@ app.modules.ko.TimerListViewModel = function() {
 
 	};
 
-	self.setCurrentTimer = function(timer) {
-
-		timer = ko.toJS(timer.data);
-
-		app.modules.socket.emit(self.sockets.setCurrentTimer, timer, function(response) {
-
-			self.data.currentTimer( new app.modules.ko.Timer(response.data) );
-
-		});
-
-	}
-
 	self.createNewTimer = function() {
 
 		self.data.editor(new app.modules.ko.Editor());
@@ -422,7 +430,7 @@ app.modules.ko.TimerListViewModel = function() {
 
 				self.getTimers();
 
-				self.setCurrentTimer(response);
+				self.setCurrentTimer(response.data);
 				
 			} else {
 				console.log(response.error);
@@ -453,6 +461,13 @@ app.modules.ko.TimerListViewModel = function() {
 
 	};
 
+	self.fullscreenMode = function() {
+
+		// set fullscreen class on timer zone
+		self.elements.timer.$timerZone.toggleClass('fullscreen');
+
+	};
+
 
 	/* Getters
 	------------------------------------------------------------------------- */	
@@ -468,10 +483,18 @@ app.modules.ko.TimerListViewModel = function() {
 	------------------------------------------------------------------------- */	
 	self.setTimers = function(response) {
 
-		var mappedTimers = $.map(response.data, function(timer) { return new app.modules.ko.Timer(timer) });
-		
 		// assign this mapping to our timers observable
-		self.data.timers(mappedTimers);
+		self.data.timers(response.data);
+
+	};
+
+	self.setCurrentTimer = function(timer) {
+
+		app.modules.socket.emit(self.sockets.setCurrentTimer, timer, function(response) {
+
+			self.data.currentTimer( new app.modules.ko.Timer(response.data) );
+
+		});
 
 	};
 

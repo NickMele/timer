@@ -1,3 +1,20 @@
+@-webkit-keyframes flash {
+  from {
+    opacity: 1; }
+
+  50% {
+    opacity: .6; }
+
+  to {
+    opacity: 1; } }
+
+@-webkit-keyframes final-countdown {
+  from {
+    color: #780000; }
+
+  50% {
+    color: #b40000; } }
+
 body {
   margin-top: 20px; }
 
@@ -196,6 +213,14 @@ body {
 .no-padding-left {
   padding-left: 0 !important; }
 
+.timer-list a .glyphicon {
+  margin-top: 1px;
+  color: #5cb85c;
+  -webkit-animation-name: flash;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear; }
+
 .timer-zone .timer-name {
   text-align: center;
   line-height: 1.2em;
@@ -247,7 +272,13 @@ body {
   padding: 20px;
   top: 0;
   left: 0;
-  background: #fff; }
+  background: #fff;
+  z-index: 999; }
+.timer-zone .final-countdown {
+  -webkit-animation-name: final-countdown;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear; }
 
 #timer-editor .time-control-groups {
   padding-top: 40px; }

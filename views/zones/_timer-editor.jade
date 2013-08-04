@@ -29,8 +29,7 @@ div.modal.fade#timer-editor
 							input.form-control.input-large(type='text', placeholder='0', data-bind="value: seconds")
 							button.btn.btn-primary.btn-block.btn-small.btn-increment-down(type="button", data-bind="click: incrementTime.bind($data, 'seconds', 'down'), disable: seconds() < 1")
 								span.glyphicon.glyphicon-chevron-down
-					div(data-bind="text: data.timerLength")
 
 			div.modal-footer
 				button.btn.btn-default(type="button", data-dismiss="modal") Close
-				button.btn.btn-primary(type="submit", data-bind="text: state.editorSaveButton, click: $root.saveTimer") Save changes
+				button.btn.btn-success(type="submit", data-bind="text: state.editorSaveButton, click: $root.saveTimer") Save changes

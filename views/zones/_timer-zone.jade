@@ -1,10 +1,10 @@
 div.clearfix
 	.btn-group.pull-right
-		a.btn.btn-default.timer-edit(data-toggle='modal', href='#timer-editor', data-bind="click: $root.editTimer")
+		a.btn.btn-primary.btn-small.timer-edit(data-toggle='modal', href='#timer-editor', data-bind="click: $root.editTimer")
 			span.glyphicon.glyphicon-edit
-		a.btn.btn-default.timer-fullscreen(data-toggle="button")
+		a.btn.btn-primary.btn-small.timer-fullscreen(data-toggle="button", data-bind="click: $root.fullscreenMode")
 			span.glyphicon.glyphicon-fullscreen
-		a.btn.btn-default.timer-delete(data-bind="click: $root.removeTimer")
+		a.btn.btn-primary.btn-small.timer-delete(data-bind="click: $root.removeTimer")
 			span.glyphicon.glyphicon-trash
 
 h1(data-name="name", data-bind="text: data.name").timer-name
@@ -18,15 +18,9 @@ div.timer-clock
 
 div.timer-controls
 	.btn-group
-		button.timer-start.btn.btn-large.btn-success(data-bind="click: startTimer, enable: data.state() != 'started'")
-			| 
+		button.timer-start.btn.btn-large.btn-primary(data-bind="click: startTimer, enable: data.state() != 'started'")
 			span.glyphicon.glyphicon-play
-			| 
 		button.timer-pause.btn.btn-large.btn-primary(data-bind="click: pauseTimer, enable: data.state() == 'started'")
-			| 
 			span.glyphicon.glyphicon-pause
-			| 
-		button.timer-reset.btn.btn-large.btn-danger(data-bind="click: resetTimer")
-			| 
+		button.timer-reset.btn.btn-large.btn-primary(data-bind="click: resetTimer")
 			span.glyphicon.glyphicon-repeat
-			| 

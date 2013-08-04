@@ -59,5 +59,13 @@
 		top: 0;
 		left: 0;
 		background: #fff;
+		z-index: 999;
+	}
+
+	.final-countdown {
+		-webkit-animation-name: final-countdown; 
+		-webkit-animation-duration: 1s; 
+		-webkit-animation-iteration-count: infinite;
+		-webkit-animation-timing-function: linear;
 	}
 }
