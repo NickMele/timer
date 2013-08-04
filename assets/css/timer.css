@@ -201,7 +201,8 @@ body {
   line-height: 1.2em;
   width: 50%;
   margin: 20px auto;
-  padding: 6px; }
+  padding: 6px;
+  height: 40px; }
   @media (max-width: 768px) {
     .timer-zone .timer-name {
       width: 90%; } }

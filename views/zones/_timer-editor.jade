@@ -9,7 +9,7 @@ div.modal.fade#timer-editor
 				form.form-horizontal(data-bind="submit: $root.saveTimer, with: data.editor")
 					.form-group
 						.col-lg-12
-							input.form-control(type='text', placeholder='Name', data-bind="value: name")
+							input.form-control(type='text', placeholder='Name', data-bind="value: data.name")
 					.form-group.time-control-groups
 						.col-lg-2.col-sm-3.col-4.col-offset-3
 							button.btn.btn-primary.btn-block.btn-small.btn-increment-up(type="button", data-bind="click: incrementTime.bind($data, 'hours', 'up'), enable: hours() >= 0")
@@ -29,7 +29,7 @@ div.modal.fade#timer-editor
 							input.form-control.input-large(type='text', placeholder='0', data-bind="value: seconds")
 							button.btn.btn-primary.btn-block.btn-small.btn-increment-down(type="button", data-bind="click: incrementTime.bind($data, 'seconds', 'down'), disable: seconds() < 1")
 								span.glyphicon.glyphicon-chevron-down
-					div(data-bind="text: timerLength")
+					div(data-bind="text: data.timerLength")
 
 			div.modal-footer
 				button.btn.btn-default(type="button", data-dismiss="modal") Close

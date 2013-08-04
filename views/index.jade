@@ -12,10 +12,7 @@ block content
 				include zones/_timer-list
 
 			.col-lg-9
-				div.timer-zone(data-bind="visible: state.timerZoneVisible, with: data.currentTimer()")
+				div.timer-zone(data-bind="visible: data.currentTimer().data._id() !== '', with: data.currentTimer()")
 					include zones/_timer-zone
-				div(data-bind="ifnot: state.timerZoneVisible")
-					h1 TimeSync
-					p Select a timer from the list on the left or create a new one
-
+				
 	include zones/_timer-editor

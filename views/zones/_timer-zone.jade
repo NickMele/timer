@@ -10,11 +10,11 @@ div.clearfix
 h1(data-name="name", data-bind="text: data.name").timer-name
 
 div.timer-clock
-	span(data-bind="text: computedData.hours").timer-clock-hours
+	span(data-bind="text: computedData.hours").timer-clock-hours 00
 	span.timer-clock-separator :
-	span(data-bind="text: computedData.minutes").timer-clock-minutes
+	span(data-bind="text: computedData.minutes").timer-clock-minutes 00
 	span.timer-clock-separator :
-	span(data-bind="text: computedData.seconds").timer-clock-seconds
+	span(data-bind="text: computedData.seconds").timer-clock-seconds 00
 
 div.timer-controls
 	.btn-group

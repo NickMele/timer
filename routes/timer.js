@@ -63,7 +63,13 @@ exports.saveTimer = function(req) {
 		// get the user id
 		update.userId = req.session.passport.user;
 
+	} else {
+
+		conditions._id = req.data._id;
+
 	}
+
+	console.log(req.data,conditions,update);
 
 	// before upserting into mongo we need to remove the _id from the data
 	delete update._id;

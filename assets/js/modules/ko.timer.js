@@ -21,8 +21,8 @@ app.modules.ko.Timer = function(data) {
 	self.data = {
 		_id			: ko.observable(""),
 		name		: ko.observable(""),
-		timerLength	: ko.observable(""),
-		timeElapsed	: ko.observable(""),
+		timerLength	: ko.observable(0),
+		timeElapsed	: ko.observable(0),
 		state		: ko.observable(""),
 		timeStarted	: ko.observable("")
 	};
@@ -62,18 +62,18 @@ app.modules.ko.Timer = function(data) {
 
 	self.init = function() {
 
-		if (typeof data == "undefined") {
-			data = {};
+		if (typeof data != "undefined") {
+
+			self.data._id(data._id);
+			self.data.name(data.name);
+			self.data.timerLength(data.timerLength);
+			self.data.timeElapsed(data.timeElapsed);
+			self.data.state(data.state);
+			self.data.timeStarted(data.timeStarted);
+
 		}
 
-		self.data._id(data._id);
-		self.data.name(data.name);
-		self.data.timerLength(data.timerLength);
-		self.data.timeElapsed(data.timeElapsed);
-		self.data.state(data.state);
-		self.data.timeStarted(data.timeStarted);
-
-		if (data.timeStarted !== "") {
+		if (self.data.timeStarted()) {
 
 			var timeStarted = new Date(data.timeStarted).getTime(),
 				currentTime = new Date().getTime(),
@@ -182,13 +182,15 @@ app.modules.ko.Editor = function(data) {
 		data = {}
 	}
 
-	self._id = ko.observable(data._id || "");
-	self.name = ko.observable(data.name || "");
-	self.timerLength = ko.observable(data.timerLength || "");
+	self.data = {
+		_id			: ko.observable(data._id || ""),
+		name		: ko.observable(data.name || ""),
+		timerLength	: ko.observable(data.timerLength || "")
+	}
 
 	self.hours = ko.computed({
 		read: function () {
-			var hours = Math.floor( self.timerLength() / 3600 );
+			var hours = Math.floor( self.data.timerLength() / 3600 );
 			if (hours === 0) {
 				hours = "";
 			}
@@ -197,14 +199,14 @@ app.modules.ko.Editor = function(data) {
 		},
 		write: function (value) {
 			// calculate our total length with the new hours
-			self.timerLength(self.reverserCalculateTime(parseInt(value), self.minutes(), self.seconds()));
+			self.data.timerLength(self.reverserCalculateTime(parseInt(value), self.minutes(), self.seconds()));
 		},
 		owner: self
 	});
 
 	self.minutes = ko.computed({
 		read: function () {
-			var minutes = Math.floor( (self.timerLength() / 60) % 60 );
+			var minutes = Math.floor( (self.data.timerLength() / 60) % 60 );
 			if (minutes === 0) {
 				minutes = "";
 			}
@@ -213,14 +215,14 @@ app.modules.ko.Editor = function(data) {
 		},
 		write: function (value) {
 			// calculate our total length with the new minutes
-			self.timerLength(self.reverserCalculateTime(self.hours(), parseInt(value), self.seconds()));
+			self.data.timerLength(self.reverserCalculateTime(self.hours(), parseInt(value), self.seconds()));
 		},
 		owner: self
 	});
 
 	self.seconds = ko.computed({
 		read: function () {
-			var seconds = Math.floor( self.timerLength() % 60 );
+			var seconds = Math.floor( self.data.timerLength() % 60 );
 			if (seconds === 0) {
 				seconds = "";
 			}
@@ -228,7 +230,7 @@ app.modules.ko.Editor = function(data) {
 			return seconds;
 		},
 		write: function (value) {
-			self.timerLength(self.reverserCalculateTime(self.hours(), self.minutes(), parseInt(value)));
+			self.data.timerLength(self.reverserCalculateTime(self.hours(), self.minutes(), parseInt(value)));
 		},
 		owner: self
 	});
@@ -309,7 +311,6 @@ app.modules.ko.TimerListViewModel = function() {
 
 	// store the state of the application
 	self.state = {
-		timerZoneVisible	: ko.observable(false),
 		editingCurrentTimer	: ko.observable(false)
 	};
 
@@ -374,8 +375,6 @@ app.modules.ko.TimerListViewModel = function() {
 
 			self.data.currentTimer( new app.modules.ko.Timer(response.data) );
 
-			self.state.timerZoneVisible(true);
-
 		});
 
 	}
@@ -406,12 +405,7 @@ app.modules.ko.TimerListViewModel = function() {
 
 	self.saveTimer = function() {
 
-		var editorData = ko.toJS(self.data.editor);
-			
-		// remove the hours, minutes and seconds from data
-		delete editorData.hours;
-		delete editorData.minutes;
-		delete editorData.seconds;
+		var editorData = ko.toJS(self.data.editor().data);
 
 		// save the timer to the server with the processed data
 		app.modules.socket.emit(self.sockets.saveTimer, editorData, function(response) {
@@ -469,8 +463,6 @@ app.modules.ko.TimerListViewModel = function() {
 	------------------------------------------------------------------------- */	
 	self.setTimers = function(response) {
 
-		console.log(response);
-
 		var mappedTimers = $.map(response.data, function(timer) { return new app.modules.ko.Timer(timer) });
 		
 		// assign this mapping to our timers observable
@@ -481,15 +473,7 @@ app.modules.ko.TimerListViewModel = function() {
 
 	/* Subscriptions
 	------------------------------------------------------------------------- */	
-	// self.data.currentTimer.subscribe(function(currentTimer) {
 
-	// 	app.modules.socket.emit(self.sockets.setCurrentTimer, ko.toJS(currentTimer.data), function(data) {
-	// 		console.log(data);
-	// 	});
-
-	// 	self.state.timerZoneVisible(true);
-
-	// });
 
 	/* Init controller
 	------------------------------------------------------------------------- */	
