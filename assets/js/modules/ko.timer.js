@@ -77,11 +77,11 @@ app.modules.ko.Timer = function(data) {
 
 			var timeStarted = new Date(data.timeStarted).getTime(),
 				currentTime = new Date().getTime(),
-				differenceInSeconds = (currentTime - timeStarted) * 1000;
+				differenceInSeconds = Math.floor((currentTime - timeStarted) / 1000);
 
-			// self.data.timeElapsed( self.data.timeElapsed() + differenceInSeconds );
+			self.data.timeElapsed( self.data.timeElapsed() + differenceInSeconds );
 
-			console.log(differenceInSeconds);
+			self.startTimer();
 
 		}
 
@@ -91,16 +91,11 @@ app.modules.ko.Timer = function(data) {
 
 		self.data.timeElapsed( self.data.timeElapsed() + 1 );
 
-		if (self.data.timeElapsed() > self.data.timerLength())
-		{
-			self.resetTimer();
-			//counter ended, do something here
-			return;
-		}
-
 	}
 
 	self.startTimer = function() {
+
+		console.log('starting');
 
 		clearInterval(self.counter);
 
@@ -159,13 +154,23 @@ app.modules.ko.Timer = function(data) {
 		// notify server of start
 		app.modules.socket.emit(self.sockets.startTimer, data);
 
-		app.viewModel.getTimers();
+		// app.viewModel.getTimers();
 
 		if (newState == "started") {
 			console.log('should start');
 		}
 
 	};
+
+	self.data.timeElapsed.subscribe(function(value) {
+
+		if (self.data.timeElapsed() > self.data.timerLength()) {
+			self.resetTimer();
+			//counter ended, do something here
+			return;
+		}
+
+	});
 
 	self.init();
 
