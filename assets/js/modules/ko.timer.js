@@ -12,7 +12,7 @@ app.modules.ko.sockets = {
 /* ----------------------------------------------------------------------
 |	-- TimeViewModel --
 ------------------------------------------------------------------------- */
-app.modules.ko.Timer = function(data) {
+app.modules.ko.Timer = function(initialData) {
 
 	var self = this;
 
@@ -32,6 +32,12 @@ app.modules.ko.Timer = function(data) {
 		minutes		: null,
 		seconds		: null
 	};
+
+	self.trigger = {
+		startTimer: null,
+		pauseTimer: null,
+		resetTimer: null
+	}
 
 	// this is where we will store our interval function
 	self.counter = null;
@@ -62,21 +68,21 @@ app.modules.ko.Timer = function(data) {
 
 	self.init = function() {
 
-		if (typeof data != "undefined") {
+		if (typeof initialData !== "undefined") {
 
-			self.data._id(data._id);
-			self.data.name(data.name);
-			self.data.timerLength(data.timerLength);
-			self.data.timeElapsed(data.timeElapsed);
-			self.data.state(data.state);
-			self.data.timeStarted(data.timeStarted);
+			self.data._id(initialData.data._id);
+			self.data.name(initialData.data.name);
+			self.data.timerLength(initialData.data.timerLength);
+			self.data.timeElapsed(initialData.data.timeElapsed);
+			self.data.state(initialData.data.state);
+			self.data.timeStarted(initialData.data.timeStarted);
 
 		}
 
 		if (self.data.timeStarted()) {
 
-			var timeStarted = new Date(data.timeStarted).getTime(),
-				currentTime = new Date().getTime(),
+			var timeStarted = new Date(initialData.data.timeStarted).getTime(),
+				currentTime = new Date(initialData.currentDateTime).getTime(),
 				differenceInSeconds = Math.floor((currentTime - timeStarted) / 1000);
 
 			self.data.timeElapsed( self.data.timeElapsed() + differenceInSeconds );
@@ -101,48 +107,71 @@ app.modules.ko.Timer = function(data) {
 
 	}
 
+	self.trigger = {
+		startTimer: function() {
+
+			self.startTimer();
+
+			var data = self.getServerReadyData();
+
+			app.modules.socket.emit(self.sockets.startTimer, data, self.startTimer);
+		},
+		pauseTimer: function() {
+
+			
+			
+			self.pauseTimer();
+
+			var data = self.getServerReadyData();
+
+			app.modules.socket.emit(self.sockets.pauseTimer, data, self.pauseTimer);
+		},
+		resetTimer: function() {
+
+			
+			
+			self.resetTimer();
+
+			var data = self.getServerReadyData();
+
+			app.modules.socket.emit(self.sockets.resetTimer, data, self.resetTimer);
+		}
+	}
+
 	self.startTimer = function() {
 
-		console.log('starting');
-
 		clearInterval(self.counter);
-
-		// 1000 will  run it every 1 second
-		self.counter = setInterval(self.timerCountdown, 1000);
 
 		self.data.timeStarted(new Date());
 
 		self.data.state("started");
 
-		self.saveTimer();
+		// 1000 will  run it every 1 second
+		self.counter = setInterval(self.timerCountdown, 1000);
 
 	};
 
 	self.pauseTimer = function() {
 
-		clearInterval(self.counter);
-
 		self.data.timeStarted("");
 
 		self.data.state("paused");
 
-		self.saveTimer();
+		clearInterval(self.counter);
 
 	};
 
 	self.resetTimer = function() {
 
-		clearInterval(self.counter);
-
-		$('.timer-clock span, .timer-name').removeClass('final-countdown');
-
 		self.data.timeElapsed(0);
 
 		self.data.timeStarted("");
 
-		self.data.state("stopped");
+		clearInterval(self.counter);
 
-		self.saveTimer();
+		$('.timer-clock span, .timer-name').removeClass('final-countdown');
+
+		self.data.state("stopped");
 
 	};
 
@@ -157,30 +186,15 @@ app.modules.ko.Timer = function(data) {
 
 	};
 
-	self.saveTimer = function(newState) {
-		// prepare our data to send to the server
-		var data = self.getServerReadyData();
-			
-		// notify server of start
-		app.modules.socket.emit(self.sockets.startTimer, data);
-
-		app.viewModel.getTimers();
-
-		if (newState == "started") {
-			console.log('should start');
-		}
-
-	};
-
 	self.data.timeElapsed.subscribe(function(value) {
 
 		if (self.data.timeElapsed() >= self.data.timerLength()) {
 
-			clearInterval(self.counter);
-
 			document.getElementById('audio-handle').play();
 
-			setTimeout(self.resetTimer, 5000);
+			clearInterval(self.counter);
+
+			setTimeout(self.trigger.resetTimer, 5000);
 
 		} else if (self.data.timeElapsed() > (self.data.timerLength() - 5)) {
 
@@ -190,6 +204,20 @@ app.modules.ko.Timer = function(data) {
 		}
 
 	});
+
+	self.getTimers = function() {
+
+		// emit a message to timer:get:list
+		app.modules.socket.emit(self.sockets.getTimers, self.setTimers);
+
+	};
+
+	self.setTimers = function(response) {
+
+		// assign this mapping to our timers observable
+		self.data.timers(response.data);
+
+	};
 
 	self.init();
 
@@ -375,20 +403,31 @@ app.modules.ko.TimerListViewModel = function() {
 	self.setupSocketListeners = function() {
 
 		// listen for timer:get:list
-		self.socket.on(self.sockets.getTimers, self.setTimers);
+		app.modules.socket.on(self.sockets.getTimers, self.setTimers);
 
 		// listen for timer:set:current_timer
-		self.socket.on(self.sockets.setCurrentTimer, function(data) {
+		app.modules.socket.on(self.sockets.setCurrentTimer, function(response) {
 
-			self.data.currentTimer( new app.modules.ko.Timer(data) );
+			console.log('heard', response);
+
+			self.data.currentTimer( new app.modules.ko.Timer(response) );
 
 		});
 
 		// listen for timer:start
+		app.modules.socket.on(self.sockets.startTimer, function() {
+			self.data.currentTimer().startTimer();
+		})
 
 		// listen for timer:pause
+		app.modules.socket.on(self.sockets.pauseTimer, function() {
+			self.data.currentTimer().pauseTimer();
+		})
 
 		// listen for timer:reset
+		app.modules.socket.on(self.sockets.resetTimer, function() {
+			self.data.currentTimer().resetTimer();
+		})
 
 	};
 
@@ -492,7 +531,9 @@ app.modules.ko.TimerListViewModel = function() {
 
 		app.modules.socket.emit(self.sockets.setCurrentTimer, timer, function(response) {
 
-			self.data.currentTimer( new app.modules.ko.Timer(response.data) );
+			console.log(response);
+
+			self.data.currentTimer( new app.modules.ko.Timer(response) );
 
 		});
 
@@ -506,6 +547,9 @@ app.modules.ko.TimerListViewModel = function() {
 	/* Init controller
 	------------------------------------------------------------------------- */	
 	self.init = function() {
+
+		// set up our socket listeners
+		self.setupSocketListeners();
 
 		// get the list of timers
 		self.getTimers();

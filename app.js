@@ -63,7 +63,7 @@ app.get('/', config.passport.ensureAuthenticated, routes.base.index);
 // when the client is ready, have them join a user room
 app.io.route('ready', function(req) {
 	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user._id;
+	var userId = req.session.passport.user;
 	// join the room
 	req.io.join(userId);
 });

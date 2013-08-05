@@ -12,7 +12,7 @@ block content
 				include zones/_timer-list
 
 			.col-lg-9
-				div.timer-zone(data-bind="visible: data.currentTimer().data._id() !== '', with: data.currentTimer()")
+				div.timer-zone(data-bind="with: data.currentTimer()")
 					include zones/_timer-zone
 				
 	include zones/_timer-editor

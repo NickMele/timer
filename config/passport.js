@@ -4,7 +4,7 @@ var passport = require('passport'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Token = require('../model/token'),
-	url = process.env.URL || 'http://localhost:5000';
+	url = process.env.URL || 'http://192.168.1.65:5000';
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to

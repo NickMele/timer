@@ -6,27 +6,30 @@ exports.getTimers = function(req, res) {
 	var userId = req.session.passport.user,
 		conditions = {
 			userId: userId
-		};
+		},
+		response = {};
 
 	// what fields do we want to select
 	var fields = '-userId';
 
 	// search the db for timers matching this user
 	Timer.find(conditions, fields, function(error, timers) {
+
+		response = {
+			error: error,
+			data: timers
+		}
 		
 		if (error) {
 			// if there was an error, do something
 			console.log(err);
 		} else {
 			// broadcast the message to load this timer to the room
-			req.io.room(userId).broadcast('timer:get:list', timers);
+			req.io.room(userId).broadcast('timer:get:list', response);
 		}
 
 		// respond to the request with the timer data, and status
-		req.io.respond({
-			error: error,
-			data: timers
-		});
+		req.io.respond(response);
 
 	});
 };
@@ -34,14 +37,30 @@ exports.getTimers = function(req, res) {
 exports.setCurrentTimer = function(req) {
 
 	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user;
+	var userId = req.session.passport.user,
+		fields = '-userId',
+		response = {};
 
-	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('timer:set:current_timer', req.data);
+	// lets make sure everyone gets up to date and the same data
+	Timer.findById(req.data._id, fields, function(error, timer) {
 
-	// respond to the client the data
-	req.io.respond({
-		data: req.data
+		response = {
+			data: timer,
+			currentDateTime: new Date()
+		}
+
+		if (error) {
+			// if there was an error, do something
+			console.log(err);
+		} else {
+
+			// broadcast the message to load this timer to the room
+			req.io.room(userId).broadcast('timer:set:current_timer', response);
+
+			// respond to the client the data
+			req.io.respond(response);
+		}
+
 	});
 
 };
@@ -134,6 +153,8 @@ exports.removeTimer = function(req) {
 
 exports.startTimer = function(req) {
 
+	console.log(req.data);
+
 	var conditions = {
 			_id: req.data._id
 		},
@@ -143,12 +164,14 @@ exports.startTimer = function(req) {
 	delete update._id;
 	
 	// update the timer state
-	Timer.findOneAndUpdate(conditions, update).exec();
+	Timer.findOneAndUpdate(conditions, update, function(error, timer) {
 
-	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user;
-	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('timer:start', req.data);
+		// the user id is going to be used at the room identifier
+		var userId = req.session.passport.user;
+		// broadcast the message to load this timer to the room
+		req.io.room(userId).broadcast('timer:start', req.data);
+
+	});
 	
 };
 
@@ -163,12 +186,14 @@ exports.pauseTimer = function(req) {
 	delete update._id;
 	
 	// update the timer state
-	Timer.findOneAndUpdate(conditions, update).exec();
+	Timer.findOneAndUpdate(conditions, update, function(error, timer) {
 
-	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user;
-	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('timer:pause', req.data);
+		// the user id is going to be used at the room identifier
+		var userId = req.session.passport.user;
+		// broadcast the message to load this timer to the room
+		req.io.room(userId).broadcast('timer:pause', req.data);
+
+	});
 	
 };
 
@@ -183,11 +208,13 @@ exports.resetTimer = function(req) {
 	delete update._id;
 	
 	// update the timer state
-	Timer.findOneAndUpdate(conditions, update).exec();
+	Timer.findOneAndUpdate(conditions, update, function(error, timer) {
 
-	// the user id is going to be used at the room identifier
-	var userId = req.session.passport.user;
-	// broadcast the message to load this timer to the room
-	req.io.room(userId).broadcast('timer:reset', req.data);
+		// the user id is going to be used at the room identifier
+		var userId = req.session.passport.user;
+		// broadcast the message to load this timer to the room
+		req.io.room(userId).broadcast('timer:reset', req.data);
+
+	});
 	
 };
