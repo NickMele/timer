@@ -89,8 +89,6 @@ app.modules.ko.Timer = function(initialData) {
 
 			if (self.data.timeElapsed() >= self.data.timerLength()) {
 
-				console.log('better not');
-
 				self.resetTimer();
 
 			} else {
@@ -114,11 +112,6 @@ app.modules.ko.Timer = function(initialData) {
 			clearInterval(self.counter);
 
 			setTimeout(self.trigger.resetTimer, 5000);
-
-		} else if (self.data.timeElapsed() > (self.data.timerLength() - 5)) {
-
-			// start warning the user we are in the final countdown
-			$('.timer-clock span, .timer-name').addClass('final-countdown');
 
 		}
 
@@ -181,8 +174,6 @@ app.modules.ko.Timer = function(initialData) {
 		self.data.timeStarted("");
 
 		clearInterval(self.counter);
-
-		$('.timer-clock span, .timer-name').removeClass('final-countdown');
 
 		self.data.state("stopped");
 
@@ -363,7 +354,7 @@ app.modules.ko.TimerListViewModel = function() {
 
 	// data store
 	self.data = {
-		currentTimer	: ko.observable(new app.modules.ko.Timer()),
+		currentTimer	: ko.observable(),
 		timers			: ko.observableArray([]),
 		// staged timer represents the timer currently being edited, regardless of new/old
 		stagedTimer		: ko.observable(""),
@@ -402,25 +393,25 @@ app.modules.ko.TimerListViewModel = function() {
 		// listen for timer:set:current_timer
 		app.modules.socket.on(self.sockets.setCurrentTimer, function(response) {
 
-			console.log('heard', response);
+			self.setTimers(response);
 
-			self.data.currentTimer( new app.modules.ko.Timer(response) );
+			self.data.currentTimer(response.currentTimerIndex);
 
 		});
 
 		// listen for timer:start
 		app.modules.socket.on(self.sockets.startTimer, function() {
-			self.data.currentTimer().startTimer();
+			self.data.timers()[self.data.currentTimer()].startTimer();
 		})
 
 		// listen for timer:pause
 		app.modules.socket.on(self.sockets.pauseTimer, function() {
-			self.data.currentTimer().pauseTimer();
+			self.data.timers()[self.data.currentTimer()].pauseTimer();
 		})
 
 		// listen for timer:reset
 		app.modules.socket.on(self.sockets.resetTimer, function() {
-			self.data.currentTimer().resetTimer();
+			self.data.timers()[self.data.currentTimer()].resetTimer();
 		})
 
 	};
@@ -499,6 +490,8 @@ app.modules.ko.TimerListViewModel = function() {
 		// set fullscreen class on timer zone
 		self.elements.timer.$timerZone.toggleClass('fullscreen');
 
+		return true;
+
 	};
 
 
@@ -516,20 +509,29 @@ app.modules.ko.TimerListViewModel = function() {
 	------------------------------------------------------------------------- */	
 	self.setTimers = function(response) {
 
-		var mappedTimers = $.map(response.data, function(timer) { return new app.modules.ko.Timer({data: timer}) });
+		var mappedTimers = $.map(response.data, function(timer) {
+
+			var initialData = {
+				data: timer,
+				currentDateTime: response.currentDateTime
+			}
+
+			return new app.modules.ko.Timer(initialData);
+
+		});
 
 		// assign this mapping to our timers observable
 		self.data.timers(mappedTimers);
 
 	};
 
-	self.setCurrentTimer = function(timer) {
+	self.setCurrentTimer = function(index) {
 
-		var timer = ko.toJS(timer.data);
+		app.modules.socket.emit(self.sockets.setCurrentTimer, index, function(response) {
 
-		app.modules.socket.emit(self.sockets.setCurrentTimer, timer, function(response) {
+			self.setTimers(response);
 
-			self.data.currentTimer( new app.modules.ko.Timer(response) );
+			self.data.currentTimer(response.currentTimerIndex);
 
 		});
 
