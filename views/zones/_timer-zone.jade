@@ -18,10 +18,9 @@ div.timer-clock
 
 div.timer-controls
 	.btn-group
-		button.timer-start.btn.btn-large.btn-primary(data-bind="click: trigger.startTimer, enable: data.state() != 'started'")
+		button.timer-start.btn.btn-large.btn-primary(data-bind="click: trigger.startTimer, css: {active: data.state() == 'started'}")
 			span.glyphicon.glyphicon-play
-		button.timer-pause.btn.btn-large.btn-primary(data-bind="click: trigger.pauseTimer, enable: data.state() == 'started'")
+		button.timer-pause.btn.btn-large.btn-primary(data-bind="click: trigger.pauseTimer, css: {active: data.state() == 'paused'}")
 			span.glyphicon.glyphicon-pause
 		button.timer-reset.btn.btn-large.btn-primary(data-bind="click: trigger.resetTimer")
 			span.glyphicon.glyphicon-repeat
-

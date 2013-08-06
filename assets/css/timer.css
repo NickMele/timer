@@ -16,7 +16,8 @@
     color: #b40000; } }
 
 body {
-  margin-top: 20px; }
+  margin-top: 20px;
+  padding-bottom: 40px; }
 
 /* Margin and Padding - determined via golden ratio */
 /* Margin */
@@ -241,6 +242,9 @@ body {
     @media (max-width: 768px) {
       .timer-zone .timer-clock span {
         font-size: 6em; } }
+    @media (max-width: 480px) {
+      .timer-zone .timer-clock span {
+        font-size: 4em; } }
 .timer-zone .timer-edit-controls {
   margin-right: 4px; }
 .timer-zone .timer-controls {

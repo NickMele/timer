@@ -40,7 +40,9 @@ app.modules.ko.Timer = function(initialData) {
 	}
 
 	// this is where we will store our interval function
+	self.soundModule = document.getElementById('audio-handle');
 	self.counter = null;
+	self.timerSubscription = null;
 
 	self.computedData.hours = ko.computed(function() {
 		var hours = Math.floor( (self.data.timerLength() - self.data.timeElapsed()) / 3600 );
@@ -105,16 +107,6 @@ app.modules.ko.Timer = function(initialData) {
 
 		self.data.timeElapsed( self.data.timeElapsed() + 1 );
 
-		if (self.data.timeElapsed() >= self.data.timerLength()) {
-
-			document.getElementById('audio-handle').play();
-
-			clearInterval(self.counter);
-
-			setTimeout(self.trigger.resetTimer, 5000);
-
-		}
-
 	}
 
 	self.trigger = {
@@ -146,6 +138,18 @@ app.modules.ko.Timer = function(initialData) {
 
 	self.startTimer = function() {
 
+		self.soundModule.load();
+
+		self.timerSubscription = self.data.timeElapsed.subscribe(function() {
+			if (self.data.timeElapsed() > self.data.timerLength()) {
+
+				self.soundModule.play();
+
+				self.trigger.resetTimer();
+
+			}
+		});
+
 		clearInterval(self.counter);
 
 		self.data.timeStarted(new Date());
@@ -165,6 +169,8 @@ app.modules.ko.Timer = function(initialData) {
 
 		clearInterval(self.counter);
 
+		self.timerSubscription.dispose();
+
 	};
 
 	self.resetTimer = function() {
@@ -177,11 +183,8 @@ app.modules.ko.Timer = function(initialData) {
 
 		self.data.state("stopped");
 
-	};
+		self.timerSubscription.dispose();
 
-	self.muteTimer = function() {
-
-		
 	};
 
 	self.getServerReadyData = function() {
@@ -428,13 +431,13 @@ app.modules.ko.TimerListViewModel = function() {
 	self.editTimer = function() {
 
 		// pause the current timer if it is started
-		if (self.data.currentTimer().data.state() == "started") {
-			self.data.currentTimer().pauseTimer();
+		if (self.data.timers()[self.data.currentTimer()].data.state() == "started") {
+			self.data.timers()[self.data.currentTimer()].pauseTimer();
 		}
 
 		// stage the current timer for editing
 		// self.data.stagedTimer(self.data.currentTimer());
-		self.data.editor(new app.modules.ko.Editor(ko.toJS(self.data.currentTimer().data)));
+		self.data.editor(new app.modules.ko.Editor(ko.toJS(self.data.timers()[self.data.currentTimer()].data)));
 
 		self.state.editingCurrentTimer(true);
 
@@ -454,7 +457,7 @@ app.modules.ko.TimerListViewModel = function() {
 
 				self.getTimers();
 
-				self.setCurrentTimer(response.data);
+				// self.setCurrentTimer(response.data);
 				
 			} else {
 				console.log(response.error);
