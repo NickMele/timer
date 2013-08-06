@@ -2,6 +2,5 @@ a(data-toggle='modal',data-backdrop="static", href='#timer-editor', data-bind="c
 	| New timer
 
 div.list-group.margin-top(data-bind="foreach: data.timers")
-	a(data-bind="click: $root.setCurrentTimer, css: { active: _id == $root.data.currentTimer().data._id() }").list-group-item.timer-link
-		span(data-bind="text: name")
-		span.glyphicon.glyphicon-play.pull-right(data-bind="visible: state == 'started'")
+	a(data-bind="click: $root.setCurrentTimer, css: { active: data._id() == $root.data.currentTimer().data._id() }").list-group-item.timer-link
+		span(data-bind="text: data.name()")

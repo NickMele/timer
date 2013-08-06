@@ -89,6 +89,8 @@ app.modules.ko.Timer = function(initialData) {
 
 			if (self.data.timeElapsed() >= self.data.timerLength()) {
 
+				console.log('better not');
+
 				self.resetTimer();
 
 			} else {
@@ -105,6 +107,21 @@ app.modules.ko.Timer = function(initialData) {
 
 		self.data.timeElapsed( self.data.timeElapsed() + 1 );
 
+		if (self.data.timeElapsed() >= self.data.timerLength()) {
+
+			document.getElementById('audio-handle').play();
+
+			clearInterval(self.counter);
+
+			setTimeout(self.trigger.resetTimer, 5000);
+
+		} else if (self.data.timeElapsed() > (self.data.timerLength() - 5)) {
+
+			// start warning the user we are in the final countdown
+			$('.timer-clock span, .timer-name').addClass('final-countdown');
+
+		}
+
 	}
 
 	self.trigger = {
@@ -118,8 +135,6 @@ app.modules.ko.Timer = function(initialData) {
 		},
 		pauseTimer: function() {
 
-			
-			
 			self.pauseTimer();
 
 			var data = self.getServerReadyData();
@@ -128,8 +143,6 @@ app.modules.ko.Timer = function(initialData) {
 		},
 		resetTimer: function() {
 
-			
-			
 			self.resetTimer();
 
 			var data = self.getServerReadyData();
@@ -185,25 +198,6 @@ app.modules.ko.Timer = function(initialData) {
 		return ko.toJS(self.data);
 
 	};
-
-	self.data.timeElapsed.subscribe(function(value) {
-
-		if (self.data.timeElapsed() >= self.data.timerLength()) {
-
-			document.getElementById('audio-handle').play();
-
-			clearInterval(self.counter);
-
-			setTimeout(self.trigger.resetTimer, 5000);
-
-		} else if (self.data.timeElapsed() > (self.data.timerLength() - 5)) {
-
-			// start warning the user we are in the final countdown
-			$('.timer-clock span, .timer-name').addClass('final-countdown');
-
-		}
-
-	});
 
 	self.getTimers = function() {
 
@@ -522,16 +516,18 @@ app.modules.ko.TimerListViewModel = function() {
 	------------------------------------------------------------------------- */	
 	self.setTimers = function(response) {
 
+		var mappedTimers = $.map(response.data, function(timer) { return new app.modules.ko.Timer({data: timer}) });
+
 		// assign this mapping to our timers observable
-		self.data.timers(response.data);
+		self.data.timers(mappedTimers);
 
 	};
 
 	self.setCurrentTimer = function(timer) {
 
-		app.modules.socket.emit(self.sockets.setCurrentTimer, timer, function(response) {
+		var timer = ko.toJS(timer.data);
 
-			console.log(response);
+		app.modules.socket.emit(self.sockets.setCurrentTimer, timer, function(response) {
 
 			self.data.currentTimer( new app.modules.ko.Timer(response) );
 

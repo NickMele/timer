@@ -7,7 +7,7 @@ div.clearfix
 		a.btn.btn-primary.btn-small.timer-delete(data-bind="click: $root.removeTimer")
 			span.glyphicon.glyphicon-trash
 
-h1(data-name="name", data-bind="text: data.name").timer-name
+h1(data-name="name", data-bind="text: data.name()").timer-name
 
 div.timer-clock
 	span(data-bind="text: computedData.hours").timer-clock-hours 00
