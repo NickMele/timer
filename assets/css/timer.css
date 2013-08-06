@@ -15,9 +15,9 @@
   50% {
     color: #b40000; } }
 
-body {
-  margin-top: 20px;
-  padding-bottom: 40px; }
+.main-content {
+  width: 90%;
+  margin: 20px auto; }
 
 /* Margin and Padding - determined via golden ratio */
 /* Margin */
@@ -214,13 +214,52 @@ body {
 .no-padding-left {
   padding-left: 0 !important; }
 
-.timer-list a .glyphicon {
-  margin-top: 1px;
-  color: #5cb85c;
-  -webkit-animation-name: flash;
-  -webkit-animation-duration: 1.5s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear; }
+.main-menu {
+  width: 20%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: -20%;
+  background: whitesmoke;
+  margin: 0;
+  padding: 0;
+  opacity: 1;
+  -webkit-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
+  -moz-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
+  -o-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
+  transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s; }
+  .main-menu .top-row {
+    margin: 0;
+    padding: 0 15px;
+    height: 50px;
+    background: rgba(230, 230, 230, 0.6);
+    line-height: 50px; }
+    .main-menu .top-row .toggle-menu {
+      position: absolute;
+      top: 0;
+      right: -50px;
+      display: block;
+      width: 50px;
+      height: 50px;
+      text-align: center; }
+  .main-menu .timer-list .timer-list-link {
+    margin: 0 5px;
+    display: block;
+    padding: 15px 10px;
+    border-top: 1px solid #f0f0f0; }
+    .main-menu .timer-list .timer-list-link:first-child {
+      border-top: none; }
+  .main-menu.open {
+    left: 0;
+    background: rgba(245, 245, 245, 0.6);
+    box-shadow: 0px 0px 10px 0px rgba(200, 200, 200, 0.6);
+    border-right: 1px solid rgba(200, 200, 200, 0.4);
+    -webkit-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
+    -moz-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
+    -o-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
+    transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s; }
+    .main-menu.open .toggle-menu {
+      right: 0; }
 
 .timer-zone .timer-name {
   text-align: center;
@@ -789,3 +828,12 @@ body {
   content: "\e160"; }
 
 /* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
+.new-timer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px; }

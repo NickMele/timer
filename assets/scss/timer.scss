@@ -5,8 +5,10 @@
 // PARTIALS
 @import 'partials/base';
 @import 'partials/spacing';
+@import 'partials/navigation';
 @import 'partials/timer-list';
 @import 'partials/timer-zone';
 @import 'partials/timer-editor';
-
 @import 'partials/bootstrap-glyphicons';
+
+@import 'views/index';

@@ -7,15 +7,28 @@ block scripts
 
 block content
 
-	.container
-		.row
-			.col-lg-3.timer-list
-				include zones/_timer-list
+	div.main-menu
+		div.top-row
+			a.toggle-menu ->
+			a.logout New timer
+		div.timer-list(data-bind="foreach: data.timers")
+			a.timer-list-link(data-bind="click: $root.setCurrentTimer.bind($data, $index()), css: { active: $index() == $root.data.currentTimer() }").list-group-item.timer-link
+				span(data-bind="text: data.name()")
 
-			.col-lg-9
-				div.timer-zone(data-bind="with: data.timers()[data.currentTimer()]")
-					include zones/_timer-zone
+	a.new-timer +
+
+	div.main-content
+		| main content
+
+	//- .container
+	//- 	.row
+	//- 		.col-lg-3.timer-list
+	//- 			include zones/_timer-list
+
+	//- 		.col-lg-9
+	//- 			div.timer-zone(data-bind="with: data.timers()[data.currentTimer()]")
+	//- 				include zones/_timer-zone
 				
-	include zones/_timer-editor
+	//- include zones/_timer-editor
 
-	audio#audio-handle(src="/audio/come-to-daddy.mp3",preload="auto")
+	//- audio#audio-handle(src="/audio/come-to-daddy.mp3",preload="auto")
