@@ -17,7 +17,8 @@ exports.getTimers = function(req, res) {
 
 		response = {
 			error: error,
-			data: timers
+			data: timers,
+			currentDateTime: new Date()
 		}
 		
 		if (error) {
@@ -36,24 +37,30 @@ exports.getTimers = function(req, res) {
 
 exports.setCurrentTimer = function(req) {
 
-	// the user id is going to be used at the room identifier
+	// set up our conditions
 	var userId = req.session.passport.user,
-		fields = '-userId',
+		conditions = {
+			userId: userId
+		},
 		response = {};
 
-	// lets make sure everyone gets up to date and the same data
-	Timer.findById(req.data._id, fields, function(error, timer) {
+	// what fields do we want to select
+	var fields = '-userId';
+
+	// search the db for timers matching this user
+	Timer.find(conditions, fields, function(error, timers) {
 
 		response = {
-			data: timer,
-			currentDateTime: new Date()
+			error: error,
+			data: timers,
+			currentDateTime: new Date(),
+			currentTimerIndex: req.data
 		}
-
+		
 		if (error) {
 			// if there was an error, do something
 			console.log(err);
 		} else {
-
 			// broadcast the message to load this timer to the room
 			req.io.room(userId).broadcast('timer:set:current_timer', response);
 
