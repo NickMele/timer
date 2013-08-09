@@ -1,26 +1,23 @@
-div.clearfix
-	.btn-group.pull-right
-		a.btn.btn-primary.timer-edit(data-toggle='modal', href='#timer-editor', data-bind="click: $root.editTimer")
-			span.glyphicon.glyphicon-edit
-		a.btn.btn-primary.timer-fullscreen(data-toggle="button", data-bind="click: $root.fullscreenMode")
-			span.glyphicon.glyphicon-fullscreen
-		a.btn.btn-primary.timer-delete(data-bind="click: $root.removeTimer")
-			span.glyphicon.glyphicon-trash
+div.timer-zone(data-bind="with: data.timers()[data.currentTimer()]")
+	div.timer-options
+		a.timer-option(data-bind="click: $root.editTimer")
+			i.icon-edit
+		a.timer-option(data-bind="click: $root.removeTimer")
+			i.icon-trash
 
-h1(data-name="name", data-bind="text: data.name()").timer-name
+	h1.timer-name(data-name="name", data-bind="text: data.name()")
 
-div.timer-clock
-	span(data-bind="text: computedData.hours").timer-clock-hours 00
-	span.timer-clock-separator :
-	span(data-bind="text: computedData.minutes").timer-clock-minutes 00
-	span.timer-clock-separator :
-	span(data-bind="text: computedData.seconds").timer-clock-seconds 00
+	div.timer-clock(data-bind="css: { 'timer-clock-has-hours': computedData.hours > 0 }")
+		span(data-bind="text: computedData.hours, visible: computedData.hours > 0").timer-clock-hours 00
+		span(data-bind="visible: computedData.hours > 0").timer-clock-separator :
+		span(data-bind="text: computedData.minutes").timer-clock-minutes 00
+		span.timer-clock-separator :
+		span(data-bind="text: computedData.seconds").timer-clock-seconds 00
 
-div.timer-controls
-	.btn-group
-		button.timer-start.btn.btn-large.btn-primary(data-bind="click: trigger.startTimer, css: {active: data.state() == 'started'}")
-			span.glyphicon.glyphicon-play
-		button.timer-pause.btn.btn-large.btn-primary(data-bind="click: trigger.pauseTimer, css: {active: data.state() == 'paused'}")
-			span.glyphicon.glyphicon-pause
-		button.timer-reset.btn.btn-large.btn-primary(data-bind="click: trigger.resetTimer")
-			span.glyphicon.glyphicon-repeat
+	div.timer-controls
+		a.timer-start.btn.btn-large.btn-primary(data-bind="click: trigger.startTimer, css: {disabled: data.state() == 'started'}")
+			i.icon-play
+		a.timer-pause.btn.btn-large.btn-primary(data-bind="click: trigger.pauseTimer, css: {disabled: data.state() != 'started'}")
+			i.icon-pause
+		a.timer-reset.btn.btn-large.btn-primary(data-bind="click: trigger.resetTimer")
+			i.icon-rotate-left

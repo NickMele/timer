@@ -2,13 +2,13 @@
 @import 'modules/modular-scale';
 @import 'modules/animations';
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600);
+
+@import 'partials/normalize';
+
 // PARTIALS
 @import 'partials/base';
 @import 'partials/spacing';
 @import 'partials/navigation';
-@import 'partials/timer-list';
-@import 'partials/timer-zone';
-@import 'partials/timer-editor';
-@import 'partials/bootstrap-glyphicons';
-
-@import 'views/index';
+@import 'partials/main-content';
+// @import 'partials/timer-editor';

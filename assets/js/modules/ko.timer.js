@@ -352,7 +352,8 @@ app.modules.ko.TimerListViewModel = function() {
 
 	// store the state of the application
 	self.state = {
-		editingCurrentTimer	: ko.observable(false)
+		editingCurrentTimer	: ko.observable(false),
+		mainMenuOpen		: ko.observable(false)
 	};
 
 	// data store
@@ -497,6 +498,12 @@ app.modules.ko.TimerListViewModel = function() {
 
 	};
 
+	self.toggleMainMenu = function() {
+
+		self.state.mainMenuOpen( !self.state.mainMenuOpen() );
+
+	}
+
 
 	/* Getters
 	------------------------------------------------------------------------- */	
@@ -534,6 +541,8 @@ app.modules.ko.TimerListViewModel = function() {
 
 			self.setTimers(response);
 
+			self.state.mainMenuOpen(false);
+
 			self.data.currentTimer(response.currentTimerIndex);
 
 		});
@@ -554,6 +563,9 @@ app.modules.ko.TimerListViewModel = function() {
 
 		// get the list of timers
 		self.getTimers();
+
+		// set the first time initially
+		self.setCurrentTimer(0);
 
 	};
 

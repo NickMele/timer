@@ -1,56 +1,78 @@
+// variables
+$main-menu-width: 20%;
+$main-menu-background: rgba(245,245,245,.95);
+$main-menu-top-row-background: rgba(230,230,230,.6);
+$main-menu-top-row-line-height: $top-row-height;
+$toggle-menu-width: $top-row-height;
+$timer-list-link-line-height: $top-row-height;
+$timer-list-link-border-top: 1px solid rgba(12,93,165,.1);
+
+
 .main-menu {
-	width: 20%;
+	width: $main-menu-width;
 	height: 100%;
 	position: absolute;
 	top: 0;
-	left: -20%;
-	background: rgba(245,245,245,1);
+	left: -$main-menu-width;
+	background: $main-menu-background;
 	margin: 0;
 	padding: 0;
 	opacity: 1;
-	-webkit-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
-	-moz-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
-	-o-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
-	transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
+	z-index: 999;
+	-webkit-transition: all ease-out .2s;
+	-moz-transition: all ease-out .2s;
+	-o-transition: all ease-out .2s;
+	transition: all ease-out .2s;
 	.top-row {
 		margin: 0;
 		padding: 0 15px;
-		height: 50px;
-		// border-bottom: 1px solid rgba(200,200,200,.4);
-		background: rgba(230,230,230,.6);
-		line-height: 50px;
+		background: $main-menu-top-row-background;
+		line-height: $main-menu-top-row-line-height;
+		.new-timer {
+			font-weight: $bold;
+			color: $green;
+		}
 		.toggle-menu {
 			position: absolute;
 			top: 0;
-			right: -50px;
+			width: $toggle-menu-width;
+			right: -$toggle-menu-width;
 			display: block;
-			width: 50px;
-			height: 50px;
+			line-height: $main-menu-top-row-line-height;
 			text-align: center;
+			font-size: 1.5em;
 		}
 	}
 	.timer-list {
 		.timer-list-link {
-			margin: 0 5px;
+			margin: 0 15px;
+			padding: 0;
 			display: block;
-			padding: 15px 10px;
-			border-top: 1px solid rgba(240,240,240,1);
+			line-height: $timer-list-link-line-height;
+			border-top: $timer-list-link-border-top;
 			&:first-child {
 				border-top: none;
+			}
+			&.active {
+				font-weight: $bold;
 			}
 		}
 	}
 	&.open {
 		left: 0;
-		background: rgba(245,245,245,.6);
 		box-shadow: 0px 0px 10px 0px rgba(200, 200, 200,.6);
 		border-right: 1px solid rgba(200,200,200,.4);
-		-webkit-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
-		-moz-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
-		-o-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
-		transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
+		-webkit-transition: all ease-in .2s;
+		-moz-transition: all ease-in .2s;
+		-o-transition: all ease-in .2s;
+		transition: all ease-in .2s;
 		.toggle-menu {
 			right: 0;
 		}
+	}
+
+	@media(max-width: 480px) {
+		width: 95%;
+		left: -95%;
 	}
 }

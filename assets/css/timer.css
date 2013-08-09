@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600);
 @-webkit-keyframes flash {
   from {
     opacity: 1; }
@@ -15,8 +16,348 @@
   50% {
     color: #b40000; } }
 
+/* normalize.css v2.1.2 | MIT License | git.io/normalize */
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+/**
+ * Correct `block` display not defined in IE 8/9.
+ */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+  display: block; }
+
+/**
+ * Correct `inline-block` display not defined in IE 8/9.
+ */
+audio,
+canvas,
+video {
+  display: inline-block; }
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+audio:not([controls]) {
+  display: none;
+  height: 0; }
+
+/**
+ * Address styling not present in IE 8/9.
+ */
+[hidden] {
+  display: none; }
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+/**
+ * 1. Set default font family to sans-serif.
+ * 2. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+html {
+  font-family: sans-serif;
+  /* 1 */
+  -ms-text-size-adjust: 100%;
+  /* 2 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */ }
+
+/**
+ * Remove default margin.
+ */
+body {
+  margin: 0; }
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+a:focus {
+  outline: thin dotted; }
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+a:active,
+a:hover {
+  outline: 0; }
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+/**
+ * Address variable `h1` font-size and margin within `section` and `article`
+ * contexts in Firefox 4+, Safari 5, and Chrome.
+ */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0; }
+
+/**
+ * Address styling not present in IE 8/9, Safari 5, and Chrome.
+ */
+abbr[title] {
+  border-bottom: 1px dotted; }
+
+/**
+ * Address style set to `bolder` in Firefox 4+, Safari 5, and Chrome.
+ */
+b,
+strong {
+  font-weight: bold; }
+
+/**
+ * Address styling not present in Safari 5 and Chrome.
+ */
+dfn {
+  font-style: italic; }
+
+/**
+ * Address differences between Firefox and other browsers.
+ */
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0; }
+
+/**
+ * Address styling not present in IE 8/9.
+ */
+mark {
+  background: #ff0;
+  color: #000; }
+
+/**
+ * Correct font family set oddly in Safari 5 and Chrome.
+ */
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, serif;
+  font-size: 1em; }
+
+/**
+ * Improve readability of pre-formatted text in all browsers.
+ */
+pre {
+  white-space: pre-wrap; }
+
+/**
+ * Set consistent quote types.
+ */
+q {
+  quotes: "\201C" "\201D" "\2018" "\2019"; }
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+small {
+  font-size: 80%; }
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline; }
+
+sup {
+  top: -0.5em; }
+
+sub {
+  bottom: -0.25em; }
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+/**
+ * Remove border when inside `a` element in IE 8/9.
+ */
+img {
+  border: 0; }
+
+/**
+ * Correct overflow displayed oddly in IE 9.
+ */
+svg:not(:root) {
+  overflow: hidden; }
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+/**
+ * Address margin not present in IE 8/9 and Safari 5.
+ */
+figure {
+  margin: 0; }
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+/**
+ * Define consistent border, margin, and padding.
+ */
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em; }
+
+/**
+ * 1. Correct `color` not being inherited in IE 8/9.
+ * 2. Remove padding so people aren't caught out if they zero out fieldsets.
+ */
+legend {
+  border: 0;
+  /* 1 */
+  padding: 0;
+  /* 2 */ }
+
+/**
+ * 1. Correct font family not being inherited in all browsers.
+ * 2. Correct font size not being inherited in all browsers.
+ * 3. Address margins set differently in Firefox 4+, Safari 5, and Chrome.
+ */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 2 */
+  margin: 0;
+  /* 3 */ }
+
+/**
+ * Address Firefox 4+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+button,
+input {
+  line-height: normal; }
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 8+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+button,
+select {
+  text-transform: none; }
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ */
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  /* 2 */
+  cursor: pointer;
+  /* 3 */ }
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+button[disabled],
+html input[disabled] {
+  cursor: default; }
+
+/**
+ * 1. Address box sizing set to `content-box` in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ */
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */ }
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+input[type="search"] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  /* 2 */
+  box-sizing: content-box; }
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none; }
+
+/**
+ * Remove inner padding and border in Firefox 4+.
+ */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+/**
+ * 1. Remove default vertical scrollbar in IE 8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+textarea {
+  overflow: auto;
+  /* 1 */
+  vertical-align: top;
+  /* 2 */ }
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+/**
+ * Remove most spacing between table cells.
+ */
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+body {
+  font-family: "Open Sans";
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1em;
+  color: #00a8c6;
+  background: #f9f2e7; }
+
 .main-content {
-  width: 90%;
+  width: 100%;
   margin: 20px auto; }
 
 /* Margin and Padding - determined via golden ratio */
@@ -220,620 +561,113 @@
   position: absolute;
   top: 0;
   left: -20%;
-  background: whitesmoke;
+  background: rgba(245, 245, 245, 0.95);
   margin: 0;
   padding: 0;
   opacity: 1;
-  -webkit-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
-  -moz-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
-  -o-transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s;
-  transition: left ease-out 0.3s, background ease-out 0.3s,border ease-out 0.3s,box-shadow ease-out 0.3s; }
+  z-index: 999;
+  -webkit-transition: all ease-out .2s;
+  -moz-transition: all ease-out .2s;
+  -o-transition: all ease-out .2s;
+  transition: all ease-out .2s; }
   .main-menu .top-row {
     margin: 0;
     padding: 0 15px;
-    height: 50px;
     background: rgba(230, 230, 230, 0.6);
-    line-height: 50px; }
+    line-height: 60px; }
+    .main-menu .top-row .new-timer {
+      font-weight: 600;
+      color: #8fbe00; }
     .main-menu .top-row .toggle-menu {
       position: absolute;
       top: 0;
-      right: -50px;
+      width: 60px;
+      right: -60px;
       display: block;
-      width: 50px;
-      height: 50px;
-      text-align: center; }
+      line-height: 60px;
+      text-align: center;
+      font-size: 1.5em; }
   .main-menu .timer-list .timer-list-link {
-    margin: 0 5px;
+    margin: 0 15px;
+    padding: 0;
     display: block;
-    padding: 15px 10px;
-    border-top: 1px solid #f0f0f0; }
+    line-height: 60px;
+    border-top: 1px solid rgba(12, 93, 165, 0.1); }
     .main-menu .timer-list .timer-list-link:first-child {
       border-top: none; }
+    .main-menu .timer-list .timer-list-link.active {
+      font-weight: 600; }
   .main-menu.open {
     left: 0;
-    background: rgba(245, 245, 245, 0.6);
     box-shadow: 0px 0px 10px 0px rgba(200, 200, 200, 0.6);
     border-right: 1px solid rgba(200, 200, 200, 0.4);
-    -webkit-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
-    -moz-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
-    -o-transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s;
-    transition: left ease-out 0.3s, background ease-in 0.3s,border ease-in 0.3s,box-shadow ease-in 0.3s; }
+    -webkit-transition: all ease-in .2s;
+    -moz-transition: all ease-in .2s;
+    -o-transition: all ease-in .2s;
+    transition: all ease-in .2s; }
     .main-menu.open .toggle-menu {
       right: 0; }
+  @media (max-width: 480px) {
+    .main-menu {
+      width: 95%;
+      left: -95%; } }
 
-.timer-zone .timer-name {
-  text-align: center;
-  line-height: 1.2em;
-  width: 50%;
-  margin: 20px auto;
-  padding: 6px;
-  height: 40px; }
-  @media (max-width: 768px) {
-    .timer-zone .timer-name {
-      width: 90%; } }
-.timer-zone .timer-clock {
-  text-align: center;
-  margin-top: 40px; }
-  .timer-zone .timer-clock span {
-    font-size: 10em;
-    line-height: 1em;
-    padding: 2px; }
-    @media (max-width: 768px) {
-      .timer-zone .timer-clock span {
-        font-size: 6em; } }
-    @media (max-width: 480px) {
-      .timer-zone .timer-clock span {
-        font-size: 4em; } }
-.timer-zone .timer-edit-controls {
-  margin-right: 4px; }
-.timer-zone .timer-controls {
-  text-align: center;
-  margin-top: 40px; }
-.timer-zone [contenteditable="false"] {
-  box-sizing: border-box;
-  border: 1px solid #ffffff;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px; }
-.timer-zone [contenteditable="true"] {
-  box-sizing: border-box;
-  border: 1px solid #cccccc;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
-  -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-  transition: border linear 0.2s, box-shadow linear 0.2s;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px; }
-.timer-zone.fullscreen {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  top: 0;
-  left: 0;
-  background: #fff;
-  z-index: 999; }
-.timer-zone .final-countdown {
-  -webkit-animation-name: final-countdown;
-  -webkit-animation-duration: 1s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear; }
-
-#timer-editor .time-control-groups {
-  padding-top: 40px; }
-  #timer-editor .time-control-groups .btn-increment-up {
-    border-radius: 3px 3px 0 0; }
-  #timer-editor .time-control-groups .btn-increment-down {
-    border-radius: 0 0 3px 3px; }
-  #timer-editor .time-control-groups .form-control {
-    border-radius: 0;
+.main-content .timer-zone {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid #e6e6e6;
+  padding-bottom: 40px; }
+  .main-content .timer-zone .timer-options {
+    position: absolute;
+    top: 0;
+    right: 0; }
+    .main-content .timer-zone .timer-options .timer-option {
+      line-height: 60px;
+      border-top: 1px solid #f0f0f0;
+      width: 60px;
+      display: inline-block;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center; }
+      .main-content .timer-zone .timer-options .timer-option i {
+        line-height: inherit;
+        font-size: 1.5em; }
+  .main-content .timer-zone .timer-name {
+    padding: 0;
+    margin: 0;
     text-align: center;
-    border-top: 0;
-    border-bottom: 0; }
-
-@font-face {
-  font-family: 'Glyphicons Halflings';
-  src: url("../fonts/glyphiconshalflings-regular.eot");
-  src: url("../fonts/glyphiconshalflings-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/glyphiconshalflings-regular.woff") format("woff"), url("../fonts/glyphiconshalflings-regular.ttf") format("truetype"), url("../fonts/glyphiconshalflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
-
-.glyphicon:before {
-  font-family: 'Glyphicons Halflings';
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased; }
-
-.glyphicon-glass:before {
-  content: "\e001"; }
-
-.glyphicon-music:before {
-  content: "\e002"; }
-
-.glyphicon-search:before {
-  content: "\e003"; }
-
-.glyphicon-envelope:before {
-  content: "\2709"; }
-
-.glyphicon-heart:before {
-  content: "\e005"; }
-
-.glyphicon-star:before {
-  content: "\e006"; }
-
-.glyphicon-star-empty:before {
-  content: "\e007"; }
-
-.glyphicon-user:before {
-  content: "\e008"; }
-
-.glyphicon-film:before {
-  content: "\e009"; }
-
-.glyphicon-th-large:before {
-  content: "\e010"; }
-
-.glyphicon-th:before {
-  content: "\e011"; }
-
-.glyphicon-th-list:before {
-  content: "\e012"; }
-
-.glyphicon-ok:before {
-  content: "\e013"; }
-
-.glyphicon-remove:before {
-  content: "\e014"; }
-
-.glyphicon-zoom-in:before {
-  content: "\e015"; }
-
-.glyphicon-zoom-out:before {
-  content: "\e016"; }
-
-.glyphicon-off:before {
-  content: "\e017"; }
-
-.glyphicon-signal:before {
-  content: "\e018"; }
-
-.glyphicon-cog:before {
-  content: "\e019"; }
-
-.glyphicon-trash:before {
-  content: "\e020"; }
-
-.glyphicon-home:before {
-  content: "\e021"; }
-
-.glyphicon-file:before {
-  content: "\e022"; }
-
-.glyphicon-time:before {
-  content: "\e023"; }
-
-.glyphicon-road:before {
-  content: "\e024"; }
-
-.glyphicon-download-alt:before {
-  content: "\e025"; }
-
-.glyphicon-download:before {
-  content: "\e026"; }
-
-.glyphicon-upload:before {
-  content: "\e027"; }
-
-.glyphicon-inbox:before {
-  content: "\e028"; }
-
-.glyphicon-play-circle:before {
-  content: "\e029"; }
-
-.glyphicon-repeat:before {
-  content: "\e030"; }
-
-.glyphicon-refresh:before {
-  content: "\e031"; }
-
-.glyphicon-list-alt:before {
-  content: "\e032"; }
-
-.glyphicon-lock:before {
-  content: "\e033"; }
-
-.glyphicon-flag:before {
-  content: "\e034"; }
-
-.glyphicon-headphones:before {
-  content: "\e035"; }
-
-.glyphicon-volume-off:before {
-  content: "\e036"; }
-
-.glyphicon-volume-down:before {
-  content: "\e037"; }
-
-.glyphicon-volume-up:before {
-  content: "\e038"; }
-
-.glyphicon-qrcode:before {
-  content: "\e039"; }
-
-.glyphicon-barcode:before {
-  content: "\e040"; }
-
-.glyphicon-tag:before {
-  content: "\e041"; }
-
-.glyphicon-tags:before {
-  content: "\e042"; }
-
-.glyphicon-book:before {
-  content: "\e043"; }
-
-.glyphicon-bookmark:before {
-  content: "\e044"; }
-
-.glyphicon-print:before {
-  content: "\e045"; }
-
-.glyphicon-camera:before {
-  content: "\e046"; }
-
-.glyphicon-font:before {
-  content: "\e047"; }
-
-.glyphicon-bold:before {
-  content: "\e048"; }
-
-.glyphicon-italic:before {
-  content: "\e049"; }
-
-.glyphicon-text-height:before {
-  content: "\e050"; }
-
-.glyphicon-text-width:before {
-  content: "\e051"; }
-
-.glyphicon-align-left:before {
-  content: "\e052"; }
-
-.glyphicon-align-center:before {
-  content: "\e053"; }
-
-.glyphicon-align-right:before {
-  content: "\e054"; }
-
-.glyphicon-align-justify:before {
-  content: "\e055"; }
-
-.glyphicon-list:before {
-  content: "\e056"; }
-
-.glyphicon-indent-left:before {
-  content: "\e057"; }
-
-.glyphicon-indent-right:before {
-  content: "\e058"; }
-
-.glyphicon-facetime-video:before {
-  content: "\e059"; }
-
-.glyphicon-picture:before {
-  content: "\e060"; }
-
-.glyphicon-pencil:before {
-  content: "\270f"; }
-
-.glyphicon-map-marker:before {
-  content: "\e062"; }
-
-.glyphicon-adjust:before {
-  content: "\e063"; }
-
-.glyphicon-tint:before {
-  content: "\e064"; }
-
-.glyphicon-edit:before {
-  content: "\e065"; }
-
-.glyphicon-share:before {
-  content: "\e066"; }
-
-.glyphicon-check:before {
-  content: "\e067"; }
-
-.glyphicon-move:before {
-  content: "\e068"; }
-
-.glyphicon-step-backward:before {
-  content: "\e069"; }
-
-.glyphicon-fast-backward:before {
-  content: "\e070"; }
-
-.glyphicon-backward:before {
-  content: "\e071"; }
-
-.glyphicon-play:before {
-  content: "\e072"; }
-
-.glyphicon-pause:before {
-  content: "\e073"; }
-
-.glyphicon-stop:before {
-  content: "\e074"; }
-
-.glyphicon-forward:before {
-  content: "\e075"; }
-
-.glyphicon-fast-forward:before {
-  content: "\e076"; }
-
-.glyphicon-step-forward:before {
-  content: "\e077"; }
-
-.glyphicon-eject:before {
-  content: "\e078"; }
-
-.glyphicon-chevron-left:before {
-  content: "\e079"; }
-
-.glyphicon-chevron-right:before {
-  content: "\e080"; }
-
-.glyphicon-plus-sign:before {
-  content: "\e081"; }
-
-.glyphicon-minus-sign:before {
-  content: "\e082"; }
-
-.glyphicon-remove-sign:before {
-  content: "\e083"; }
-
-.glyphicon-ok-sign:before {
-  content: "\e084"; }
-
-.glyphicon-question-sign:before {
-  content: "\e085"; }
-
-.glyphicon-info-sign:before {
-  content: "\e086"; }
-
-.glyphicon-screenshot:before {
-  content: "\e087"; }
-
-.glyphicon-remove-circle:before {
-  content: "\e088"; }
-
-.glyphicon-ok-circle:before {
-  content: "\e089"; }
-
-.glyphicon-ban-circle:before {
-  content: "\e090"; }
-
-.glyphicon-arrow-left:before {
-  content: "\e091"; }
-
-.glyphicon-arrow-right:before {
-  content: "\e092"; }
-
-.glyphicon-arrow-up:before {
-  content: "\e093"; }
-
-.glyphicon-arrow-down:before {
-  content: "\e094"; }
-
-.glyphicon-share-alt:before {
-  content: "\e095"; }
-
-.glyphicon-resize-full:before {
-  content: "\e096"; }
-
-.glyphicon-resize-small:before {
-  content: "\e097"; }
-
-.glyphicon-plus:before {
-  content: "\002b"; }
-
-.glyphicon-minus:before {
-  content: "\2212"; }
-
-.glyphicon-asterisk:before {
-  content: "\002a"; }
-
-.glyphicon-exclamation-sign:before {
-  content: "\e101"; }
-
-.glyphicon-gift:before {
-  content: "\e102"; }
-
-.glyphicon-leaf:before {
-  content: "\e103"; }
-
-.glyphicon-fire:before {
-  content: "\e104"; }
-
-.glyphicon-eye-open:before {
-  content: "\e105"; }
-
-.glyphicon-eye-close:before {
-  content: "\e106"; }
-
-.glyphicon-warning-sign:before {
-  content: "\e107"; }
-
-.glyphicon-plane:before {
-  content: "\e108"; }
-
-.glyphicon-calendar:before {
-  content: "\e109"; }
-
-.glyphicon-random:before {
-  content: "\e110"; }
-
-.glyphicon-comment:before {
-  content: "\e111"; }
-
-.glyphicon-magnet:before {
-  content: "\e112"; }
-
-.glyphicon-chevron-up:before {
-  content: "\e113"; }
-
-.glyphicon-chevron-down:before {
-  content: "\e114"; }
-
-.glyphicon-retweet:before {
-  content: "\e115"; }
-
-.glyphicon-shopping-cart:before {
-  content: "\e116"; }
-
-.glyphicon-folder-close:before {
-  content: "\e117"; }
-
-.glyphicon-folder-open:before {
-  content: "\e118"; }
-
-.glyphicon-resize-vertical:before {
-  content: "\e119"; }
-
-.glyphicon-resize-horizontal:before {
-  content: "\e120"; }
-
-.glyphicon-hdd:before {
-  content: "\e121"; }
-
-.glyphicon-bullhorn:before {
-  content: "\e122"; }
-
-.glyphicon-bell:before {
-  content: "\e123"; }
-
-.glyphicon-certificate:before {
-  content: "\e124"; }
-
-.glyphicon-thumbs-up:before {
-  content: "\e125"; }
-
-.glyphicon-thumbs-down:before {
-  content: "\e126"; }
-
-.glyphicon-hand-right:before {
-  content: "\e127"; }
-
-.glyphicon-hand-left:before {
-  content: "\e128"; }
-
-.glyphicon-hand-up:before {
-  content: "\e129"; }
-
-.glyphicon-hand-down:before {
-  content: "\e130"; }
-
-.glyphicon-circle-arrow-right:before {
-  content: "\e131"; }
-
-.glyphicon-circle-arrow-left:before {
-  content: "\e132"; }
-
-.glyphicon-circle-arrow-up:before {
-  content: "\e133"; }
-
-.glyphicon-circle-arrow-down:before {
-  content: "\e134"; }
-
-.glyphicon-globe:before {
-  content: "\e135"; }
-
-.glyphicon-wrench:before {
-  content: "\e136"; }
-
-.glyphicon-tasks:before {
-  content: "\e137"; }
-
-.glyphicon-filter:before {
-  content: "\e138"; }
-
-.glyphicon-briefcase:before {
-  content: "\e139"; }
-
-.glyphicon-fullscreen:before {
-  content: "\e140"; }
-
-.glyphicon-dashboard:before {
-  content: "\e141"; }
-
-.glyphicon-paperclip:before {
-  content: "\e142"; }
-
-.glyphicon-heart-empty:before {
-  content: "\e143"; }
-
-.glyphicon-link:before {
-  content: "\e144"; }
-
-.glyphicon-phone:before {
-  content: "\e145"; }
-
-.glyphicon-pushpin:before {
-  content: "\e146"; }
-
-.glyphicon-euro:before {
-  content: "\20ac"; }
-
-.glyphicon-usd:before {
-  content: "\e148"; }
-
-.glyphicon-gbp:before {
-  content: "\e149"; }
-
-.glyphicon-sort:before {
-  content: "\e150"; }
-
-.glyphicon-sort-by-alphabet:before {
-  content: "\e151"; }
-
-.glyphicon-sort-by-alphabet-alt:before {
-  content: "\e152"; }
-
-.glyphicon-sort-by-order:before {
-  content: "\e153"; }
-
-.glyphicon-sort-by-order-alt:before {
-  content: "\e154"; }
-
-.glyphicon-sort-by-attributes:before {
-  content: "\e155"; }
-
-.glyphicon-sort-by-attributes-alt:before {
-  content: "\e156"; }
-
-.glyphicon-unchecked:before {
-  content: "\e157"; }
-
-.glyphicon-expand:before {
-  content: "\e158"; }
-
-.glyphicon-collapse:before {
-  content: "\e159"; }
-
-.glyphicon-collapse-top:before {
-  content: "\e160"; }
-
-/* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
-.new-timer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: block;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  line-height: 50px; }
+    line-height: 1em;
+    font-size: 2.5em;
+    color: #8fbe00; }
+  .main-content .timer-zone .timer-clock {
+    border: 1px solid rgba(240, 240, 240, 0.95);
+    background: rgba(250, 250, 250, 0.7);
+    box-shadow: inset 0px 0px 10px -2px rgba(200, 200, 200, 0.4);
+    border-radius: 5px;
+    padding: 20px 0;
+    box-sizing: border-box;
+    width: 85%;
+    margin: 40px auto 60px;
+    text-align: center;
+    font-size: 9em;
+    font-weight: 300;
+    line-height: 1em; }
+  .main-content .timer-zone .timer-controls {
+    text-align: center; }
+    .main-content .timer-zone .timer-controls a {
+      line-height: 60px;
+      font-size: 2.5em;
+      margin: 0 20px;
+      color: #40c0cb;
+      text-shadow: 0px 0px 6px rgba(200, 200, 200, 0.9); }
+      .main-content .timer-zone .timer-controls a.disabled {
+        color: rgba(200, 200, 200, 0.3);
+        text-shadow: none; }
+  @media (max-width: 480px) {
+    .main-content .timer-zone .timer-name {
+      font-size: 1.5em; }
+    .main-content .timer-zone .timer-clock {
+      width: 85%;
+      font-size: 6em; }
+      .main-content .timer-zone .timer-clock.timer-clock-has-hours {
+        font-size: 4.3em; } }

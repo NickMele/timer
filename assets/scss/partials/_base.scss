@@ -1,4 +1,13 @@
+body {
+	font-family: $base-font-family;
+	font-weight: $base-font-weight;
+	font-size: $base-font-size;
+	line-height: $base-line-height;
+	color: $font-color;
+	background: $cream;
+}
+
 .main-content {
-	width: 90%;
+	width: 100%;
 	margin: 20px auto;
 }

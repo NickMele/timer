@@ -7,18 +7,17 @@ block scripts
 
 block content
 
-	div.main-menu
+	div.main-menu(data-bind="css: { open: $root.state.mainMenuOpen() }")
 		div.top-row
-			a.toggle-menu ->
-			a.logout New timer
+			a.toggle-menu(data-bind="click: $root.toggleMainMenu")
+				i(data-bind="css: { 'icon-chevron-right': !$root.state.mainMenuOpen(),'icon-chevron-left': $root.state.mainMenuOpen() }")
+			a.new-timer New timer...
 		div.timer-list(data-bind="foreach: data.timers")
 			a.timer-list-link(data-bind="click: $root.setCurrentTimer.bind($data, $index()), css: { active: $index() == $root.data.currentTimer() }").list-group-item.timer-link
 				span(data-bind="text: data.name()")
 
-	a.new-timer +
-
 	div.main-content
-		| main content
+		include zones/_timer-zone
 
 	//- .container
 	//- 	.row
@@ -31,4 +30,4 @@ block content
 				
 	//- include zones/_timer-editor
 
-	//- audio#audio-handle(src="/audio/come-to-daddy.mp3",preload="auto")
+	audio#audio-handle(src="/audio/come-to-daddy.mp3",preload="auto")
