@@ -3,7 +3,7 @@ $timer-option-width: $top-row-height;
 
 .top-row {
 	height: $top-row-height;
-	background: rgba(50,50,50,1);
+	background: $top-row-background;
 	position: relative;
 	.timer-options {
 		position: absolute;

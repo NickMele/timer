@@ -575,9 +575,11 @@ body {
     line-height: 60px; }
     .main-menu .top-row .new-timer {
       font-weight: 600;
-      color: #f9f2e7; }
+      color: #f9f2e7;
+      cursor: pointer; }
     .main-menu .top-row .toggle-menu {
       position: absolute;
+      cursor: pointer;
       top: 0;
       width: 60px;
       right: -60px;
@@ -589,13 +591,15 @@ body {
   .main-menu .timer-list .timer-list-link {
     margin: 0 15px;
     padding: 0;
+    cursor: pointer;
     display: block;
     line-height: 60px;
     border-top: 1px solid rgba(12, 93, 165, 0.1); }
     .main-menu .timer-list .timer-list-link:first-child {
       border-top: none; }
     .main-menu .timer-list .timer-list-link.active {
-      font-weight: 600; }
+      font-weight: 600;
+      color: #8fbe00; }
   .main-menu.open {
     left: 0;
     box-shadow: 0px 0px 10px 0px rgba(200, 200, 200, 0.6);
@@ -628,14 +632,19 @@ body {
     width: 85%;
     margin: 40px auto 60px;
     text-align: center;
-    font-size: 9em;
+    font-size: 15em;
     font-weight: 300;
     line-height: 1em; }
+    .main-content .timer-zone .timer-clock .timer-clock-separator {
+      color: rgba(50, 50, 50, 0.7);
+      margin: 0 5px;
+      font-size: .8em;
+      vertical-align: top; }
   .main-content .timer-zone .timer-controls {
     text-align: center; }
     .main-content .timer-zone .timer-controls a {
       line-height: 60px;
-      font-size: 2.5em;
+      font-size: 4em;
       margin: 0 20px;
       color: #40c0cb;
       text-shadow: 0px 0px 6px rgba(200, 200, 200, 0.9); }
@@ -650,6 +659,72 @@ body {
       font-size: 6em; }
       .main-content .timer-zone .timer-clock.timer-clock-has-hours {
         font-size: 4.3em; } }
+
+input[type="text"] {
+  border-radius: 3px;
+  border: 1px solid #c8c8c8;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 1.5em; }
+
+.timer-form {
+  width: 85%;
+  margin: 20px auto;
+  display: block;
+  padding: 0; }
+  .timer-form .timer-form-name {
+    margin-top: 20px;
+    margin-bottom: 40px; }
+  .timer-form .timer-form-digit {
+    width: 30%;
+    margin: 0 0 40px;
+    display: inline-block; }
+    .timer-form .timer-form-digit.alpha {
+      margin-right: 5%; }
+    .timer-form .timer-form-digit.omega {
+      margin-left: 5%; }
+    .timer-form .timer-form-digit input[type="text"] {
+      font-size: 2.5em;
+      border-radius: 0;
+      border-top: none;
+      border-bottom: none;
+      padding: 20px 0 30px;
+      position: relative; }
+      .timer-form .timer-form-digit input[type="text"]:after {
+        content: attr(title);
+        position: absolute;
+        bottom: 5px;
+        left: 0px;
+        width: 100%;
+        font-size: .3em;
+        color: rgba(50, 50, 50, 0.6); }
+    .timer-form .timer-form-digit button {
+      width: 100%;
+      border: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1em;
+      font-size: 2em;
+      background: #00a8c6;
+      color: #f9f2e7;
+      padding: 5px; }
+      .timer-form .timer-form-digit button.btn-increment-down {
+        border-radius: 0 0 5px 5px; }
+      .timer-form .timer-form-digit button.btn-increment-up {
+        border-radius: 5px 5px 0 0; }
+  .timer-form button {
+    width: 49%;
+    border-radius: 3px;
+    border: none;
+    padding: 10px; }
+    .timer-form button.btn-cancel {
+      margin-right: 2%;
+      background: #323232;
+      color: #f9f2e7; }
+    .timer-form button.btn-save {
+      background: #8fbe00; }
 
 .top-row {
   height: 60px;

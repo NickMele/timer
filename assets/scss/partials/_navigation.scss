@@ -1,7 +1,6 @@
 // variables
 $main-menu-width: 20%;
 $main-menu-background: rgba(245,245,245,.95);
-$main-menu-top-row-background: rgba(230,230,230,.6);
 $main-menu-top-row-line-height: $top-row-height;
 $toggle-menu-width: $top-row-height;
 $timer-list-link-line-height: $top-row-height;
@@ -30,9 +29,11 @@ $timer-list-link-border-top: 1px solid rgba(12,93,165,.1);
 		.new-timer {
 			font-weight: $bold;
 			color: $cream;
+			cursor: pointer;
 		}
 		.toggle-menu {
 			position: absolute;
+			cursor: pointer;
 			top: 0;
 			width: $toggle-menu-width;
 			right: -$toggle-menu-width;
@@ -47,6 +48,7 @@ $timer-list-link-border-top: 1px solid rgba(12,93,165,.1);
 		.timer-list-link {
 			margin: 0 15px;
 			padding: 0;
+			cursor: pointer;
 			display: block;
 			line-height: $timer-list-link-line-height;
 			border-top: $timer-list-link-border-top;
@@ -55,6 +57,7 @@ $timer-list-link-border-top: 1px solid rgba(12,93,165,.1);
 			}
 			&.active {
 				font-weight: $bold;
+				color: $green;
 			}
 		}
 	}

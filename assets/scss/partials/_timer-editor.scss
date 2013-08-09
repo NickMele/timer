@@ -1,17 +1,80 @@
-#timer-editor {
-	.time-control-groups {
-		padding-top: 40px;
-		.btn-increment-up {
-			border-radius: 3px 3px 0 0;
+input[type="text"] {
+	border-radius: 3px;
+	border: 1px solid rgba(200,200,200,1);
+	padding: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+.timer-form {
+	width: 85%;
+	margin: 20px auto;
+	display: block;
+	padding: 0;
+	.timer-form-name {
+		margin-top: 20px;
+		margin-bottom: 40px;
+	}
+	.timer-form-digit {
+		width: 30%;
+		margin: 0 0 40px;
+		display: inline-block;
+		&.alpha {
+			margin-right: 5%;
 		}
-		.btn-increment-down {
-			border-radius: 0 0 3px 3px;
+		&.omega {
+			margin-left: 5%;
 		}
-		.form-control {
+		input[type="text"] {
+			font-size: 2.5em;
 			border-radius: 0;
-			text-align: center;
-			border-top: 0;
-			border-bottom: 0;
+			border-top: none;
+			border-bottom: none;
+			padding: 20px 0 30px;
+			position: relative;
+			&:after {
+				content: attr(title);
+				position: absolute;
+				bottom: 5px;
+				left: 0px;
+				width: 100%;
+				font-size: .3em;
+				color: rgba(50,50,50,.6);
+			}
+		}
+		button {
+			width: 100%;
+			border: none;
+			margin: 0;
+			padding: 0;
+			line-height: 1em;
+			font-size: 2em;
+			background: $blue;
+			color: $cream;
+			padding: 5px;
+			&.btn-increment-down {
+				border-radius: 0 0 5px 5px;
+			}
+			&.btn-increment-up {
+				border-radius: 5px 5px 0 0;
+			}
+		}
+	}
+
+	button {
+		width: 49%;
+		border-radius: 3px;
+		border: none;
+		padding: 10px;
+		&.btn-cancel {
+			margin-right: 2%;
+			background: rgba(50,50,50,1);
+			color: $cream;
+		}
+		&.btn-save {
+			background: $green;			
 		}
 	}
 }

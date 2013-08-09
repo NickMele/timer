@@ -2,12 +2,12 @@ div.timer-zone(data-bind="with: data.timers()[data.currentTimer()]")
 
 	h1.timer-name(data-name="name", data-bind="text: data.name()")
 
-	div.timer-clock(data-bind="css: { 'timer-clock-has-hours': computedData.hours > 0 }")
-		span(data-bind="text: computedData.hours, visible: computedData.hours > 0").timer-clock-hours 00
-		span(data-bind="visible: computedData.hours > 0").timer-clock-separator :
-		span(data-bind="text: computedData.minutes").timer-clock-minutes 00
+	div.timer-clock(data-bind="css: { 'timer-clock-has-hours': computedData.hours() != '00' }")
+		span(data-bind="text: computedData.hours(), visible: computedData.hours() != '00'").timer-clock-hours 00
+		span(data-bind="visible: computedData.hours() != '00'").timer-clock-separator :
+		span(data-bind="text: computedData.minutes()").timer-clock-minutes 00
 		span.timer-clock-separator :
-		span(data-bind="text: computedData.seconds").timer-clock-seconds 00
+		span(data-bind="text: computedData.seconds()").timer-clock-seconds 00
 
 	div.timer-controls
 		a.timer-start.btn.btn-large.btn-primary(data-bind="click: trigger.startTimer, visible: data.state() != 'started'")
