@@ -1,10 +1,26 @@
-.new-timer {
-	position: absolute;
-	top: 0;
-	right: 0;
-	display: block;
-	width: 50px;
-	height: 50px;
-	text-align: center;
-	line-height: 50px;
+$timer-option-line-height: $top-row-height;
+$timer-option-width: $top-row-height;
+
+.top-row {
+	height: $top-row-height;
+	background: rgba(50,50,50,1);
+	position: relative;
+	.timer-options {
+		position: absolute;
+		top: 0;
+		right: 0;
+		.timer-option {
+			line-height: $timer-option-line-height;
+			width: $timer-option-width;
+			display: inline-block;
+			cursor: pointer;
+			text-decoration: none;
+			text-align: center;
+			color: $cream;
+			i {
+				line-height: inherit;
+				font-size: 1.5em;
+			}
+		}
+	}
 }

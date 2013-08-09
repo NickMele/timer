@@ -357,8 +357,7 @@ body {
   background: #f9f2e7; }
 
 .main-content {
-  width: 100%;
-  margin: 20px auto; }
+  width: 100%; }
 
 /* Margin and Padding - determined via golden ratio */
 /* Margin */
@@ -573,11 +572,10 @@ body {
   .main-menu .top-row {
     margin: 0;
     padding: 0 15px;
-    background: rgba(230, 230, 230, 0.6);
     line-height: 60px; }
     .main-menu .top-row .new-timer {
       font-weight: 600;
-      color: #8fbe00; }
+      color: #f9f2e7; }
     .main-menu .top-row .toggle-menu {
       position: absolute;
       top: 0;
@@ -586,7 +584,8 @@ body {
       display: block;
       line-height: 60px;
       text-align: center;
-      font-size: 1.5em; }
+      font-size: 1.5em;
+      color: #f9f2e7; }
   .main-menu .timer-list .timer-list-link {
     margin: 0 15px;
     padding: 0;
@@ -600,7 +599,7 @@ body {
   .main-menu.open {
     left: 0;
     box-shadow: 0px 0px 10px 0px rgba(200, 200, 200, 0.6);
-    border-right: 1px solid rgba(200, 200, 200, 0.4);
+    border-right: 1px solid rgba(100, 100, 100, 0.4);
     -webkit-transition: all ease-in .2s;
     -moz-transition: all ease-in .2s;
     -o-transition: all ease-in .2s;
@@ -613,38 +612,18 @@ body {
       left: -95%; } }
 
 .main-content .timer-zone {
-  margin-top: 60px;
+  margin: 0;
   padding-top: 20px;
   border-top: 1px solid #e6e6e6;
   padding-bottom: 40px; }
-  .main-content .timer-zone .timer-options {
-    position: absolute;
-    top: 0;
-    right: 0; }
-    .main-content .timer-zone .timer-options .timer-option {
-      line-height: 60px;
-      border-top: 1px solid #f0f0f0;
-      width: 60px;
-      display: inline-block;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center; }
-      .main-content .timer-zone .timer-options .timer-option i {
-        line-height: inherit;
-        font-size: 1.5em; }
   .main-content .timer-zone .timer-name {
-    padding: 0;
+    padding: 20px 0 0 0;
     margin: 0;
     text-align: center;
     line-height: 1em;
     font-size: 2.5em;
     color: #8fbe00; }
   .main-content .timer-zone .timer-clock {
-    border: 1px solid rgba(240, 240, 240, 0.95);
-    background: rgba(250, 250, 250, 0.7);
-    box-shadow: inset 0px 0px 10px -2px rgba(200, 200, 200, 0.4);
-    border-radius: 5px;
-    padding: 20px 0;
     box-sizing: border-box;
     width: 85%;
     margin: 40px auto 60px;
@@ -671,3 +650,23 @@ body {
       font-size: 6em; }
       .main-content .timer-zone .timer-clock.timer-clock-has-hours {
         font-size: 4.3em; } }
+
+.top-row {
+  height: 60px;
+  background: #323232;
+  position: relative; }
+  .top-row .timer-options {
+    position: absolute;
+    top: 0;
+    right: 0; }
+    .top-row .timer-options .timer-option {
+      line-height: 60px;
+      width: 60px;
+      display: inline-block;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      color: #f9f2e7; }
+      .top-row .timer-options .timer-option i {
+        line-height: inherit;
+        font-size: 1.5em; }

@@ -1,9 +1,4 @@
 div.timer-zone(data-bind="with: data.timers()[data.currentTimer()]")
-	div.timer-options
-		a.timer-option(data-bind="click: $root.editTimer")
-			i.icon-edit
-		a.timer-option(data-bind="click: $root.removeTimer")
-			i.icon-trash
 
 	h1.timer-name(data-name="name", data-bind="text: data.name()")
 
@@ -15,9 +10,9 @@ div.timer-zone(data-bind="with: data.timers()[data.currentTimer()]")
 		span(data-bind="text: computedData.seconds").timer-clock-seconds 00
 
 	div.timer-controls
-		a.timer-start.btn.btn-large.btn-primary(data-bind="click: trigger.startTimer, css: {disabled: data.state() == 'started'}")
+		a.timer-start.btn.btn-large.btn-primary(data-bind="click: trigger.startTimer, visible: data.state() != 'started'")
 			i.icon-play
-		a.timer-pause.btn.btn-large.btn-primary(data-bind="click: trigger.pauseTimer, css: {disabled: data.state() != 'started'}")
+		a.timer-pause.btn.btn-large.btn-primary(data-bind="click: trigger.pauseTimer, visible: data.state() == 'started'")
 			i.icon-pause
 		a.timer-reset.btn.btn-large.btn-primary(data-bind="click: trigger.resetTimer")
 			i.icon-rotate-left

@@ -1,7 +1,3 @@
-$timer-options-width: 10%;
-$timer-option-line-height: $top-row-height;
-$timer-option-border-top: 1px solid rgba(240,240,240,1);
-$timer-option-width: $top-row-height;
 $timer-zone-buffer-space: 20px;
 $timer-zone-border-top: 1px solid rgba(230,230,230,1);
 $timer-clock-border: 1px solid rgba(240,240,240,.95);
@@ -9,30 +5,12 @@ $timer-clock-background: rgba(250,250,250,.7);
 
 .main-content {
 	.timer-zone {
-		margin-top: $timer-option-line-height;
+		margin: 0;
 		padding-top: $timer-zone-buffer-space;
 		border-top: $timer-zone-border-top;
 		padding-bottom: 40px;
-		.timer-options {
-			position: absolute;
-			top: 0;
-			right: 0;
-			.timer-option {
-				line-height: $timer-option-line-height;
-				border-top: $timer-option-border-top;
-				width: $timer-option-width;
-				display: inline-block;
-				cursor: pointer;
-				text-decoration: none;
-				text-align: center;
-				i {
-					line-height: inherit;
-					font-size: 1.5em;
-				}
-			}
-		}
 		.timer-name {
-			padding: 0;
+			padding: 20px 0 0 0;
 			margin: 0;
 			text-align: center;
 			line-height: 1em;
@@ -40,11 +18,6 @@ $timer-clock-background: rgba(250,250,250,.7);
 			color: $green;
 		}
 		.timer-clock {
-			border: $timer-clock-border;
-			background: $timer-clock-background;
-			box-shadow: inset 0px 0px 10px -2px rgba(200,200,200,.4);
-			border-radius: 5px;
-			padding: 20px 0;
 			box-sizing: border-box;
 			width: 85%;
 			margin: 40px auto 60px;
@@ -56,7 +29,7 @@ $timer-clock-background: rgba(250,250,250,.7);
 		.timer-controls {
 			text-align: center;
 			a {
-				line-height: $timer-option-line-height;
+				line-height: $top-row-height;
 				font-size: 2.5em;
 				margin: 0 20px;
 				color: $blue-light;
