@@ -4,21 +4,21 @@ form.timer-form(data-bind="submit: $root.saveTimer, with: data.editor")
 	div.timer-form-digit.alpha
 		button.btn-increment-up(type="button", data-bind="click: incrementTime.bind($data, 'hours', 'up'), enable: hours() >= 0")
 			i.icon-angle-up
-		input(title='hours', type='text', placeholder='0', data-bind="value: hours(), event: { keyup: incrementTime.bind($data, 'hours', '')}")
+		input(title='hours', type='text', pattern='[0-9]*', placeholder='0', data-bind="value: hours, event: { keyup: incrementTime.bind($data, 'hours', '')}")
 		button.btn-increment-down(type="button", data-bind="click: incrementTime.bind($data, 'hours', 'down'), disable: hours() < 1")
 			i.icon-angle-down
 
 	div.timer-form-digit
 		button.btn-increment-up(type="button", data-bind="click: incrementTime.bind($data, 'minutes', 'up'), enable: minutes() >= 0")
 			i.icon-angle-up
-		input(title='minutes', type='text', placeholder='0', data-bind="value: minutes(), event: { keyup: incrementTime.bind($data, 'minutes', '')}")
+		input(title='minutes', type='text', pattern='[0-9]*', placeholder='0', data-bind="value: minutes, event: { keyup: incrementTime.bind($data, 'minutes', '')}")
 		button.btn-increment-down(type="button", data-bind="click: incrementTime.bind($data, 'minutes', 'down'), disable: minutes() < 1")
 			i.icon-angle-down
 
 	div.timer-form-digit.omega
 		button.btn-increment-up(type="button", data-bind="click: incrementTime.bind($data, 'seconds', 'up'), enable: seconds() >= 0")
 			i.icon-angle-up
-		input(title='seconds', type='text', placeholder='0', data-bind="value: seconds(), event: { keyup: incrementTime.bind($data, 'seconds', '')}")
+		input(title='seconds', type='text', pattern='[0-9]*', placeholder='0', data-bind="value: seconds, event: { keyup: incrementTime.bind($data, 'seconds', '')}")
 		button.btn-increment-down(type="button", data-bind="click: incrementTime.bind($data, 'seconds', 'down'), disable: seconds() < 1")
 			i.icon-angle-down
 

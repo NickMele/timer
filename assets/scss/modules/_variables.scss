@@ -10,6 +10,7 @@ $cream: rgb(249,242,231);
 $green: rgb(143,190,0);
 $green-medium: rgb(174,226,57);
 $green-light: rgba(174,226,57,.5);
+$black: rgba(50,50,50,1);
 
 // base colors
 $font-color: $blue;
@@ -23,5 +24,5 @@ $base-line-height: 1em;
 
 $base-spacing: 18px;
 
-$top-row-height: 60px;
-$top-row-background: rgba(50,50,50,1);
+$top-row-height: 50px;
+$top-row-background: $black;

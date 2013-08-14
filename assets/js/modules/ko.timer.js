@@ -85,7 +85,7 @@ app.modules.ko.Timer = function(initialData) {
 
 			var timeStarted = new Date(initialData.data.timeStarted).getTime(),
 				currentTime = new Date(initialData.currentDateTime).getTime(),
-				differenceInSeconds = Math.floor((currentTime - timeStarted) / 1000);
+				differenceInSeconds = self.getDifferenceInSeconds(timeStarted, currentTime);
 
 			self.data.timeElapsed( self.data.timeElapsed() + differenceInSeconds );
 
@@ -103,11 +103,23 @@ app.modules.ko.Timer = function(initialData) {
 
 	};
 
+	self.getDifferenceInSeconds = function(timeStarted, currentTime) {
+
+		var differenceInSeconds = Math.floor((currentTime - timeStarted) / 1000);
+
+		return differenceInSeconds;
+
+	};
+
 	self.timerCountdown = function() {
 
-		self.data.timeElapsed( self.data.timeElapsed() + 1 );
+		var timeStarted = new Date(self.data.timeStarted()).getTime(),
+			currentTime = new Date().getTime(),
+			differenceInSeconds = self.getDifferenceInSeconds(timeStarted, currentTime);
 
-	}
+		self.data.timeElapsed( differenceInSeconds );
+
+	};
 
 	self.trigger = {
 		startTimer: function() {
