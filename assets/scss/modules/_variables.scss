@@ -1,27 +1,28 @@
 // Font weights
-$light: 100;
+$light: 300;
 $regular: 400;
 $bold: 600;
 
+// colors
+$blue: rgb(0,168,198);
+$blue-light: rgb(64,192,203);
+$cream: rgb(249,242,231);
+$green: rgb(143,190,0);
+$green-medium: rgb(174,226,57);
+$green-light: rgba(174,226,57,.5);
+$black: rgba(50,50,50,1);
+
+// base colors
+$font-color: $blue;
+$body-background: $cream;
+
 // Base Font
-$base-font-family: sans-serif;
+$base-font-family: 'Open Sans';
 $base-font-weight: $regular;
 $base-font-size: 16px;
 $base-line-height: 1em;
 
-// Fixed Font
-$fixed-font-family: monospace;
-$fixed-font-size: 85%;
-$fixed-line-height: $base-line-height;
-
-// Headings
-$header-font-weight: $bold;
-
-// Colors
-$base-text-color: rgba(50,50,50,1);
-$body-background: rgba(0,0,0,.9);
-$timer-list-border: rgba(220,220,220,1);
-$timer-list-background: #ECF8FD;
-$timer-list-item-border: rgba(230,230,230,1);
-
 $base-spacing: 18px;
+
+$top-row-height: 50px;
+$top-row-background: $black;

@@ -1,0 +1,10 @@
+div.main-menu(data-bind="css: { open: $root.state.mainMenuOpen() }")
+		div.top-row
+			a.toggle-menu(data-bind="click: $root.toggleMainMenu")
+				i(data-bind="css: { 'icon-chevron-right': !$root.state.mainMenuOpen(),'icon-chevron-left': $root.state.mainMenuOpen() }")
+			a.new-timer(data-bind="click: $root.createNewTimer")
+				i.icon-time
+				|  New timer...
+		div.timer-list(data-bind="foreach: data.timers")
+			a.timer-list-link(data-bind="click: $root.setCurrentTimer.bind($data, $index()), css: { active: $index() == $root.data.currentTimer() }").list-group-item.timer-link
+				span(data-bind="text: data.name()")

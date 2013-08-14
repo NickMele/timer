@@ -85,7 +85,7 @@ app.modules.ko.Timer = function(initialData) {
 
 			var timeStarted = new Date(initialData.data.timeStarted).getTime(),
 				currentTime = new Date(initialData.currentDateTime).getTime(),
-				differenceInSeconds = Math.floor((currentTime - timeStarted) / 1000);
+				differenceInSeconds = self.getDifferenceInSeconds(timeStarted, currentTime);
 
 			self.data.timeElapsed( self.data.timeElapsed() + differenceInSeconds );
 
@@ -103,11 +103,23 @@ app.modules.ko.Timer = function(initialData) {
 
 	};
 
+	self.getDifferenceInSeconds = function(timeStarted, currentTime) {
+
+		var differenceInSeconds = Math.floor((currentTime - timeStarted) / 1000);
+
+		return differenceInSeconds;
+
+	};
+
 	self.timerCountdown = function() {
 
-		self.data.timeElapsed( self.data.timeElapsed() + 1 );
+		var timeStarted = new Date(self.data.timeStarted()).getTime(),
+			currentTime = new Date().getTime(),
+			differenceInSeconds = self.getDifferenceInSeconds(timeStarted, currentTime);
 
-	}
+		self.data.timeElapsed( differenceInSeconds );
+
+	};
 
 	self.trigger = {
 		startTimer: function() {
@@ -296,24 +308,25 @@ app.modules.ko.Editor = function(data) {
 	};
 
 	self.incrementTime = function(valueToIncrement, direction, data, event) {
-		
+
 		// let increment the time according to what was passed
 		var timeOptions = {
 				'hours': self.hours,
 				'minutes': self.minutes,
 				'seconds': self.seconds
 			},
+			keyCode = event.keyCode,
 			currentValue;
 
 		// get the current value
 		currentValue = timeOptions[valueToIncrement]();
 
 		// determine if we need to add/subtract
-		if (direction == "up") {
+		if (direction == "up" || keyCode == 38) {
 		
 			timeOptions[valueToIncrement](currentValue+1);
 
-		} else if (direction == "down") {
+		} else if (direction == "down" || keyCode == 40) {
 
 			timeOptions[valueToIncrement](currentValue-1);
 
@@ -352,37 +365,19 @@ app.modules.ko.TimerListViewModel = function() {
 
 	// store the state of the application
 	self.state = {
-		editingCurrentTimer	: ko.observable(false)
+		editing				: ko.observable(false),
+		mainMenuOpen		: ko.observable(false)
 	};
 
 	// data store
 	self.data = {
 		currentTimer	: ko.observable(),
 		timers			: ko.observableArray([]),
-		// staged timer represents the timer currently being edited, regardless of new/old
-		stagedTimer		: ko.observable(""),
 		editor 			: ko.observable("")
 	};
 
 	/* Computed data
-	------------------------------------------------------------------------- */	
-	// dynamically create the editor title based on editing
-	self.state.editorTitle = ko.computed(function() {
-		if (self.state.editingCurrentTimer()) {
-			return "Edit timer";
-		} else {
-			return "New timer";
-		}
-	});
-
-	// dynamically create the save button for the editor
-	self.state.editorSaveButton = ko.computed(function() {
-		if (self.state.editingCurrentTimer()) {
-			return "Save changes";
-		} else {
-			return "Create";
-		}
-	});
+	------------------------------------------------------------------------- */
 
 	/* Functional methods
 	------------------------------------------------------------------------- */
@@ -421,14 +416,19 @@ app.modules.ko.TimerListViewModel = function() {
 
 	self.createNewTimer = function() {
 
+		self.state.editing(true);
+
 		self.data.editor(new app.modules.ko.Editor());
 
-		// empty out the current timer observable
-		self.data.stagedTimer({});
+		self.state.mainMenuOpen(false);
+
+		$('.timer-form-name').focus();
 
 	};
 
 	self.editTimer = function() {
+
+		self.state.editing(true);
 
 		// pause the current timer if it is started
 		if (self.data.timers()[self.data.currentTimer()].data.state() == "started") {
@@ -436,10 +436,7 @@ app.modules.ko.TimerListViewModel = function() {
 		}
 
 		// stage the current timer for editing
-		// self.data.stagedTimer(self.data.currentTimer());
 		self.data.editor(new app.modules.ko.Editor(ko.toJS(self.data.timers()[self.data.currentTimer()].data)));
-
-		self.state.editingCurrentTimer(true);
 
 	}
 
@@ -453,7 +450,7 @@ app.modules.ko.TimerListViewModel = function() {
 			// we got a good response, close, modal and reload timers
 			if (!response.error) {
 
-				$('#timer-editor').modal('hide');
+				self.state.editing(false);
 
 				self.getTimers();
 
@@ -467,24 +464,36 @@ app.modules.ko.TimerListViewModel = function() {
 
 	};
 
+	self.cancelEdit = function() {
+
+		self.state.editing(false);
+
+		self.data.editor({});
+
+	};
+
 	self.removeTimer = function(timerToRemove) {
 
-		// notify the server to remove this timer
-		app.modules.socket.emit(self.sockets.removeTimer, timerToRemove.data._id(), function(response) {
+		if (confirm('Are you sure you want to remove this timer?')) {
 
-			// if there is no error set the timer list
-			if (response.error == null) {
+			// notify the server to remove this timer
+			app.modules.socket.emit(self.sockets.removeTimer, timerToRemove.data._id(), function(response) {
 
-				// set our timer list with the new data
-				self.setTimers(response);
+				// if there is no error set the timer list
+				if (response.error == null) {
 
-			} else {
+					// set our timer list with the new data
+					self.setTimers(response);
 
-				console.log('no error!');
+				} else {
 
-			}
+					console.log('no error!');
 
-		});
+				}
+
+			});
+
+		}
 
 	};
 
@@ -496,6 +505,12 @@ app.modules.ko.TimerListViewModel = function() {
 		return true;
 
 	};
+
+	self.toggleMainMenu = function() {
+
+		self.state.mainMenuOpen( !self.state.mainMenuOpen() );
+
+	}
 
 
 	/* Getters
@@ -534,6 +549,8 @@ app.modules.ko.TimerListViewModel = function() {
 
 			self.setTimers(response);
 
+			self.state.mainMenuOpen(false);
+
 			self.data.currentTimer(response.currentTimerIndex);
 
 		});
@@ -554,6 +571,9 @@ app.modules.ko.TimerListViewModel = function() {
 
 		// get the list of timers
 		self.getTimers();
+
+		// set the first time initially
+		self.setCurrentTimer(0);
 
 	};
 
