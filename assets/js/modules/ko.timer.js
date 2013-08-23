@@ -538,7 +538,7 @@ app.modules.ko.TimerListViewModel = function() {
 					return item.data._id() === timerToSetWhenDone.data._id;
 				});
 
-				self.setCurrentTimer(index);
+				self.data.currentTimer(index);
 
 			}
 
@@ -597,7 +597,7 @@ app.modules.ko.TimerListViewModel = function() {
 		self.getTimers();
 
 		// set the first time initially
-		self.setCurrentTimer(0);
+		self.data.currentTimer(0);
 
 	};
 

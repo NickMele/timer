@@ -1,11 +1,5 @@
 extends ../layout
 
 block content
-	.container
-		.row
-			div.col-lg-4.col-offset-4
-
-				h2 Sign in
-				p Use your Google account to sign in
-				
-				a(href="/auth/google").btn.btn-primary.btn-block.btn-large Sign in using Google
+	div.login-container
+		a(href="/auth/google").sign-in-button Sign in with Google

@@ -1,0 +1,17 @@
+.login-container {
+	width: 100%;
+	margin: 100px auto 0;
+	text-align: center;
+
+	.sign-in-button {
+		display: inline-block;
+		width: auto;
+		margin: 0;
+		padding: 20px 25px;
+		background: $blue;
+		text-decoration: none;
+		color: $cream;
+		font-size: 1.3em;
+		border-radius: 3px;
+	}
+}

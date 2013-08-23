@@ -356,6 +356,16 @@ body {
   color: #00a8c6;
   background: #f9f2e7; }
 
+.callout {
+  font-size: .6em;
+  color: #323232;
+  text-decoration: none;
+  position: absolute;
+  bottom: 5px;
+  right: 5px; }
+  .callout:hover {
+    text-decoration: underline; }
+
 /* Margin and Padding - determined via golden ratio */
 /* Margin */
 .margin {
@@ -777,3 +787,18 @@ input[type="number"] {
       .top-row .timer-options .timer-option i {
         line-height: inherit;
         font-size: 1.5em; }
+
+.login-container {
+  width: 100%;
+  margin: 100px auto 0;
+  text-align: center; }
+  .login-container .sign-in-button {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    padding: 20px 25px;
+    background: #00a8c6;
+    text-decoration: none;
+    color: #f9f2e7;
+    font-size: 1.3em;
+    border-radius: 3px; }

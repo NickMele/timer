@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
 	Timer = mongoose.model('Timer');
 
-exports.getTimers = function(req, res) {
+var getTimers = function(req, res) {
 	// set up our conditions
 	var userId = req.session.passport.user,
 		conditions = {
@@ -13,7 +13,7 @@ exports.getTimers = function(req, res) {
 	var fields = '-userId';
 
 	// search the db for timers matching this user
-	Timer.find(conditions, fields, function(error, timers) {
+	Timer.find(conditions, fields).sort({name:'asc'}).exec(function(error, timers) {
 
 		response = {
 			error: error,
@@ -34,6 +34,7 @@ exports.getTimers = function(req, res) {
 
 	});
 };
+exports.getTimers = getTimers;
 
 exports.setCurrentTimer = function(req) {
 
@@ -48,7 +49,7 @@ exports.setCurrentTimer = function(req) {
 	var fields = '-userId';
 
 	// search the db for timers matching this user
-	Timer.find(conditions, fields, function(error, timers) {
+	Timer.find(conditions, fields).sort({name:'asc'}).exec(function(error, timers) {
 
 		response = {
 			error: error,
@@ -139,37 +140,7 @@ exports.removeTimer = function(req) {
 
 		} else {
 
-			// set up our conditions
-			var userId = req.session.passport.user,
-				conditions = {
-					userId: userId
-				},
-				response = {};
-
-			// what fields do we want to select
-			var fields = '-userId';
-
-			// search the db for timers matching this user
-			Timer.find(conditions, fields, function(error, timers) {
-
-				response = {
-					error: error,
-					data: timers,
-					currentDateTime: new Date()
-				}
-				
-				if (error) {
-					// if there was an error, do something
-					console.log(err);
-				} else {
-					// broadcast the message to load this timer to the room
-					req.io.room(userId).broadcast('timer:get:list', response);
-				}
-
-				// respond to the request with the timer data, and status
-				req.io.respond(response);
-
-			});
+			getTimers(req);
 
 		}
 
