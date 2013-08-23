@@ -139,16 +139,34 @@ exports.removeTimer = function(req) {
 
 		} else {
 
-			// get timer list for user
-			Timer.findById(userId, function(error,timers) {
+			// set up our conditions
+			var userId = req.session.passport.user,
+				conditions = {
+					userId: userId
+				},
+				response = {};
 
-				// store the timers in data
+			// what fields do we want to select
+			var fields = '-userId';
+
+			// search the db for timers matching this user
+			Timer.find(conditions, fields, function(error, timers) {
+
 				response = {
 					error: error,
-					data: timers
-				};
+					data: timers,
+					currentDateTime: new Date()
+				}
+				
+				if (error) {
+					// if there was an error, do something
+					console.log(err);
+				} else {
+					// broadcast the message to load this timer to the room
+					req.io.room(userId).broadcast('timer:get:list', response);
+				}
 
-				// respond to the client with our response
+				// respond to the request with the timer data, and status
 				req.io.respond(response);
 
 			});

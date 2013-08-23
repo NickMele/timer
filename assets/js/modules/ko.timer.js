@@ -1,3 +1,12 @@
+function arrayFirstIndexOf(array, predicate, predicateOwner) {
+    for (var i = 0, j = array.length; i < j; i++) {
+        if (predicate.call(predicateOwner, array[i])) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 // set up some global sockets
 app.modules.ko.sockets = {
 	getTimers			: 'timer:get:list',
@@ -46,15 +55,12 @@ app.modules.ko.Timer = function(initialData) {
 
 	self.computedData.hours = ko.computed(function() {
 		var hours = Math.floor( (self.data.timerLength() - self.data.timeElapsed()) / 3600 );
-		if (hours < 10) {
-			hours = "0" + hours;
-		}
 		return hours;
 	});
 
 	self.computedData.minutes = ko.computed(function() {
 		var minutes = Math.floor( ((self.data.timerLength() - self.data.timeElapsed()) / 60) % 60 );
-		if (minutes < 10) {
+		if (minutes < 10 && self.computedData.hours() > 0) {
 			minutes = "0" + minutes;
 		}
 		return minutes;
@@ -117,7 +123,8 @@ app.modules.ko.Timer = function(initialData) {
 			currentTime = new Date().getTime(),
 			differenceInSeconds = self.getDifferenceInSeconds(timeStarted, currentTime);
 
-		self.data.timeElapsed( differenceInSeconds );
+		// we need to know how much time has already elapsed when we started this timer
+		self.data.timeElapsed( self.data.timeElapsedAtStart + differenceInSeconds );
 
 	};
 
@@ -167,6 +174,9 @@ app.modules.ko.Timer = function(initialData) {
 		self.data.timeStarted(new Date());
 
 		self.data.state("started");
+
+		// record how much time had already elapsed when we started the timer
+		self.data.timeElapsedAtStart = self.data.timeElapsed();
 
 		// 1000 will  run it every 1 second
 		self.counter = setInterval(self.timerCountdown, 1000);
@@ -452,9 +462,7 @@ app.modules.ko.TimerListViewModel = function() {
 
 				self.state.editing(false);
 
-				self.getTimers();
-
-				// self.setCurrentTimer(response.data);
+				self.getTimers(response);
 				
 			} else {
 				console.log(response.error);
@@ -477,17 +485,19 @@ app.modules.ko.TimerListViewModel = function() {
 		if (confirm('Are you sure you want to remove this timer?')) {
 
 			// notify the server to remove this timer
-			app.modules.socket.emit(self.sockets.removeTimer, timerToRemove.data._id(), function(response) {
+			app.modules.socket.emit(self.sockets.removeTimer, self.data.timers()[self.data.currentTimer()].data._id(), function(response) {
 
 				// if there is no error set the timer list
-				if (response.error == null) {
+				if (response.error) {
+
+					console.log('error');
+
+				} else {
 
 					// set our timer list with the new data
 					self.setTimers(response);
 
-				} else {
-
-					console.log('no error!');
+					self.setCurrentTimer(0);
 
 				}
 
@@ -515,10 +525,24 @@ app.modules.ko.TimerListViewModel = function() {
 
 	/* Getters
 	------------------------------------------------------------------------- */	
-	self.getTimers = function() {
+	self.getTimers = function(timerToSetWhenDone) {
 
 		// emit a message to timer:get:list
-		app.modules.socket.emit(self.sockets.getTimers, self.setTimers);
+		app.modules.socket.emit(self.sockets.getTimers, function(response) {
+
+			self.setTimers(response);
+
+			if (timerToSetWhenDone) {
+
+				var index = arrayFirstIndexOf(self.data.timers(), function(item) {
+					return item.data._id() === timerToSetWhenDone.data._id;
+				});
+
+				self.setCurrentTimer(index);
+
+			}
+
+		});
 
 	};
 
