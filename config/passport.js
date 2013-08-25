@@ -63,9 +63,21 @@ passport.use(new GoogleStrategy({
   function(identifier, profile, done) {
 	process.nextTick(function () {
 		console.log('google id: ' + identifier);
+
+		var user = new User({
+			openId: identifier
+		});
+
+		// Convert the Model instance to a simple object using Model's 'toObject' function
+		// to prevent weirdness like infinite looping...
+		var upsertData = user.toObject();
+
+		// Delete the _id property, otherwise Mongo will return a "Mod on _id not allowed" error
+		delete upsertData._id;
+
 		User.findOneAndUpdate(
 			{ openId: identifier },
-			{ openId: identifier },
+			upsertData,
 			{ upsert: true },
 			function(err, user) {
 				console.log(err);
