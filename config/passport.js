@@ -4,7 +4,7 @@ var passport = require('passport'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Token = require('../model/token'),
-	url = process.env.URL || 'http://192.168.1.65:5000';
+	url = process.env.URL || 'http://192.168.1.135:5000';
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -62,6 +62,7 @@ passport.use(new GoogleStrategy({
   },
   function(identifier, profile, done) {
 	process.nextTick(function () {
+		console.log('google id: ' + identifier);
 		User.findOneAndUpdate(
 			{ openId: identifier },
 			{ openId: identifier },
