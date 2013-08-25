@@ -68,6 +68,7 @@ passport.use(new GoogleStrategy({
 			{ openId: identifier },
 			{ upsert: true },
 			function(err, user) {
+				console.log(err);
 				return done(null, user);
 			}
 		);
